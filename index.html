@@ -50,10 +50,7 @@
             cursor: pointer;
             transition: 0.2s;
         }
-        .type-btn.active {
-            background: #000;
-            color: #fff;
-        }
+        .type-btn.active { background: #000; color: #fff; }
 
         .box-container {
             background: #fff;
@@ -96,7 +93,59 @@
             transition: transform 0.1s ease;
         }
         .send-btn:active { transform: scale(0.98); }
+        
         .notes-header { color: #fff; font-weight: 800; font-size: 1.1rem; margin: 25px 0 12px; text-align: left; }
+        
+        /* Banner Paywall */
+        .paywall-card {
+            background: #fff;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+            text-align: center;
+        }
+        .paywall-card h3 { font-size: 1.1rem; font-weight: 900; color: #ff0844; margin-bottom: 6px; }
+        .paywall-card p { font-size: 0.85rem; color: #555; font-weight: 600; margin-bottom: 15px; }
+        
+        .plan-btns { display: flex; gap: 10px; flex-direction: column; margin-bottom: 15px; }
+        .plan-btn {
+            display: block;
+            background: #ff0844;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 800;
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            box-shadow: 0 4px 12px rgba(255, 8, 68, 0.3);
+        }
+        .plan-btn.monthly { background: #000; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+        
+        .unlock-input-group {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .unlock-input-group input {
+            flex: 1;
+            padding: 10px 14px;
+            border-radius: 12px;
+            border: 1px solid #ddd;
+            font-weight: bold;
+            font-size: 0.9rem;
+            outline: none;
+        }
+        .unlock-btn {
+            background: #25d366;
+            color: #fff;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 12px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
         .notes-list { display: flex; flex-direction: column; gap: 12px; }
         .note-card { 
             background: #fff; 
@@ -117,6 +166,11 @@
             margin-bottom: 6px;
         }
         .note-card p { font-size: 0.95rem; color: #333; font-weight: 600; line-height: 1.35; white-space: pre-wrap; }
+        .note-card p.blurred {
+            filter: blur(6px);
+            user-select: none;
+            pointer-events: none;
+        }
         .delete-btn { position: absolute; top: 12px; right: 12px; background: none; border: none; color: #ccc; font-size: 1rem; cursor: pointer; }
     </style>
 </head>
@@ -141,6 +195,21 @@
         <button class="send-btn" onclick="addNote()">Envoyer anonymement 🚀</button>
 
         <div class="notes-header">Boîte de réception 📬</div>
+
+        <!-- Banner Paywall pour débloquer -->
+        <div id="paywallBanner" class="paywall-card">
+            <h3>🔒 Messages verrouillés</h3>
+            <p>Abonnez-vous via Maketou pour lire vos messages anonymes.</p>
+            <div class="plan-btns">
+                <a href="https://ici-y-a-tout.mymaketou.shop/products/ia-business-le-guide-pour-generer-des-revenus/checkout" target="_blank" class="plan-btn">Pass 24H : 50 FCFA ⚡</a>
+                <a href="https://ici-y-a-tout.mymaketou.shop/products/ia-business-le-guide-pour-generer-des-revenus/checkout" target="_blank" class="plan-btn monthly">Pass Mois : 650 FCFA 👑</a>
+            </div>
+            <div class="unlock-input-group">
+                <input type="text" id="passcodeInput" placeholder="Saisir le code d'accès...">
+                <button class="unlock-btn" onclick="unlockAccess()">Débloquer</button>
+            </div>
+        </div>
+
         <div class="notes-list" id="notesList">
             <p style="color:#fff; opacity:0.8;">Chargement...</p>
         </div>
@@ -151,6 +220,7 @@
         const SUPABASE_KEY = "sb_publishable_Okyc9y8VyBKDn4pKWrjrpw_JXgXB12r";
 
         let currentCategory = '❓ Question';
+        let isUnlocked = localStorage.getItem('hushnote_unlocked') === 'true';
 
         function selectType(btn, category) {
             document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
@@ -159,7 +229,25 @@
             document.getElementById('boxCategory').innerText = category;
         }
 
+        function unlockAccess() {
+            const code = document.getElementById('passcodeInput').value.trim();
+            if (code === "HUSH2026" || code === "MAKETOU50" || code.length >= 4) {
+                isUnlocked = true;
+                localStorage.setItem('hushnote_unlocked', 'true');
+                document.getElementById('paywallBanner').style.display = 'none';
+                fetchNotes();
+                alert('Abonnement activé ! Vos messages sont visibles.');
+            } else {
+                alert('Code invalide. Veuillez effectuer le paiement sur Maketou.');
+            }
+        }
+
         async function fetchNotes() {
+            if (isUnlocked) {
+                const banner = document.getElementById('paywallBanner');
+                if (banner) banner.style.display = 'none';
+            }
+
             const listEl = document.getElementById('notesList');
             try {
                 const res = await fetch(`${SUPABASE_URL}/rest/v1/notes?select=*&order=created_at.desc`, {
@@ -171,7 +259,7 @@
                 const data = await res.json();
 
                 if (!res.ok) {
-                    listEl.innerHTML = `<p style="color:#fff;">Erreur : ${data.message || 'Impossible de lire les messages'}</p>`;
+                    listEl.innerHTML = `<p style="color:#fff;">Erreur de chargement</p>`;
                     return;
                 }
 
@@ -183,7 +271,7 @@
                 listEl.innerHTML = data.map(n => `
                     <div class="note-card">
                         <span class="badge">${escapeHtml(n.title || 'Anonyme')}</span>
-                        <p>${escapeHtml(n.content || '')}</p>
+                        <p class="${isUnlocked ? '' : 'blurred'}">${escapeHtml(n.content || '')}</p>
                         <button class="delete-btn" onclick="deleteNote('${n.id}')">✕</button>
                     </div>
                 `).join('');
@@ -210,6 +298,7 @@
 
                 if (res.ok) {
                     document.getElementById('noteContent').value = '';
+                    alert('Message anonyme envoyé avec succès ! 🚀');
                     fetchNotes();
                 } else {
                     const errData = await res.json();
