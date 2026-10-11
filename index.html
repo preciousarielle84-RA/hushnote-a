@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hushnote - Messages & Confessions Anonymes</title>
+    <!-- HTML2Canvas pour générer l'image Story -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         body { 
@@ -121,29 +123,9 @@
         }
         .plan-btn.monthly { background: #000; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
         
-        .unlock-input-group {
-            display: flex;
-            gap: 8px;
-            margin-top: 10px;
-        }
-        .unlock-input-group input {
-            flex: 1;
-            padding: 10px 14px;
-            border-radius: 12px;
-            border: 1px solid #ddd;
-            font-weight: bold;
-            font-size: 0.9rem;
-            outline: none;
-        }
-        .unlock-btn {
-            background: #25d366;
-            color: #fff;
-            border: none;
-            padding: 10px 16px;
-            border-radius: 12px;
-            font-weight: 800;
-            cursor: pointer;
-        }
+        .unlock-input-group { display: flex; gap: 8px; margin-top: 10px; }
+        .unlock-input-group input { flex: 1; padding: 10px 14px; border-radius: 12px; border: 1px solid #ddd; font-weight: bold; font-size: 0.9rem; outline: none; }
+        .unlock-btn { background: #25d366; color: #fff; border: none; padding: 10px 16px; border-radius: 12px; font-weight: 800; cursor: pointer; }
 
         .notes-list { display: flex; flex-direction: column; gap: 12px; }
         .note-card { 
@@ -165,34 +147,40 @@
             margin-bottom: 6px;
         }
         .note-card p { font-size: 0.95rem; color: #333; font-weight: 600; line-height: 1.35; white-space: pre-wrap; margin-bottom: 12px; }
-        .note-card p.blurred {
-            filter: blur(6px);
-            user-select: none;
-            pointer-events: none;
-        }
+        .note-card p.blurred { filter: blur(6px); user-select: none; pointer-events: none; }
         
-        .card-actions {
+        .card-actions { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; border-top: 1px solid #eee; padding-top: 10px; margin-top: 8px; }
+        .share-btn { background: #ff0844; color: #fff; border: none; padding: 6px 12px; border-radius: 15px; font-size: 0.78rem; font-weight: 800; cursor: pointer; }
+        .story-btn { background: #000; color: #fff; border: none; padding: 6px 12px; border-radius: 15px; font-size: 0.78rem; font-weight: 800; cursor: pointer; }
+        .delete-btn { background: none; border: none; color: #bbb; font-size: 0.8rem; font-weight: 700; cursor: pointer; margin-left: auto; }
+
+        /* Template Masqué pour la Génération d'Image Story 1080x1920 */
+        #storyTemplate {
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+            width: 1080px;
+            height: 1920px;
+            background: linear-gradient(135deg, #ff0844 0%, #ffb199 100%);
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            border-top: 1px solid #eee;
-            padding-top: 10px;
-            margin-top: 8px;
+            padding: 80px;
+            box-sizing: border-box;
         }
-        .share-btn {
-            background: #ff0844;
-            color: #fff;
-            border: none;
-            padding: 6px 14px;
-            border-radius: 15px;
-            font-size: 0.8rem;
-            font-weight: 800;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 5px;
+        .story-card-box {
+            background: #ffffff;
+            width: 100%;
+            border-radius: 50px;
+            padding: 70px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+            text-align: center;
         }
-        .delete-btn { background: none; border: none; color: #bbb; font-size: 0.9rem; font-weight: 700; cursor: pointer; }
+        .story-logo { font-size: 4rem; font-weight: 900; color: #ff0844; margin-bottom: 30px; }
+        .story-badge { display: inline-block; background: #ffe5ec; color: #ff0844; font-size: 2.2rem; font-weight: 800; padding: 12px 30px; border-radius: 30px; margin-bottom: 30px; }
+        .story-text { font-size: 2.8rem; color: #222; font-weight: 700; line-height: 1.4; word-break: break-word; margin-bottom: 50px; }
+        .story-footer { font-size: 2rem; color: #fff; font-weight: 800; margin-top: 60px; text-shadow: 0 4px 10px rgba(0,0,0,0.2); }
     </style>
 </head>
 <body>
@@ -235,6 +223,16 @@
         </div>
     </div>
 
+    <!-- Canvas Template cachée pour générer la Story -->
+    <div id="storyTemplate">
+        <div class="story-logo">🤫 Hushnote</div>
+        <div class="story-card-box">
+            <div class="story-badge" id="storyCategory">❓ QUESTION</div>
+            <div class="story-text" id="storyMessage">Message anonyme...</div>
+        </div>
+        <div class="story-footer">Pose-moi une question anonyme 📲<br>hushnote-a.onrender.com</div>
+    </div>
+
     <script>
         const SUPABASE_URL = "https://tieptbsrgbshpixsgrht.supabase.co";
         const SUPABASE_KEY = "sb_publishable_Okyc9y8VyBKDn4pKWrjrpw_JXgXB12r";
@@ -271,10 +269,7 @@
             const listEl = document.getElementById('notesList');
             try {
                 const res = await fetch(`${SUPABASE_URL}/rest/v1/notes?select=*&order=created_at.desc`, {
-                    headers: {
-                        'apikey': SUPABASE_KEY,
-                        'Authorization': `Bearer ${SUPABASE_KEY}`
-                    }
+                    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
                 });
                 const data = await res.json();
 
@@ -294,7 +289,8 @@
                         <p class="${isUnlocked ? '' : 'blurred'}">${escapeHtml(n.content || '')}</p>
                         <div class="card-actions">
                             <button class="share-btn" onclick="shareNote('${escapeHtml(n.title || 'Anonyme')}', '${escapeHtml(n.content || '')}')">Partager 📲</button>
-                            <button class="delete-btn" onclick="deleteNote('${n.id}')">Supprimer ✕</button>
+                            <button class="story-btn" onclick="generateStoryImage('${escapeHtml(n.title || 'Anonyme')}', '${escapeHtml(n.content || '')}')">Story 📸</button>
+                            <button class="delete-btn" onclick="deleteNote('${n.id}')">✕</button>
                         </div>
                     </div>
                 `).join('');
@@ -303,22 +299,39 @@
             }
         }
 
+        async function generateStoryImage(title, content) {
+            document.getElementById('storyCategory').innerText = title.toUpperCase();
+            document.getElementById('storyMessage').innerText = content;
+
+            const template = document.getElementById('storyTemplate');
+            
+            try {
+                const canvas = await html2canvas(template, {
+                    width: 1080,
+                    height: 1920,
+                    scale: 1
+                });
+
+                const image = canvas.toDataURL("image/png");
+                const link = document.createElement('a');
+                link.download = `Hushnote-Story-${Date.now()}.png`;
+                link.href = image;
+                link.click();
+                alert('📸 Image Story générée et téléchargée ! Vous pouvez maintenant la publier sur votre statut WhatsApp ou Story Instagram.');
+            } catch (err) {
+                alert('Erreur lors de la création de l\'image.');
+            }
+        }
+
         async function shareNote(title, content) {
             const shareText = `🤫 Message anonyme reçu sur Hushnote (${title}) :\n\n"${content}"\n\nPose-moi tes questions anonymes ici 👉 https://hushnote-a.onrender.com`;
-            
             if (navigator.share) {
                 try {
-                    await navigator.share({
-                        title: 'Hushnote Anonyme',
-                        text: shareText,
-                        url: 'https://hushnote-a.onrender.com'
-                    });
-                } catch (err) {
-                    console.log('Partage annulé');
-                }
+                    await navigator.share({ title: 'Hushnote Anonyme', text: shareText, url: 'https://hushnote-a.onrender.com' });
+                } catch (err) { console.log('Annulé'); }
             } else {
                 navigator.clipboard.writeText(shareText);
-                alert('Texte copié dans le presse-papiers ! Vous pouvez maintenant le coller dans vos Statuts WhatsApp ou Stories.');
+                alert('Texte copié !');
             }
         }
 
@@ -355,15 +368,10 @@
             try {
                 const res = await fetch(`${SUPABASE_URL}/rest/v1/notes?id=eq.${id}`, {
                     method: 'DELETE',
-                    headers: {
-                        'apikey': SUPABASE_KEY,
-                        'Authorization': `Bearer ${SUPABASE_KEY}`
-                    }
+                    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
                 });
                 if (res.ok) fetchNotes();
-            } catch (err) {
-                console.error(err);
-            }
+            } catch (err) { console.error(err); }
         }
 
         function escapeHtml(text) {
