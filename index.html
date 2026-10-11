@@ -148,7 +148,7 @@
 
     <script>
         const SUPABASE_URL = "https://tieptbsrgbshpixsgrht.supabase.co";
-        const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRpZXB0YnNyZ2JzaHBpeHNncmh0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAxNTIxOTIsImV4cCI6MjA3NTcyODE5Mn0.S_yvL2qImsa0iN-P5Z492_K65Yj6U5Wp3fC-707V2g8";
+        const SUPABASE_KEY = "EyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRpZXB0YnNyZ2JzaHBpeHNncmh0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE3MDU5ODMsImV4cCI6MjEwNzI4MTk4M30.MO7yR27XKJPcyMt8konTvBc1Pvwpo3O1Qo8GpFN7ahQ";
 
         let currentCategory = '❓ Question';
 
@@ -171,7 +171,7 @@
                 const data = await res.json();
 
                 if (!res.ok) {
-                    listEl.innerHTML = `<p style="color:#fff;">Erreur : ${data.message || 'Impossible de lire les notes'}</p>`;
+                    listEl.innerHTML = `<p style="color:#fff;">Erreur : ${data.message || 'Impossible de lire les messages'}</p>`;
                     return;
                 }
 
