@@ -15,11 +15,11 @@
         textarea { resize: vertical; min-height: 100px; }
         button { background: #bb86fc; color: #121212; font-weight: bold; padding: 12px; border: none; border-radius: 8px; cursor: pointer; transition: 0.2s; }
         button:hover { background: #9965f4; }
-        .notes-list { display: flex; flex-direction: column; gap: 12px; }
+        .notes-list { display: flex; flex-direction: column; gap: 12px; margin-top: 15px; }
         .note-card { background: #2b2b2b; padding: 15px; border-radius: 8px; border-left: 4px solid #bb86fc; position: relative; }
         .note-card h3 { font-size: 1.1rem; margin-bottom: 5px; color: #fff; }
         .note-card p { color: #aaa; font-size: 0.95rem; white-space: pre-wrap; }
-        .delete-btn { position: absolute; top: 10px; right: 10px; background: transparent; color: #cf6679; border: none; font-size: 1.1rem; cursor: pointer; }
+        .delete-btn { position: absolute; top: 10px; right: 10px; background: transparent; color: #cf6679; border: none; font-size: 1.1rem; cursor: pointer; padding: 5px; }
     </style>
 </head>
 <body>
@@ -41,14 +41,15 @@
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         async function fetchNotes() {
-            const { data, error } = await supabase.from('notes').select('*').order('created_at', { ascending: false });
             const listEl = document.getElementById('notesList');
+            const { data, error } = await supabase.from('notes').select('*').order('created_at', { ascending: false });
+            
             if (error) {
                 listEl.innerHTML = `<p style="color:#cf6679; text-align:center;">Erreur: ${error.message}</p>`;
                 return;
             }
             if (!data || data.length === 0) {
-                listEl.innerHTML = '<p style="text-align:center; color:#666;">Aucune note enregistrée.</p>';
+                listEl.innerHTML = '<p style="text-align:center; color:#888;">Aucune note enregistrée pour le moment.</p>';
                 return;
             }
             listEl.innerHTML = data.map(n => `
@@ -64,9 +65,11 @@
             const title = document.getElementById('noteTitle').value.trim();
             const content = document.getElementById('noteContent').value.trim();
             if (!content) return alert('Veuillez écrire du contenu !');
+
             const { error } = await supabase.from('notes').insert([{ title, content }]);
-            if (error) alert('Erreur d\'ajout : ' + error.message);
-            else {
+            if (error) {
+                alert('Erreur d\'ajout : ' + error.message);
+            } else {
                 document.getElementById('noteTitle').value = '';
                 document.getElementById('noteContent').value = '';
                 fetchNotes();
@@ -74,15 +77,16 @@
         }
 
         async function deleteNote(id) {
-            const { error } = await supabase.from('notes').from('notes').delete().eq('id', id);
-            fetchNotes();
+            const { error } = await supabase.from('notes').delete().eq('id', id);
+            if (error) alert('Erreur de suppression : ' + error.message);
+            else fetchNotes();
         }
 
         function escapeHtml(text) {
-            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace/>/g, "&gt;");
         }
 
-        fetchNotes();
+        window.onload = fetchNotes;
     </script>
 </body>
 </html>
