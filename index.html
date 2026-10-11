@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hushnote - Questions Anonymes</title>
+    <title>Hushnote - Messages & Confessions Anonymes</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         body { 
             background: linear-gradient(135deg, #ff0844 0%, #ffb199 100%); 
             min-height: 100vh; 
@@ -17,8 +17,8 @@
         }
         .app-card { 
             width: 100%; 
-            max-width: 400px; 
-            background: rgba(255, 255, 255, 0.2); 
+            max-width: 420px; 
+            background: rgba(255, 255, 255, 0.25); 
             backdrop-filter: blur(20px); 
             -webkit-backdrop-filter: blur(20px); 
             padding: 25px; 
@@ -27,25 +27,62 @@
             border: 1px solid rgba(255, 255, 255, 0.3);
             text-align: center;
         }
-        .logo { font-size: 2.2rem; font-weight: 900; color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,0.2); margin-bottom: 5px; }
-        .subtitle { color: #fff; font-size: 0.95rem; font-weight: 600; opacity: 0.9; margin-bottom: 25px; }
+        .logo { font-size: 2.2rem; font-weight: 900; color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,0.15); margin-bottom: 5px; }
+        .subtitle { color: #fff; font-size: 0.95rem; font-weight: 600; opacity: 0.95; margin-bottom: 20px; }
+        
+        .type-selector {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            scrollbar-width: none;
+        }
+        .type-selector::-webkit-scrollbar { display: none; }
+        .type-btn {
+            background: rgba(255, 255, 255, 0.8);
+            color: #ff0844;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .type-btn.active {
+            background: #000;
+            color: #fff;
+        }
+
         .box-container {
             background: #fff;
             border-radius: 20px;
             padding: 18px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.1);
             margin-bottom: 20px;
+            text-align: left;
         }
-        input, textarea { 
+        .box-title {
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: #ff0844;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+        textarea { 
             width: 100%; 
             border: none; 
             outline: none; 
             background: transparent; 
-            font-size: 1rem; 
+            font-size: 1.05rem; 
             color: #222;
+            resize: none; 
+            height: 90px; 
+            font-weight: 500; 
         }
-        input { font-weight: bold; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 8px; }
-        textarea { resize: none; height: 80px; font-weight: 500; }
         .send-btn { 
             width: 100%; 
             background: #000; 
@@ -70,22 +107,39 @@
             position: relative; 
             box-shadow: 0 5px 15px rgba(0,0,0,0.08); 
         }
-        .note-card h3 { font-size: 1rem; color: #ff0844; margin-bottom: 4px; font-weight: 800; }
-        .note-card p { font-size: 0.95rem; color: #333; font-weight: 600; line-height: 1.3; }
+        .note-card .badge { 
+            display: inline-block;
+            background: #ffe5ec;
+            color: #ff0844;
+            font-size: 0.75rem;
+            font-weight: 800;
+            padding: 3px 8px;
+            border-radius: 10px;
+            margin-bottom: 6px;
+        }
+        .note-card p { font-size: 0.95rem; color: #333; font-weight: 600; line-height: 1.35; white-space: pre-wrap; }
         .delete-btn { position: absolute; top: 12px; right: 12px; background: none; border: none; color: #ccc; font-size: 1rem; cursor: pointer; }
     </style>
 </head>
 <body>
     <div class="app-card">
         <div class="logo">🤫 Hushnote</div>
-        <div class="subtitle">Recevez des messages & questions anonymes !</div>
+        <div class="subtitle">Questions, histoires, remarques & vœux anonymes</div>
+
+        <div class="type-selector">
+            <button class="type-btn active" onclick="selectType(this, '❓ Question')">❓ Question</button>
+            <button class="type-btn" onclick="selectType(this, '📖 Histoire')">📖 Histoire</button>
+            <button class="type-btn" onclick="selectType(this, '💡 Remarque')">💡 Remarque</button>
+            <button class="type-btn" onclick="selectType(this, '✨ Vœu / Sourait')">✨ Vœu</button>
+            <button class="type-btn" onclick="selectType(this, '🔒 Secret')">🔒 Secret</button>
+        </div>
 
         <div class="box-container">
-            <input type="text" id="noteTitle" placeholder="Pose-moi une question..." />
+            <div class="box-title" id="boxCategory">❓ Question</div>
             <textarea id="noteContent" placeholder="Écris ton message anonyme ici..."></textarea>
         </div>
 
-        <button class="send-btn" onclick="addNote()">Envoyer en anonyme 🚀</button>
+        <button class="send-btn" onclick="addNote()">Envoyer anonymement 🚀</button>
 
         <div class="notes-header">Boîte de réception 📬</div>
         <div class="notes-list" id="notesList">
@@ -98,21 +152,30 @@
         const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRpZXB0YnNyZ2JzaHBpeHNncmh0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAxNTIxOTIsImV4cCI6MjA3NTcyODE5Mn0.S_yvL2qImsa0iN-P5Z492_K65Yj6U5Wp3fC-707V2g8";
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+        let currentCategory = '❓ Question';
+
+        function selectType(btn, category) {
+            document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentCategory = category;
+            document.getElementById('boxCategory').innerText = category;
+        }
+
         async function fetchNotes() {
             const listEl = document.getElementById('notesList');
             const { data, error } = await supabase.from('notes').select('*').order('created_at', { ascending: false });
             
             if (error) {
-                listEl.innerHTML = `<p style="color:#fff;">Erreur de chargement</p>`;
+                listEl.innerHTML = `<p style="color:#fff;">Erreur de connexion</p>`;
                 return;
             }
             if (!data || data.length === 0) {
-                listEl.innerHTML = '<p style="color:#fff; opacity:0.8; font-size:0.9rem;">Aucun message reçu pour le moment.</p>';
+                listEl.innerHTML = '<p style="color:#fff; opacity:0.85; font-size:0.9rem;">Aucun message reçu pour le moment.</p>';
                 return;
             }
             listEl.innerHTML = data.map(n => `
                 <div class="note-card">
-                    <h3>${escapeHtml(n.title || 'Message anonyme')}</h3>
+                    <span class="badge">${escapeHtml(n.title || 'Anonyme')}</span>
                     <p>${escapeHtml(n.content || '')}</p>
                     <button class="delete-btn" onclick="deleteNote('${n.id}')">✕</button>
                 </div>
@@ -120,15 +183,13 @@
         }
 
         async function addNote() {
-            const title = document.getElementById('noteTitle').value.trim();
             const content = document.getElementById('noteContent').value.trim();
-            if (!content) return alert('Écris un message avant d\'envoyer !');
+            if (!content) return alert('Veuillez écrire un message avant d\'envoyer !');
 
-            const { error } = await supabase.from('notes').insert([{ title, content }]);
+            const { error } = await supabase.from('notes').insert([{ title: currentCategory, content }]);
             if (error) {
-                alert('Erreur : ' + error.message);
+                alert('Erreur lors de l\'envoi : ' + error.message);
             } else {
-                document.getElementById('noteTitle').value = '';
                 document.getElementById('noteContent').value = '';
                 fetchNotes();
             }
