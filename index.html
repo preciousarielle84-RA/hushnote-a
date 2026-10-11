@@ -164,13 +164,35 @@
             border-radius: 10px;
             margin-bottom: 6px;
         }
-        .note-card p { font-size: 0.95rem; color: #333; font-weight: 600; line-height: 1.35; white-space: pre-wrap; }
+        .note-card p { font-size: 0.95rem; color: #333; font-weight: 600; line-height: 1.35; white-space: pre-wrap; margin-bottom: 12px; }
         .note-card p.blurred {
             filter: blur(6px);
             user-select: none;
             pointer-events: none;
         }
-        .delete-btn { position: absolute; top: 12px; right: 12px; background: none; border: none; color: #ccc; font-size: 1rem; cursor: pointer; }
+        
+        .card-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #eee;
+            padding-top: 10px;
+            margin-top: 8px;
+        }
+        .share-btn {
+            background: #ff0844;
+            color: #fff;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .delete-btn { background: none; border: none; color: #bbb; font-size: 0.9rem; font-weight: 700; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -270,11 +292,33 @@
                     <div class="note-card">
                         <span class="badge">${escapeHtml(n.title || 'Anonyme')}</span>
                         <p class="${isUnlocked ? '' : 'blurred'}">${escapeHtml(n.content || '')}</p>
-                        <button class="delete-btn" onclick="deleteNote('${n.id}')">✕</button>
+                        <div class="card-actions">
+                            <button class="share-btn" onclick="shareNote('${escapeHtml(n.title || 'Anonyme')}', '${escapeHtml(n.content || '')}')">Partager 📲</button>
+                            <button class="delete-btn" onclick="deleteNote('${n.id}')">Supprimer ✕</button>
+                        </div>
                     </div>
                 `).join('');
             } catch (err) {
                 listEl.innerHTML = `<p style="color:#fff;">Erreur réseau : ${err.message}</p>`;
+            }
+        }
+
+        async function shareNote(title, content) {
+            const shareText = `🤫 Message anonyme reçu sur Hushnote (${title}) :\n\n"${content}"\n\nPose-moi tes questions anonymes ici 👉 https://hushnote-a.onrender.com`;
+            
+            if (navigator.share) {
+                try {
+                    await navigator.share({
+                        title: 'Hushnote Anonyme',
+                        text: shareText,
+                        url: 'https://hushnote-a.onrender.com'
+                    });
+                } catch (err) {
+                    console.log('Partage annulé');
+                }
+            } else {
+                navigator.clipboard.writeText(shareText);
+                alert('Texte copié dans le presse-papiers ! Vous pouvez maintenant le coller dans vos Statuts WhatsApp ou Stories.');
             }
         }
 
@@ -323,7 +367,7 @@
         }
 
         function escapeHtml(text) {
-            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            return text.replace(/&/g, "&amp;").replace(/'/g, "&#39;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
         }
 
         document.addEventListener('DOMContentLoaded', fetchNotes);
