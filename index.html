@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hushnote - Messages & Confessions Anonymes</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         body { 
@@ -130,7 +129,7 @@
             <button class="type-btn active" onclick="selectType(this, '❓ Question')">❓ Question</button>
             <button class="type-btn" onclick="selectType(this, '📖 Histoire')">📖 Histoire</button>
             <button class="type-btn" onclick="selectType(this, '💡 Remarque')">💡 Remarque</button>
-            <button class="type-btn" onclick="selectType(this, '✨ Vœu / Sourait')">✨ Vœu</button>
+            <button class="type-btn" onclick="selectType(this, '✨ Vœu')">✨ Vœu</button>
             <button class="type-btn" onclick="selectType(this, '🔒 Secret')">🔒 Secret</button>
         </div>
 
@@ -150,7 +149,6 @@
     <script>
         const SUPABASE_URL = "https://tieptbsrgbshpixsgrht.supabase.co";
         const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRpZXB0YnNyZ2JzaHBpeHNncmh0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAxNTIxOTIsImV4cCI6MjA3NTcyODE5Mn0.S_yvL2qImsa0iN-P5Z492_K65Yj6U5Wp3fC-707V2g8";
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         let currentCategory = '❓ Question';
 
@@ -163,48 +161,85 @@
 
         async function fetchNotes() {
             const listEl = document.getElementById('notesList');
-            const { data, error } = await supabase.from('notes').select('*').order('created_at', { ascending: false });
-            
-            if (error) {
-                listEl.innerHTML = `<p style="color:#fff;">Erreur de connexion</p>`;
-                return;
+            try {
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/notes?select=*&order=created_at.desc`, {
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`
+                    }
+                });
+                const data = await res.json();
+
+                if (!res.ok) {
+                    listEl.innerHTML = `<p style="color:#fff;">Erreur : ${data.message || 'Impossible de lire les notes'}</p>`;
+                    return;
+                }
+
+                if (!data || data.length === 0) {
+                    listEl.innerHTML = '<p style="color:#fff; opacity:0.85; font-size:0.9rem;">Aucun message reçu pour le moment.</p>';
+                    return;
+                }
+
+                listEl.innerHTML = data.map(n => `
+                    <div class="note-card">
+                        <span class="badge">${escapeHtml(n.title || 'Anonyme')}</span>
+                        <p>${escapeHtml(n.content || '')}</p>
+                        <button class="delete-btn" onclick="deleteNote('${n.id}')">✕</button>
+                    </div>
+                `).join('');
+            } catch (err) {
+                listEl.innerHTML = `<p style="color:#fff;">Erreur réseau : ${err.message}</p>`;
             }
-            if (!data || data.length === 0) {
-                listEl.innerHTML = '<p style="color:#fff; opacity:0.85; font-size:0.9rem;">Aucun message reçu pour le moment.</p>';
-                return;
-            }
-            listEl.innerHTML = data.map(n => `
-                <div class="note-card">
-                    <span class="badge">${escapeHtml(n.title || 'Anonyme')}</span>
-                    <p>${escapeHtml(n.content || '')}</p>
-                    <button class="delete-btn" onclick="deleteNote('${n.id}')">✕</button>
-                </div>
-            `).join('');
         }
 
         async function addNote() {
             const content = document.getElementById('noteContent').value.trim();
             if (!content) return alert('Veuillez écrire un message avant d\'envoyer !');
 
-            const { error } = await supabase.from('notes').insert([{ title: currentCategory, content }]);
-            if (error) {
-                alert('Erreur lors de l\'envoi : ' + error.message);
-            } else {
-                document.getElementById('noteContent').value = '';
-                fetchNotes();
+            try {
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/notes`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=minimal'
+                    },
+                    body: JSON.stringify({ title: currentCategory, content: content })
+                });
+
+                if (res.ok) {
+                    document.getElementById('noteContent').value = '';
+                    fetchNotes();
+                } else {
+                    const errData = await res.json();
+                    alert('Erreur d\'envoi : ' + (errData.message || res.statusText));
+                }
+            } catch (err) {
+                alert('Erreur réseau lors de l\'envoi');
             }
         }
 
         async function deleteNote(id) {
-            const { error } = await supabase.from('notes').delete().eq('id', id);
-            if (!error) fetchNotes();
+            try {
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/notes?id=eq.${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`
+                    }
+                });
+                if (res.ok) fetchNotes();
+            } catch (err) {
+                console.error(err);
+            }
         }
 
         function escapeHtml(text) {
             return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
         }
 
-        window.onload = fetchNotes;
+        document.addEventListener('DOMContentLoaded', fetchNotes);
     </script>
 </body>
 </html>
