@@ -3,10 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hushnote</title>
+    <title>Hushnote - Prise de notes sécurisée</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #121212; color: #e0e0e0; display: flex; justify-content: center; padding: 20px; }
+        .container { width: 100%; max-width: 600px; background: #1e1e1e; padding: 25px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+        h1 { font-size: 1.8rem; margin-bottom: 20px; text-align: center; color: #bb86fc; }
+        .input-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+        input, textarea { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #333; background: #2b2b2b; color: #fff; font-size: 1rem; }
+        textarea { resize: vertical; min-height: 100px; }
+        button { background: #bb86fc; color: #121212; font-weight: bold; padding: 12px; border: none; border-radius: 8px; cursor: pointer; transition: 0.2s; }
+        button:hover { background: #9965f4; }
+        .notes-list { display: flex; flex-direction: column; gap: 12px; }
+        .note-card { background: #2b2b2b; padding: 15px; border-radius: 8px; border-left: 4px solid #bb86fc; position: relative; }
+        .note-card h3 { font-size: 1.1rem; margin-bottom: 5px; color: #fff; }
+        .note-card p { color: #aaa; font-size: 0.95rem; white-space: pre-wrap; }
+        .delete-btn { position: absolute; top: 10px; right: 10px; background: transparent; color: #cf6679; border: none; font-size: 1.1rem; cursor: pointer; }
+    </style>
 </head>
 <body>
-    <h1>Bienvenue sur Hushnote !</h1>
-    <p>L'application fonctionne correctement.</p>
+    <div class="container">
+        <h1>🤫 Hushnote</h1>
+        <div class="input-group">
+            <input type="text" id="noteTitle" placeholder="Titre de la note...">
+            <textarea id="noteContent" placeholder="Écrivez votre note secrète ici..."></textarea>
+            <button onclick="addNote()">Enregistrer la note</button>
+        </div>
+        <div class="notes-list" id="notesList">
+            <p style="text-align:center; color:#666;">Chargement des notes...</p>
+        </div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = "https://tieptbsrgbshpixsgrht.supabase.co";
+        const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRpZXB0YnNyZ2JzaHBpeHNncmh0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAxNTIxOTIsImV4cCI6MjA3NTcyODE5Mn0.S_yvL2qImsa0iN-P5Z492_K65Yj6U5Wp3fC-707V2g8";
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        async function fetchNotes() {
+            const { data, error } = await supabase.from('notes').select('*').order('created_at', { ascending: false });
+            const listEl = document.getElementById('notesList');
+            if (error) {
+                listEl.innerHTML = `<p style="color:#cf6679; text-align:center;">Erreur: ${error.message}</p>`;
+                return;
+            }
+            if (!data || data.length === 0) {
+                listEl.innerHTML = '<p style="text-align:center; color:#666;">Aucune note enregistrée.</p>';
+                return;
+            }
+            listEl.innerHTML = data.map(n => `
+                <div class="note-card">
+                    <h3>${escapeHtml(n.title || 'Sans titre')}</h3>
+                    <p>${escapeHtml(n.content || '')}</p>
+                    <button class="delete-btn" onclick="deleteNote('${n.id}')">✕</button>
+                </div>
+            `).join('');
+        }
+
+        async function addNote() {
+            const title = document.getElementById('noteTitle').value.trim();
+            const content = document.getElementById('noteContent').value.trim();
+            if (!content) return alert('Veuillez écrire du contenu !');
+            const { error } = await supabase.from('notes').insert([{ title, content }]);
+            if (error) alert('Erreur d\'ajout : ' + error.message);
+            else {
+                document.getElementById('noteTitle').value = '';
+                document.getElementById('noteContent').value = '';
+                fetchNotes();
+            }
+        }
+
+        async function deleteNote(id) {
+            const { error } = await supabase.from('notes').from('notes').delete().eq('id', id);
+            fetchNotes();
+        }
+
+        function escapeHtml(text) {
+            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+
+        fetchNotes();
+    </script>
 </body>
 </html>
