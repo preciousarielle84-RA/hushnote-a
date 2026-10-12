@@ -8,223 +8,206 @@
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
         body { background: linear-gradient(135deg, #ff0844 0%, #ffb199 100%); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 15px; }
-        .app-card { width: 100%; max-width: 420px; background: rgba(255, 255, 255, 0.95); padding: 20px; border-radius: 25px; text-align: center; }
+        .app-card { width: 100%; max-width: 420px; background: rgba(255, 255, 255, 0.95); padding: 20px; border-radius: 25px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
         .logo { font-size: 2rem; font-weight: bold; color: #ff0844; margin-bottom: 5px; }
-        .subtitle { color: #555; font-size: 0.9rem; font-weight: bold; margin-bottom: 18px; }
+        .subtitle { color: #555; font-size: 0.85rem; font-weight: bold; margin-bottom: 15px; }
+        .auth-box { background: #fff; padding: 15px; border-radius: 18px; border: 1px solid #ffe0e6; margin-bottom: 15px; }
+        .auth-box input { width: 100%; padding: 10px; margin-bottom: 8px; border-radius: 10px; border: 1px solid #ccc; font-weight: bold; }
+        .auth-btn { width: 100%; background: #ff0844; color: #fff; padding: 10px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; margin-bottom: 5px; }
+        .auth-toggle { font-size: 0.8rem; color: #555; cursor: pointer; text-decoration: underline; }
         .type-selector { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 12px; }
         .type-btn { background: #f0f0f0; color: #ff0844; border: 1px solid #ff0844; padding: 8px 12px; border-radius: 18px; font-size: 0.8rem; font-weight: bold; white-space: nowrap; cursor: pointer; }
         .type-btn.active { background: #ff0844; color: #fff; }
-        .box-container { background: #f9f9f9; border: 2px solid #ffe0e6; border-radius: 18px; padding: 15px; margin-bottom: 15px; text-align: left; }
+        .box-container { background: #f9f9f9; border: 2px solid #ffe0e6; border-radius: 18px; padding: 15px; margin-bottom: 12px; text-align: left; }
         .box-title { font-size: 0.8rem; font-weight: bold; color: #ff0844; text-transform: uppercase; margin-bottom: 6px; }
-        textarea { width: 100%; border: none; outline: none; background: transparent; font-size: 1rem; color: #222; resize: none; height: 80px; font-weight: 500; }
+        textarea { width: 100%; border: none; outline: none; background: transparent; font-size: 1rem; color: #222; resize: none; height: 70px; font-weight: 500; }
+        .sender-input { width: 100%; padding: 8px; border-radius: 10px; border: 1px solid #ddd; margin-top: 8px; font-size: 0.85rem; font-weight: bold; }
         .send-btn { width: 100%; background: #000; color: #fff; font-size: 1rem; font-weight: bold; padding: 14px; border: none; border-radius: 40px; cursor: pointer; }
-        .notes-header { color: #ff0844; font-weight: bold; font-size: 1rem; margin: 20px 0 10px; text-align: left; }
+        .invite-card { background: #e8f5e9; border: 1px solid #c8e6c9; border-radius: 18px; padding: 15px; margin-top: 15px; display: none; }
+        .invite-card h4 { color: #2e7d32; margin-bottom: 6px; font-size: 0.95rem; }
+        .invite-card p { font-size: 0.8rem; color: #444; margin-bottom: 10px; }
         .paywall-card { background: #fff0f3; border: 1px solid #ffccd5; border-radius: 18px; padding: 15px; margin-bottom: 15px; text-align: center; }
         .paywall-card h3 { font-size: 1rem; font-weight: bold; color: #ff0844; margin-bottom: 4px; }
-        .paywall-card p { font-size: 0.8rem; color: #555; margin-bottom: 12px; }
-        .plan-btns { display: flex; gap: 8px; flex-direction: column; margin-bottom: 12px; }
+        .paywall-card p { font-size: 0.8rem; color: #555; margin-bottom: 10px; }
         .plan-btn { display: block; background: #ff0844; color: #fff; text-decoration: none; font-weight: bold; padding: 10px; border-radius: 10px; font-size: 0.85rem; }
-        .plan-btn.monthly { background: #000; }
-        .unlock-input-group { display: flex; gap: 6px; }
-        .unlock-input-group input { flex: 1; padding: 8px 10px; border-radius: 10px; border: 1px solid #ccc; font-weight: bold; font-size: 0.85rem; }
-        .unlock-btn { background: #25d366; color: #fff; border: none; padding: 8px 12px; border-radius: 10px; font-weight: bold; cursor: pointer; }
-        .notes-list { display: flex; flex-direction: column; gap: 10px; }
+        .notes-list { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
         .note-card { background: #fff; border: 1px solid #eee; padding: 14px; border-radius: 15px; text-align: left; }
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
         .note-card .badge { background: #ffe5ec; color: #ff0844; font-size: 0.7rem; font-weight: bold; padding: 2px 8px; border-radius: 8px; }
-        .note-time { font-size: 0.72rem; color: #888; font-weight: bold; }
-        .note-card p { font-size: 0.9rem; color: #333; font-weight: 600; margin-bottom: 10px; }
-        .note-card p.blurred { color: transparent; text-shadow: 0 0 8px rgba(0,0,0,0.6); user-select: none; }
-        .card-actions { display: flex; gap: 6px; align-items: center; border-top: 1px solid #eee; padding-top: 8px; margin-top: 6px; }
-        .share-btn { background: #ff0844; color: #fff; border: none; padding: 5px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; cursor: pointer; }
-        .story-btn { background: #000; color: #fff; border: none; padding: 5px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; cursor: pointer; }
-        .delete-btn { background: none; border: none; color: #aaa; font-size: 0.8rem; font-weight: bold; cursor: pointer; margin-left: auto; }
-        #storyTemplate { position: absolute; top: -9999px; left: -9999px; width: 1080px; height: 1920px; background: linear-gradient(135deg, #ff0844 0%, #ffb199 100%); display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 80px; }
-        .story-card-box { background: #ffffff; width: 100%; border-radius: 50px; padding: 70px; text-align: center; }
-        .story-logo { font-size: 4rem; font-weight: 900; color: #ff0844; margin-bottom: 30px; }
-        .story-badge { display: inline-block; background: #ffe5ec; color: #ff0844; font-size: 2.2rem; font-weight: 800; padding: 12px 30px; border-radius: 30px; margin-bottom: 30px; }
-        .story-text { font-size: 2.8rem; color: #222; font-weight: 700; margin-bottom: 50px; }
-        .story-footer { font-size: 2rem; color: #fff; font-weight: 800; margin-top: 60px; }
+        .note-card p { font-size: 0.9rem; color: #333; font-weight: 600; margin-bottom: 8px; }
+        .author-tag { font-size: 0.8rem; font-weight: bold; color: #ff0844; background: #fff0f3; padding: 4px 8px; border-radius: 6px; display: inline-block; }
+        .author-tag.blurred { color: transparent; text-shadow: 0 0 8px rgba(0,0,0,0.6); user-select: none; }
     </style>
 </head>
 <body>
     <div class="app-card">
         <div class="logo">🤫 Hushnote</div>
-        <div class="subtitle">Questions, histoires, remarques & vœux anonymes</div>
-        <div class="type-selector">
-            <button class="type-btn active" onclick="selectType(this, '❓ Question')">❓ Question</button>
-            <button class="type-btn" onclick="selectType(this, '📖 Histoire')">📖 Histoire</button>
-            <button class="type-btn" onclick="selectType(this, '💡 Remarque')">💡 Remarque</button>
-            <button class="type-btn" onclick="selectType(this, '✨ Vœu')">✨ Vœu</button>
-            <button class="type-btn" onclick="selectType(this, '🔒 Secret')">🔒 Secret</button>
-        </div>
-        <div class="box-container">
-            <div class="box-title" id="boxCategory">❓ Question</div>
-            <textarea id="noteContent" placeholder="Écris ton message anonyme ici..."></textarea>
-        </div>
-        <button class="send-btn" onclick="addNote()">Envoyer anonymement 🚀</button>
-        <div class="notes-header">Boîte de réception 📬</div>
-        <div id="paywallBanner" class="paywall-card">
-            <h3>🔒 Messages verrouillés</h3>
-            <p>Abonnez-vous via Maketou pour lire vos messages anonymes.</p>
-            <div class="plan-btns">
-                <a href="https://ici-y-a-tout.mymaketou.shop/products/ia-business-le-guide-pour-generer-des-revenus/checkout" target="_blank" class="plan-btn">Pass 24H : 50 FCFA ⚡</a>
-                <a href="https://ici-y-a-tout.mymaketou.shop/products/ia-business-le-guide-pour-generer-des-revenus/checkout" target="_blank" class="plan-btn monthly">Pass Mois : 650 FCFA 👑</a>
-            </div>
-            <div class="unlock-input-group">
-                <input type="text" id="passcodeInput" placeholder="Saisir votre code unique...">
-                <button class="unlock-btn" onclick="unlockAccess()">Débloquer</button>
-            </div>
-        </div>
-        <div class="notes-list" id="notesList"><p style="color:#666;">Chargement...</p></div>
-    </div>
-    <div id="storyTemplate">
-        <div class="story-logo">🤫 Hushnote</div>
-        <div class="story-card-box">
-            <div class="story-badge" id="storyCategory">❓ QUESTION</div>
-            <div class="story-text" id="storyMessage">Message anonyme...</div>
-        </div>
-        <div class="story-footer">Pose-moi une question anonyme 📲<br>hushnote-a.onrender.com</div>
-    </div>
-    <script>
-        var SUPABASE_URL = "https://tieptbsrgbshpixsgrht.supabase.co";
-        var SUPABASE_KEY = "sb_publishable_Okyc9y8VyBKDn4pKWrjrpw_JXgXB12r";
-        var currentCategory = '❓ Question';
-        var isUnlocked = localStorage.getItem('hushnote_unlocked') === 'true';
+        <div class="subtitle" id="pageSubtitle">Messages & Confessions Anonymes</div>
 
-        function checkUrlCode() {
-            var urlParams = new URLSearchParams(window.location.search);
-            var codeFromUrl = urlParams.get('code');
-            if (codeFromUrl) {
-                document.getElementById('passcodeInput').value = codeFromUrl;
-                unlockAccess(codeFromUrl);
+        <div id="authSection" class="auth-box">
+            <h3 id="authTitle" style="margin-bottom:10px; color:#ff0844; font-size:1rem;">Créer mon compte pour recevoir des messages</h3>
+            <input type="text" id="authUsername" placeholder="Nom d'utilisateur (ex: arielle)">
+            <input type="password" id="authPassword" placeholder="Mot de passe">
+            <button class="auth-btn" id="authSubmitBtn" onclick="handleAuth()">Créer mon compte 🚀</button>
+            <div class="auth-toggle" id="authToggleBtn" onclick="toggleAuthMode()">Déjà un compte ? Se connecter</div>
+        </div>
+
+        <div id="messageSection">
+            <div class="type-selector">
+                <button class="type-btn active" onclick="selectType(this, '❓ Question')">❓ Question</button>
+                <button class="type-btn" onclick="selectType(this, '📖 Histoire')">📖 Histoire</button>
+                <button class="type-btn" onclick="selectType(this, '💡 Remarque')">💡 Remarque</button>
+                <button class="type-btn" onclick="selectType(this, '✨ Vœu')">✨ Vœu</button>
+                <button class="type-btn" onclick="selectType(this, '🔒 Secret')">🔒 Secret</button>
+            </div>
+
+            <div class="box-container">
+                <div class="box-title" id="boxCategory">❓ Question</div>
+                <textarea id="noteContent" placeholder="Écris ton message anonyme ici..."></textarea>
+                <input type="text" id="senderPseudo" class="sender-input" placeholder="Ton nom / prénom (ou indice)...">
+            </div>
+
+            <button class="send-btn" onclick="sendMessage()">Envoyer anonymement 🚀</button>
+        </div>
+
+        <div id="inviteCard" class="invite-card">
+            <h4>Message envoyé avec succès ! 🎉</h4>
+            <p>Veux-tu toi aussi savoir ce que tes amis pensent de toi ?</p>
+            <button class="auth-btn" onclick="scrollToAuth()">Recevoir mes propres messages 📲</button>
+        </div>
+
+        <div id="dashboardSection" style="display:none; margin-top:20px;">
+            <div style="text-align:left; font-weight:bold; color:#ff0844; margin-bottom:8px;">Mon lien à partager en story :</div>
+            <input type="text" id="userShareLink" readonly style="width:100%; padding:8px; border-radius:10px; border:1px solid #ccc; font-weight:bold; margin-bottom:10px;" onclick="this.select(); document.execCommand('copy'); alert('Lien copié !');">
+
+            <div id="paywallBanner" class="paywall-card">
+                <h3>🔓 Débloquer l'identité des expéditeurs</h3>
+                <p>Abonnez-vous à 500 FCFA / mois pour voir qui vous a écrit !</p>
+                <a id="subscribeLink" href="#" target="_blank" class="plan-btn">Pass Mois : 500 FCFA 👑</a>
+            </div>
+
+            <div style="text-align:left; font-weight:bold; color:#ff0844; margin-bottom:10px;">Boîte de réception 📬</div>
+            <div class="notes-list" id="notesList"><p style="color:#666;">Chargement...</p></div>
+            <button onclick="logout()" style="margin-top:15px; background:none; border:none; color:#888; text-decoration:underline; cursor:pointer;">Se déconnecter</button>
+        </div>
+    </div>
+
+    <script>
+        var isLoginMode = false;
+        var currentCategory = '❓ Question';
+        var currentUser = JSON.parse(localStorage.getItem('hushnote_user') || 'null');
+        var targetRecipient = new URLSearchParams(window.location.search).get('u') || 'admin';
+
+        function init() {
+            if (currentUser) {
+                showDashboard();
+            } else {
+                document.getElementById('pageSubtitle').innerText = "Écris un message anonyme à @" + targetRecipient;
             }
         }
+
+        function toggleAuthMode() {
+            isLoginMode = !isLoginMode;
+            document.getElementById('authTitle').innerText = isLoginMode ? "Connexion à mon compte" : "Créer mon compte pour recevoir des messages";
+            document.getElementById('authSubmitBtn').innerText = isLoginMode ? "Se connecter 🔑" : "Créer mon compte 🚀";
+            document.getElementById('authToggleBtn').innerText = isLoginMode ? "Pas encore de compte ? S'inscrire" : "Déjà un compte ? Se connecter";
+        }
+
+        function handleAuth() {
+            var u = document.getElementById('authUsername').value.trim();
+            var p = document.getElementById('authPassword').value.trim();
+            if (!u || !p) return alert("Remplissez tous les champs.");
+
+            var endpoint = isLoginMode ? '/api/login' : '/api/register';
+            fetch(endpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: u, password: p })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.error) return alert(data.error);
+                currentUser = data.user;
+                localStorage.setItem('hushnote_user', JSON.stringify(currentUser));
+                showDashboard();
+            });
+        }
+
+        function showDashboard() {
+            document.getElementById('authSection').style.display = 'none';
+            document.getElementById('messageSection').style.display = 'none';
+            document.getElementById('inviteCard').style.display = 'none';
+            document.getElementById('dashboardSection').style.display = 'block';
+
+            var shareUrl = "https://hushnote-a.onrender.com/?u=" + currentUser.username;
+            document.getElementById('userShareLink').value = shareUrl;
+            document.getElementById('subscribeLink').href = "https://ici-y-a-tout.mymaketou.shop/products/ia-business-le-guide-pour-generer-des-revenus/checkout?username=" + currentUser.username;
+
+            if (currentUser.is_subscribed) {
+                document.getElementById('paywallBanner').style.display = 'none';
+            }
+            loadMessages();
+        }
+
         function selectType(btn, category) {
-            var btns = document.querySelectorAll('.type-btn');
-            for (var i = 0; i < btns.length; i++) { btns[i].classList.remove('active'); }
+            document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             currentCategory = category;
             document.getElementById('boxCategory').innerText = category;
         }
-        function formatDate(dateStr) {
-            if (!dateStr) return '';
-            var d = new Date(dateStr);
-            if (isNaN(d.getTime())) return '';
-            var hours = d.getHours() < 10 ? '0' + d.getHours() : d.getHours();
-            var minutes = d.getMinutes() < 10 ? '0' + d.getMinutes() : d.getMinutes();
-            var day = d.getDate() < 10 ? '0' + d.getDate() : d.getDate();
-            var monthNames = ["janv.", "févr.", "mars", "avril", "mai", "juin", "juil.", "août", "sept.", "oct.", "nov.", "déc."];
-            var now = new Date();
-            if (d.toDateString() === now.toDateString()) { return "Aujourd'hui à " + hours + "h" + minutes; }
-            return day + " " + monthNames[d.getMonth()] + " à " + hours + "h" + minutes;
+
+        function sendMessage() {
+            var content = document.getElementById('noteContent').value.trim();
+            var pseudo = document.getElementById('senderPseudo').value.trim();
+            if (!content || !pseudo) return alert("Veuillez écrire un message ET indiquer votre prénom/pseudo !");
+
+            fetch('/api/send-message', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ recipient_username: targetRecipient, category: currentCategory, content: content, sender_pseudo: pseudo })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.error) return alert(data.error);
+                document.getElementById('noteContent').value = '';
+                document.getElementById('senderPseudo').value = '';
+                document.getElementById('inviteCard').style.display = 'block';
+                alert("Message envoyé ! 🚀");
+            });
         }
-        function unlockAccess(forcedCode) {
-            var code = forcedCode || document.getElementById('passcodeInput').value.trim();
-            if (!code) return alert('Veuillez entrer votre code d\'accès.');
-            var xhr = new XMLHttpRequest();
-            xhr.open("GET", SUPABASE_URL + "/rest/v1/access_codes?code=eq." + encodeURIComponent(code) + "&select=*", true);
-            xhr.setRequestHeader("apikey", SUPABASE_KEY);
-            xhr.setRequestHeader("Authorization", "Bearer " + SUPABASE_KEY);
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4 && xhr.status >= 200 && xhr.status < 300) {
-                    var res = JSON.parse(xhr.responseText);
-                    if (res && res.length > 0) {
-                        isUnlocked = true;
-                        localStorage.setItem('hushnote_unlocked', 'true');
-                        var banner = document.getElementById('paywallBanner');
-                        if (banner) banner.style.display = 'none';
-                        fetchNotes();
-                        alert('Code valide ! Messages débloqués.');
-                    } else { alert('Code invalide ou expiré.'); }
+
+        function loadMessages() {
+            fetch('/api/messages/' + currentUser.username)
+            .then(res => res.json())
+            .then(data => {
+                var list = document.getElementById('notesList');
+                if (!data.messages || data.messages.length === 0) {
+                    list.innerHTML = '<p style="color:#666;">Aucun message reçu pour le moment.</p>';
+                    return;
                 }
-            };
-            xhr.send();
-        }
-        function fetchNotes() {
-            if (isUnlocked) {
-                var banner = document.getElementById('paywallBanner');
-                if (banner) banner.style.display = 'none';
-            }
-            var listEl = document.getElementById('notesList');
-            var xhr = new XMLHttpRequest();
-            xhr.open("GET", SUPABASE_URL + "/rest/v1/notes?select=*&order=created_at.desc", true);
-            xhr.setRequestHeader("apikey", SUPABASE_KEY);
-            xhr.setRequestHeader("Authorization", "Bearer " + SUPABASE_KEY);
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4 && xhr.status >= 200 && xhr.status < 300) {
-                    var data = JSON.parse(xhr.responseText);
-                    if (!data || data.length === 0) {
-                        listEl.innerHTML = '<p style="color:#666; font-size:0.9rem;">Aucun message reçu pour le moment.</p>';
-                        return;
-                    }
-                    var html = '';
-                    for (var i = 0; i < data.length; i++) {
-                        var n = data[i];
-                        var title = escapeHtml(n.title || 'Anonyme');
-                        var content = escapeHtml(n.content || '');
-                        var formattedTime = formatDate(n.created_at);
-                        var blurClass = isUnlocked ? '' : 'blurred';
-                        html += '<div class="note-card"><div class="card-header"><span class="badge">' + title + '</span><span class="note-time">' + formattedTime + '</span></div><p class="' + blurClass + '">' + content + '</p><div class="card-actions"><button class="share-btn" onclick="shareNote(\'' + title + '\', \'' + content + '\')">Partager 📲</button><button class="story-btn" onclick="generateStoryImage(\'' + title + '\', \'' + content + '\')">Story 📸</button><button class="delete-btn" onclick="deleteNote(\'' + n.id + '\')">✕</button></div></div>';
-                    }
-                    listEl.innerHTML = html;
-                }
-            };
-            xhr.send();
-        }
-        function addNote() {
-            var input = document.getElementById('noteContent');
-            var content = input ? input.value.trim() : '';
-            if (!content) {
-                alert('Veuillez écrire votre message anonyme dans la case avant d\'appuyer sur Envoyer ! ✍️');
-                if (input) input.focus();
-                return;
-            }
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", SUPABASE_URL + "/rest/v1/notes", true);
-            xhr.setRequestHeader("apikey", SUPABASE_KEY);
-            xhr.setRequestHeader("Authorization", "Bearer " + SUPABASE_KEY);
-            xhr.setRequestHeader("Content-Type", "application/json");
-            xhr.setRequestHeader("Prefer", "return=minimal");
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4 && xhr.status >= 200 && xhr.status < 300) {
-                    document.getElementById('noteContent').value = '';
-                    alert('Message anonyme envoyé avec succès ! 🚀');
-                    fetchNotes();
-                }
-            };
-            xhr.send(JSON.stringify({ title: currentCategory, content: content }));
-        }
-        function deleteNote(id) {
-            var xhr = new XMLHttpRequest();
-            xhr.open("DELETE", SUPABASE_URL + "/rest/v1/notes?id=eq." + id, true);
-            xhr.setRequestHeader("apikey", SUPABASE_KEY);
-            xhr.setRequestHeader("Authorization", "Bearer " + SUPABASE_KEY);
-            xhr.onreadystatechange = function () { if (xhr.readyState === 4 && xhr.status >= 200 && xhr.status < 300) fetchNotes(); };
-            xhr.send();
-        }
-        function generateStoryImage(title, content) {
-            document.getElementById('storyCategory').innerText = title.toUpperCase();
-            document.getElementById('storyMessage').innerText = content;
-            var template = document.getElementById('storyTemplate');
-            if (typeof html2canvas !== 'undefined') {
-                html2canvas(template, { width: 1080, height: 1920, scale: 1 }).then(function(canvas) {
-                    var image = canvas.toDataURL("image/png");
-                    var link = document.createElement('a');
-                    link.download = "Hushnote-Story-" + Date.now() + ".png";
-                    link.href = image;
-                    link.click();
-                    alert('📸 Image Story générée !');
+                var html = '';
+                data.messages.forEach(m => {
+                    var blurClass = currentUser.is_subscribed ? '' : 'blurred';
+                    html += '<div class="note-card">' +
+                        '<div class="card-header"><span class="badge">' + m.category + '</span></div>' +
+                        '<p>' + m.content + '</p>' +
+                        '<div>Auteur : <span class="author-tag ' + blurClass + '">' + m.sender_pseudo + '</span></div>' +
+                    '</div>';
                 });
-            }
+                list.innerHTML = html;
+            });
         }
-        function shareNote(title, content) {
-            var shareText = '🤫 Message anonyme reçu sur Hushnote (' + title + ') :\n\n"' + content + '"\n\nPose-moi tes questions anonymes ici 👉 https://hushnote-a.onrender.com';
-            if (navigator.share) { navigator.share({ title: 'Hushnote Anonyme', text: shareText, url: 'https://hushnote-a.onrender.com' }).catch(function() {}); }
-            else { window.prompt("Copiez ce lien pour le partager :", shareText); }
+
+        function scrollToAuth() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-        function escapeHtml(text) { return text.replace(/&/g, "&amp;").replace(/'/g, "&#39;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
-        document.addEventListener('DOMContentLoaded', function() { fetchNotes(); checkUrlCode(); });
+
+        function logout() {
+            localStorage.removeItem('hushnote_user');
+            location.reload();
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
