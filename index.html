@@ -54,6 +54,20 @@
             width: 100%;
             margin-top: 10px;
         }
+        .input-id {
+            width: 100%;
+            padding: 16px;
+            border-radius: 20px;
+            border: none;
+            font-size: 1.2rem;
+            font-weight: 700;
+            text-align: center;
+            outline: none;
+            background: rgba(255, 255, 255, 0.25);
+            color: #fff;
+            margin-top: 15px;
+        }
+        .input-id::placeholder { color: rgba(255, 255, 255, 0.8); }
         .card-carousel {
             display: flex;
             gap: 15px;
@@ -175,8 +189,17 @@
                 <p style="font-size: 0.95rem; font-weight: 700; margin-bottom: 20px;">Que souhaites-tu faire maintenant ?</p>
                 
                 <button class="main-btn" style="margin-top:0;" onclick="resetToSendForm()">Envoyer un autre message ✍️</button>
-                <button class="sec-btn" onclick="openMyOwnSpace()">Recevoir mes propres messages 📲</button>
+                <button class="sec-btn" onclick="openCreateOrDashboardSpace()">Recevoir mes propres messages 📲</button>
             </div>
+        </div>
+
+        <!-- ÉCRAN SAISIE DU PSEUDO FIXE PERSO -->
+        <div id="enterPseudoView" style="display: none;">
+            <div class="logo-title">HUSHNOTE</div>
+            <h3 style="font-size: 1.2rem; font-weight: 800; margin-bottom: 15px;">Quel est ton identifiant / pseudo ?</h3>
+            <p style="font-size: 0.85rem; opacity: 0.9; margin-bottom: 15px;">Ce pseudo sera utilisé dans ton lien unique.</p>
+            <input type="text" id="customPseudoInput" class="input-id" placeholder="Ex: arielle">
+            <button class="main-btn" onclick="saveCustomPseudoAndShowDashboard()">Valider mon lien 🚀</button>
         </div>
 
         <!-- ÉCRAN 4: DASHBOARD PERSO (MON LIEN & MA BOÎTE) -->
@@ -212,8 +235,8 @@
             <div id="inboxSection" style="display: none;">
                 <div id="paywallBox" class="paywall-banner">
                     <h3 style="color:#7b1fa2; font-size:1rem; font-weight:900;">🔒 Noms des expéditeurs verrouillés</h3>
-                    <p style="font-size:0.8rem; margin: 6px 0 10px;">Abonnez-vous à 500 FCFA / mois pour savoir qui vous a écrit.</p>
-                    <a id="payLink" href="#" target="_blank" style="background:#7b1fa2; color:#fff; text-decoration:none; padding:8px 15px; border-radius:15px; font-weight:bold; font-size:0.85rem; display:inline-block;">Débloquer l'Abonnement 👑</a>
+                    <p style="font-size:0.85rem; margin: 6px 0 10px;">Abonnez-vous à <strong>650 FCFA / mois</strong> pour savoir qui vous a écrit.</p>
+                    <a id="payLink" href="#" target="_blank" style="background:#7b1fa2; color:#fff; text-decoration:none; padding:10px 18px; border-radius:15px; font-weight:bold; font-size:0.9rem; display:inline-block;">Débloquer l'Abonnement 👑</a>
                 </div>
 
                 <div class="inbox-list" id="inboxList">
@@ -227,13 +250,10 @@
 
     <script>
         var currentSelectedCategory = '❓ Question';
-        var myUserId = localStorage.getItem('hushnote_user_id') || ('user_' + Math.floor(100000 + Math.random() * 900000));
+        var myUserId = localStorage.getItem('hushnote_user_id') || null;
         var targetRecipient = new URLSearchParams(window.location.search).get('u') || myUserId;
 
-        localStorage.setItem('hushnote_user_id', myUserId);
-
         function init() {
-            // Écran 1 par défaut pour tout le monde
             document.getElementById('landingView').style.display = 'block';
         }
 
@@ -255,11 +275,13 @@
             var pseudo = document.getElementById('senderPseudo').value.trim();
             if (!content || !pseudo) return alert("Veuillez écrire votre message ET indiquer votre prénom/pseudo/indice !");
 
+            var finalRecipient = targetRecipient || 'admin';
+
             fetch('/api/send-message', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
-                    recipient_username: targetRecipient, 
+                    recipient_username: finalRecipient, 
                     category: currentSelectedCategory, 
                     content: content, 
                     sender_pseudo: pseudo 
@@ -282,14 +304,32 @@
             document.getElementById('sendMsgView').style.display = 'block';
         }
 
-        function openMyOwnSpace() {
+        function openCreateOrDashboardSpace() {
             document.getElementById('afterSendView').style.display = 'none';
             document.getElementById('landingView').style.display = 'none';
             document.getElementById('sendMsgView').style.display = 'none';
-            document.getElementById('dashboardView').style.display = 'block';
 
-            var link = "https://hushnote-a.onrender.com/?u=" + myUserId;
-            document.getElementById('shareLinkDisplay').innerText = link;
+            if (myUserId) {
+                showDashboard();
+            } else {
+                document.getElementById('enterPseudoView').style.display = 'block';
+            }
+        }
+
+        function saveCustomPseudoAndShowDashboard() {
+            var rawInput = document.getElementById('customPseudoInput').value.replace('@','').trim().toLowerCase();
+            if (!rawInput) return alert("Veuillez entrer un pseudo valide.");
+
+            myUserId = rawInput;
+            localStorage.setItem('hushnote_user_id', myUserId);
+            document.getElementById('enterPseudoView').style.display = 'none';
+            showDashboard();
+        }
+
+        function showDashboard() {
+            document.getElementById('dashboardView').style.display = 'block';
+            var shareUrl = "https://hushnote-a.onrender.com/?u=" + myUserId;
+            document.getElementById('shareLinkDisplay').innerText = shareUrl;
             document.getElementById('payLink').href = "https://ici-y-a-tout.mymaketou.shop/products/ia-business-le-guide-pour-generer-des-revenus/checkout?username=" + myUserId;
 
             loadInbox();
@@ -312,12 +352,23 @@
         function copyUserLink() {
             var link = "https://hushnote-a.onrender.com/?u=" + myUserId;
             navigator.clipboard.writeText(link);
-            alert("Votre lien unique est copié dans le presse-papiers ! 📲");
+            alert("Lien copié dans le presse-papiers ! 📲");
         }
 
         function shareToStory() {
-            copyUserLink();
-            alert("Lien copié ! Vous pouvez maintenant coller le lien dans votre Story WhatsApp, Instagram ou Snapchat 📸");
+            var link = "https://hushnote-a.onrender.com/?u=" + myUserId;
+            var shareData = {
+                title: 'Hushnote - Messages Anonymes',
+                text: 'Pose-moi des questions anonymes sur Hushnote ! 💬',
+                url: link
+            };
+
+            if (navigator.share) {
+                navigator.share(shareData).catch(() => {});
+            } else {
+                copyUserLink();
+                alert("Lien copié ! Vous pouvez maintenant le coller dans votre Story (WhatsApp, Facebook, TikTok, Instagram, Telegram, Snapchat, YouTube...) 📸");
+            }
         }
 
         function loadInbox() {
