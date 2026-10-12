@@ -7,7 +7,7 @@
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         body { 
-            background: linear-gradient(180deg, #d9006c 0%, #ff4b2b 100%);
+            background: linear-gradient(180deg, #7b1fa2 0%, #e91e63 100%);
             min-height: 100vh;
             color: #fff;
             display: flex;
@@ -22,7 +22,7 @@
             position: relative;
         }
         .logo-title {
-            font-size: 3.5rem;
+            font-size: 3.2rem;
             font-weight: 900;
             font-style: italic;
             text-shadow: 3px 3px 0px #000;
@@ -31,7 +31,7 @@
         }
         .main-btn {
             background: #ffffff;
-            color: #222;
+            color: #7b1fa2;
             font-size: 1.1rem;
             font-weight: 800;
             padding: 16px 30px;
@@ -51,11 +51,11 @@
             font-weight: 700;
             text-align: center;
             outline: none;
-            background: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.25);
             color: #fff;
             margin-top: 20px;
         }
-        .input-id::placeholder { color: rgba(255, 255, 255, 0.7); }
+        .input-id::placeholder { color: rgba(255, 255, 255, 0.8); }
         .nav-tabs {
             display: flex;
             justify-content: center;
@@ -78,7 +78,7 @@
         .theme-card {
             min-width: 280px;
             height: 220px;
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.18);
             backdrop-filter: blur(10px);
             border-radius: 30px;
             border: 2px solid rgba(255,255,255,0.3);
@@ -93,24 +93,25 @@
         .theme-card p { font-size: 1rem; background: #fff; color: #222; padding: 12px 18px; border-radius: 20px; font-weight: 700; }
         
         .action-box {
-            background: #f5f5f7;
+            background: #ffffff;
             border-radius: 25px;
             padding: 20px;
             color: #222;
             margin-bottom: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
         .action-box h4 { font-size: 0.9rem; color: #666; margin-bottom: 8px; }
-        .action-box .link-val { font-size: 0.85rem; font-weight: bold; color: #888; margin-bottom: 12px; word-break: break-all; }
-        .sub-btn { background: none; border: 2px solid #d9006c; color: #d9006c; font-weight: 800; padding: 10px 20px; border-radius: 20px; width: 100%; cursor: pointer; }
-        .share-btn { background: linear-gradient(90deg, #d9006c, #ff4b2b); color: #fff; font-size: 1.1rem; font-weight: 800; border: none; padding: 15px; border-radius: 30px; width: 100%; cursor: pointer; }
+        .action-box .link-val { font-size: 0.85rem; font-weight: bold; color: #7b1fa2; margin-bottom: 12px; word-break: break-all; }
+        .sub-btn { background: none; border: 2px solid #7b1fa2; color: #7b1fa2; font-weight: 800; padding: 10px 20px; border-radius: 20px; width: 100%; cursor: pointer; }
+        .share-btn { background: linear-gradient(90deg, #7b1fa2, #e91e63); color: #fff; font-size: 1.1rem; font-weight: 800; border: none; padding: 15px; border-radius: 30px; width: 100%; cursor: pointer; }
         
         .inbox-list { display: flex; flex-direction: column; gap: 12px; text-align: left; }
         .msg-card { background: #fff; color: #222; padding: 16px; border-radius: 20px; }
-        .msg-header { display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: bold; color: #d9006c; margin-bottom: 6px; }
+        .msg-header { display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: bold; color: #7b1fa2; margin-bottom: 6px; }
         .msg-body { font-size: 1rem; font-weight: 700; margin-bottom: 8px; }
-        .msg-author { font-size: 0.85rem; font-weight: bold; color: #ff4b2b; }
+        .msg-author { font-size: 0.85rem; font-weight: bold; color: #e91e63; }
         .msg-author.blurred { color: transparent; text-shadow: 0 0 10px rgba(0,0,0,0.6); user-select: none; }
-        .paywall-banner { background: #fff0f3; border: 2px dashed #ff4b2b; padding: 15px; border-radius: 20px; color: #222; margin-bottom: 15px; }
+        .paywall-banner { background: #f3e5f5; border: 2px dashed #7b1fa2; padding: 15px; border-radius: 20px; color: #222; margin-bottom: 15px; }
     </style>
 </head>
 <body>
@@ -127,7 +128,7 @@
         <div id="step2View" style="display: none;">
             <div class="logo-title" style="font-size: 2.5rem;">HUSHNOTE</div>
             <h3 style="font-size: 1.2rem; font-weight: 800; margin-bottom: 15px;">Quel est votre ID souhaité ?</h3>
-            <input type="text" id="usernameInput" class="input-id" placeholder="@votre_pseudo">
+            <input type="text" id="usernameInput" class="input-id" placeholder="Ex: arielle">
             <button class="main-btn" onclick="handleLoginOrRegister()">Continuer 🚀</button>
         </div>
 
@@ -169,17 +170,17 @@
             <!-- SECTION INBOX -->
             <div id="inboxSection" style="display: none;">
                 <div id="paywallBox" class="paywall-banner">
-                    <h3 style="color:#d9006c; font-size:1rem; font-weight:900;">🔒 Noms des expéditeurs verrouillés</h3>
+                    <h3 style="color:#7b1fa2; font-size:1rem; font-weight:900;">🔒 Noms des expéditeurs verrouillés</h3>
                     <p style="font-size:0.8rem; margin: 6px 0 10px;">Abonnez-vous à 500 FCFA / mois pour savoir qui vous a écrit.</p>
-                    <a id="payLink" href="#" target="_blank" style="background:#ff4b2b; color:#fff; text-decoration:none; padding:8px 15px; border-radius:15px; font-weight:bold; font-size:0.85rem; display:inline-block;">Débloquer l'Abonnement 👑</a>
+                    <a id="payLink" href="#" target="_blank" style="background:#7b1fa2; color:#fff; text-decoration:none; padding:8px 15px; border-radius:15px; font-weight:bold; font-size:0.85rem; display:inline-block;">Débloquer l'Abonnement 👑</a>
                 </div>
 
                 <div class="inbox-list" id="inboxList">
-                    <p style="text-align:center; opacity:0.8;">Chargement des messages...</p>
+                    <p style="text-align:center; color:#fff;">Chargement des messages...</p>
                 </div>
             </div>
 
-            <button onclick="logout()" style="background:none; border:none; color:rgba(255,255,255,0.7); text-decoration:underline; font-weight:bold; margin-top:25px; cursor:pointer;">Se déconnecter</button>
+            <button onclick="logout()" style="background:none; border:none; color:rgba(255,255,255,0.8); text-decoration:underline; font-weight:bold; margin-top:25px; cursor:pointer;">Se déconnecter</button>
         </div>
     </div>
 
@@ -198,23 +199,22 @@
         }
 
         function handleLoginOrRegister() {
-            var rawUser = document.getElementById('usernameInput').value.replace('@','').trim();
-            if (!rawUser) return alert("Veuillez entrer un pseudo valide.");
+            var rawInput = document.getElementById('usernameInput').value.replace('@','').trim();
+            if (!rawInput) return alert("Veuillez entrer un pseudo valide.");
 
             fetch('/api/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username: rawUser, password: 'defaultpassword' })
+                body: JSON.stringify({ username: rawInput })
             })
             .then(res => res.json())
             .then(data => {
-                if (data.error && !data.error.includes("déjà pris")) {
-                    return alert(data.error);
-                }
-                currentUser = { username: rawUser, is_subscribed: false };
+                if (data.error) return alert(data.error);
+                currentUser = data.user;
                 localStorage.setItem('hushnote_user', JSON.stringify(currentUser));
                 showDashboard();
-            });
+            })
+            .catch(() => alert("Erreur de connexion au serveur."));
         }
 
         function showDashboard() {

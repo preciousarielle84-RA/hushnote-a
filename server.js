@@ -13,32 +13,35 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 app.use(express.static('.'));
 
+// Inscription / Connexion directe par Pseudo
 app.post('/api/register', async (req, res) => {
-    const { username, password } = req.body;
-    if (!username || !password) return res.status(400).json({ error: "Nom d'utilisateur et mot de passe requis." });
+    const { username } = req.body;
+    if (!username) return res.status(400).json({ error: "Nom d'utilisateur requis." });
 
-    const cleanUser = username.toLowerCase().trim();
-    const { data, error } = await supabase.from('users').insert([{ username: cleanUser, password }]).select();
+    const cleanUser = username.toLowerCase().replace(/[^a-z0-9_.]/g, '').trim();
+    if (!cleanUser) return res.status(400).json({ error: "Pseudo invalide." });
+
+    // Vérifier si l'utilisateur existe déjà
+    const { data: existingUser } = await supabase.from('users').select('*').eq('username', cleanUser).single();
+
+    if (existingUser) {
+        return res.json({ success: true, user: existingUser });
+    }
+
+    // Sinon créer l'utilisateur
+    const { data, error } = await supabase.from('users').insert([{ 
+        username: cleanUser, 
+        password: 'default_password' 
+    }]).select();
 
     if (error) {
-        if (error.code === '23505') return res.status(400).json({ error: "Ce nom d'utilisateur est déjà pris." });
-        return res.status(500).json({ error: "Erreur lors de l'inscription." });
+        console.error("Erreur Supabase:", error);
+        return res.status(500).json({ error: "Erreur lors de la création du compte." });
     }
     res.json({ success: true, user: data[0] });
 });
 
-app.post('/api/login', async (req, res) => {
-    const { username, password } = req.body;
-    const cleanUser = username.toLowerCase().trim();
-
-    const { data, error } = await supabase.from('users').select('*').eq('username', cleanUser).eq('password', password);
-
-    if (error || !data || data.length === 0) {
-        return res.status(401).json({ error: "Nom d'utilisateur ou mot de passe incorrect." });
-    }
-    res.json({ success: true, user: data[0] });
-});
-
+// Envoi de message anonyme
 app.post('/api/send-message', async (req, res) => {
     const { recipient_username, category, content, sender_pseudo } = req.body;
     if (!recipient_username || !content || !sender_pseudo) {
@@ -56,6 +59,7 @@ app.post('/api/send-message', async (req, res) => {
     res.json({ success: true });
 });
 
+// Récupération des messages
 app.get('/api/messages/:username', async (req, res) => {
     const cleanUser = req.params.username.toLowerCase().trim();
     const { data, error } = await supabase.from('messages').select('*').eq('recipient_username', cleanUser).order('created_at', { ascending: false });
@@ -64,6 +68,7 @@ app.get('/api/messages/:username', async (req, res) => {
     res.json({ success: true, messages: data });
 });
 
+// Webhook Maketou
 app.post('/webhook-maketou', async (req, res) => {
     try {
         const username = req.query.username || req.body.username;
