@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hushnote - Messages & Confessions Anonymes</title>
-    <!-- HTML2Canvas pour la génération d'image Story -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, Helvetica, sans-serif; }
@@ -130,6 +129,12 @@
             text-align: left; 
             box-shadow: 0 3px 10px rgba(0,0,0,0.05); 
         }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
         .note-card .badge { 
             display: inline-block;
             background: #ffe5ec;
@@ -138,7 +143,11 @@
             font-weight: bold;
             padding: 2px 8px;
             border-radius: 8px;
-            margin-bottom: 6px;
+        }
+        .note-time {
+            font-size: 0.72rem;
+            color: #888;
+            font-weight: bold;
         }
         .note-card p { font-size: 0.9rem; color: #333; font-weight: 600; line-height: 1.3; margin-bottom: 10px; }
         .note-card p.blurred {
@@ -152,7 +161,6 @@
         .story-btn { background: #000; color: #fff; border: none; padding: 5px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; cursor: pointer; }
         .delete-btn { background: none; border: none; color: #aaa; font-size: 0.8rem; font-weight: bold; cursor: pointer; margin-left: auto; }
 
-        /* Template Masqué pour la Génération d'Image Story */
         #storyTemplate {
             position: absolute;
             top: -9999px;
@@ -221,7 +229,6 @@
         </div>
     </div>
 
-    <!-- Template cachée pour générer la Story -->
     <div id="storyTemplate">
         <div class="story-logo">🤫 Hushnote</div>
         <div class="story-card-box">
@@ -246,6 +253,23 @@
             btn.classList.add('active');
             currentCategory = category;
             document.getElementById('boxCategory').innerText = category;
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return '';
+            var d = new Date(dateStr);
+            if (isNaN(d.getTime())) return '';
+            var hours = d.getHours() < 10 ? '0' + d.getHours() : d.getHours();
+            var minutes = d.getMinutes() < 10 ? '0' + d.getMinutes() : d.getMinutes();
+            var day = d.getDate() < 10 ? '0' + d.getDate() : d.getDate();
+            var monthNames = ["janv.", "févr.", "mars", "avril", "mai", "juin", "juil.", "août", "sept.", "oct.", "nov.", "déc."];
+            var month = monthNames[d.getMonth()];
+            
+            var now = new Date();
+            if (d.toDateString() === now.toDateString()) {
+                return "Aujourd'hui à " + hours + "h" + minutes;
+            }
+            return day + " " + month + " à " + hours + "h" + minutes;
         }
 
         function unlockAccess() {
@@ -289,10 +313,14 @@
                                 var n = data[i];
                                 var title = escapeHtml(n.title || 'Anonyme');
                                 var content = escapeHtml(n.content || '');
+                                var formattedTime = formatDate(n.created_at);
                                 var blurClass = isUnlocked ? '' : 'blurred';
 
                                 html += '<div class="note-card">' +
-                                    '<span class="badge">' + title + '</span>' +
+                                    '<div class="card-header">' +
+                                        '<span class="badge">' + title + '</span>' +
+                                        '<span class="note-time">' + formattedTime + '</span>' +
+                                    '</div>' +
                                     '<p class="' + blurClass + '">' + content + '</p>' +
                                     '<div class="card-actions">' +
                                         '<button class="share-btn" onclick="shareNote(\'' + title + '\', \'' + content + '\')">Partager 📲</button>' +
