@@ -245,6 +245,15 @@
         var currentCategory = '❓ Question';
         var isUnlocked = localStorage.getItem('hushnote_unlocked') === 'true';
 
+        function checkUrlCode() {
+            var urlParams = new URLSearchParams(window.location.search);
+            var codeFromUrl = urlParams.get('code');
+            if (codeFromUrl) {
+                document.getElementById('passcodeInput').value = codeFromUrl;
+                unlockAccess(codeFromUrl);
+            }
+        }
+
         function selectType(btn, category) {
             var btns = document.querySelectorAll('.type-btn');
             for (var i = 0; i < btns.length; i++) {
@@ -272,14 +281,10 @@
             return day + " " + month + " à " + hours + "h" + minutes;
         }
 
-        function unlockAccess() {
-            var code = document.getElementById('passcodeInput').value.trim();
-            if (!code) {
-                alert('Veuillez entrer votre code d\'accès.');
-                return;
-            }
+        function unlockAccess(forcedCode) {
+            var code = forcedCode || document.getElementById('passcodeInput').value.trim();
+            if (!code) return alert('Veuillez entrer votre code d\'accès.');
 
-            // Vérification directe dans la table Supabase 'access_codes'
             var xhr = new XMLHttpRequest();
             xhr.open("GET", SUPABASE_URL + "/rest/v1/access_codes?code=eq." + encodeURIComponent(code) + "&select=*", true);
             xhr.setRequestHeader("apikey", SUPABASE_KEY);
@@ -296,15 +301,15 @@
                                 var banner = document.getElementById('paywallBanner');
                                 if (banner) banner.style.display = 'none';
                                 fetchNotes();
-                                alert('Code unique valide ! Vos messages sont désormais débloqués.');
+                                alert('Paiement validé ! Vos messages anonymes sont débloqués.');
                             } else {
-                                alert('Code invalide ou expiré. Effectuez le paiement sur Maketou pour recevoir votre code.');
+                                alert('Code invalide ou expiré.');
                             }
                         } catch (e) {
-                            alert('Erreur de vérification du code.');
+                            alert('Erreur de vérification.');
                         }
                     } else {
-                        alert('Erreur serveur lors de la vérification.');
+                        alert('Erreur serveur.');
                     }
                 }
             };
@@ -440,7 +445,43 @@
             return text.replace(/&/g, "&amp;").replace(/'/g, "&#39;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
         }
 
-        document.addEventListener('DOMContentLoaded', fetchNotes);
-    </script>
-</body>
-</html>
+        document.addEventListener('DOMConte
+git add . && git commit -m "Add automatic Webhook backend for Maketou" && git push origin main
+
+cat << 'EOF' > server.js
+const express = require('express');
+const { createClient } = require('@supabase/supabase-js');
+const cors = require('cors');
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+const SUPABASE_URL = "https://tieptbsrgbshpixsgrht.supabase.co";
+const SUPABASE_KEY = "sb_publishable_Okyc9y8VyBKDn4pKWrjrpw_JXgXB12r";
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+app.use(express.static('.'));
+
+app.post('/webhook-maketou', async (req, res) => {
+    try {
+        const randomCode = 'HK-' + Math.random().toString(36).substring(2, 7).toUpperCase();
+
+        const { data, error } = await supabase
+            .from('access_codes')
+            .insert([{ code: randomCode, is_used: false }]);
+
+        if (error) {
+            console.error('Erreur Supabase:', error);
+            return res.status(500).json({ error: 'Erreur lors de la création du code' });
+        }
+
+        res.redirect(`https://hushnote-a.onrender.com?code=${randomCode}`);
+    } catch (err) {
+        res.status(500).send('Erreur serveur');
+    }
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Serveur Hushnote actif sur le port ${PORT}`));
