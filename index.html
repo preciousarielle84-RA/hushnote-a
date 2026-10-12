@@ -219,7 +219,7 @@
                 <a href="https://ici-y-a-tout.mymaketou.shop/products/ia-business-le-guide-pour-generer-des-revenus/checkout" target="_blank" class="plan-btn monthly">Pass Mois : 650 FCFA 👑</a>
             </div>
             <div class="unlock-input-group">
-                <input type="text" id="passcodeInput" placeholder="Saisir le code d'accès...">
+                <input type="text" id="passcodeInput" placeholder="Saisir votre code unique...">
                 <button class="unlock-btn" onclick="unlockAccess()">Débloquer</button>
             </div>
         </div>
@@ -274,16 +274,41 @@
 
         function unlockAccess() {
             var code = document.getElementById('passcodeInput').value.trim();
-            if (code === "HUSH2026" || code === "MAKETOU50" || code.length >= 4) {
-                isUnlocked = true;
-                localStorage.setItem('hushnote_unlocked', 'true');
-                var banner = document.getElementById('paywallBanner');
-                if (banner) banner.style.display = 'none';
-                fetchNotes();
-                alert('Abonnement activé ! Vos messages sont visibles.');
-            } else {
-                alert('Code invalide. Veuillez effectuer le paiement sur Maketou.');
+            if (!code) {
+                alert('Veuillez entrer votre code d\'accès.');
+                return;
             }
+
+            // Vérification directe dans la table Supabase 'access_codes'
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", SUPABASE_URL + "/rest/v1/access_codes?code=eq." + encodeURIComponent(code) + "&select=*", true);
+            xhr.setRequestHeader("apikey", SUPABASE_KEY);
+            xhr.setRequestHeader("Authorization", "Bearer " + SUPABASE_KEY);
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        try {
+                            var res = JSON.parse(xhr.responseText);
+                            if (res && res.length > 0) {
+                                isUnlocked = true;
+                                localStorage.setItem('hushnote_unlocked', 'true');
+                                var banner = document.getElementById('paywallBanner');
+                                if (banner) banner.style.display = 'none';
+                                fetchNotes();
+                                alert('Code unique valide ! Vos messages sont désormais débloqués.');
+                            } else {
+                                alert('Code invalide ou expiré. Effectuez le paiement sur Maketou pour recevoir votre code.');
+                            }
+                        } catch (e) {
+                            alert('Erreur de vérification du code.');
+                        }
+                    } else {
+                        alert('Erreur serveur lors de la vérification.');
+                    }
+                }
+            };
+            xhr.send();
         }
 
         function fetchNotes() {
