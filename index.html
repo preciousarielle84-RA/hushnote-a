@@ -186,9 +186,11 @@
 
     <script>
         var currentUser = JSON.parse(localStorage.getItem('hushnote_user') || 'null');
+        var isUnlocked = new URLSearchParams(window.location.search).get('unlocked') === 'true';
 
         function init() {
             if (currentUser) {
+                if (isUnlocked) currentUser.is_subscribed = true;
                 showDashboard();
             }
         }
@@ -199,22 +201,12 @@
         }
 
         function handleLoginOrRegister() {
-            var rawInput = document.getElementById('usernameInput').value.replace('@','').trim();
+            var rawInput = document.getElementById('usernameInput').value.replace('@','').trim().toLowerCase();
             if (!rawInput) return alert("Veuillez entrer un pseudo valide.");
 
-            fetch('/api/register', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username: rawInput })
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.error) return alert(data.error);
-                currentUser = data.user;
-                localStorage.setItem('hushnote_user', JSON.stringify(currentUser));
-                showDashboard();
-            })
-            .catch(() => alert("Erreur de connexion au serveur."));
+            currentUser = { username: rawInput, is_subscribed: isUnlocked };
+            localStorage.setItem('hushnote_user', JSON.stringify(currentUser));
+            showDashboard();
         }
 
         function showDashboard() {

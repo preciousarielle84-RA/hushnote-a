@@ -13,34 +13,6 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 app.use(express.static('.'));
 
-// Inscription / Connexion directe par Pseudo
-app.post('/api/register', async (req, res) => {
-    const { username } = req.body;
-    if (!username) return res.status(400).json({ error: "Nom d'utilisateur requis." });
-
-    const cleanUser = username.toLowerCase().replace(/[^a-z0-9_.]/g, '').trim();
-    if (!cleanUser) return res.status(400).json({ error: "Pseudo invalide." });
-
-    // Vérifier si l'utilisateur existe déjà
-    const { data: existingUser } = await supabase.from('users').select('*').eq('username', cleanUser).single();
-
-    if (existingUser) {
-        return res.json({ success: true, user: existingUser });
-    }
-
-    // Sinon créer l'utilisateur
-    const { data, error } = await supabase.from('users').insert([{ 
-        username: cleanUser, 
-        password: 'default_password' 
-    }]).select();
-
-    if (error) {
-        console.error("Erreur Supabase:", error);
-        return res.status(500).json({ error: "Erreur lors de la création du compte." });
-    }
-    res.json({ success: true, user: data[0] });
-});
-
 // Envoi de message anonyme
 app.post('/api/send-message', async (req, res) => {
     const { recipient_username, category, content, sender_pseudo } = req.body;
@@ -65,7 +37,7 @@ app.get('/api/messages/:username', async (req, res) => {
     const { data, error } = await supabase.from('messages').select('*').eq('recipient_username', cleanUser).order('created_at', { ascending: false });
 
     if (error) return res.status(500).json({ error: "Erreur de chargement." });
-    res.json({ success: true, messages: data });
+    res.json({ success: true, messages: data || [] });
 });
 
 // Webhook Maketou
@@ -73,7 +45,6 @@ app.post('/webhook-maketou', async (req, res) => {
     try {
         const username = req.query.username || req.body.username;
         if (username) {
-            await supabase.from('users').update({ is_subscribed: true }).eq('username', username.toLowerCase().trim());
             return res.redirect(`https://hushnote-a.onrender.com?user=${username}&unlocked=true`);
         }
         res.redirect(`https://hushnote-a.onrender.com`);
