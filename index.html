@@ -131,10 +131,18 @@
 </head>
 <body>
     <div class="app-container">
-        <!-- VUE ENVOI MESSAGE DE L'AMI -->
+        <!-- 1. LANDING SPASH POUR VISITEUR D'UN LIEN (?u=...) -->
+        <div id="visitorSplashView" style="display: none;">
+            <div class="logo-title">HUSHNOTE</div>
+            <h2 style="font-size: 1.4rem; font-weight: 800; line-height: 1.3;" id="visitorSplashTitle">Envoyez un message anonyme ! 💬</h2>
+            <button class="main-btn" onclick="openVisitorForm()">Écrire un message 🚀</button>
+            <p style="font-size: 0.75rem; margin-top: 20px; opacity: 0.8;">En continuant, vous acceptez nos Conditions d'utilisation.</p>
+        </div>
+
+        <!-- 2. FORMULAIRE D'ENVOI DU VISITEUR -->
         <div id="sendMsgView" style="display: none;">
             <div class="logo-title">HUSHNOTE</div>
-            <h3 style="font-size: 1.1rem; font-weight: 800; margin-bottom: 15px;" id="targetRecipientLabel">Écrire à un ami</h3>
+            <h3 style="font-size: 1.1rem; font-weight: 800; margin-bottom: 15px;" id="targetRecipientLabel">Pose une question anonyme</h3>
             
             <p style="font-size: 0.85rem; font-weight: bold; margin-bottom: 10px;">Étape 1 : Choisis une rubrique</p>
             <div class="card-carousel">
@@ -175,7 +183,7 @@
             </div>
         </div>
 
-        <!-- PAGE LANDING ACCUEIL (ACCÈS DIRECT) -->
+        <!-- 3. PAGE LANDING ACCUEIL PRINCIPALE -->
         <div id="landingView" style="display: none;">
             <div class="logo-title">HUSHNOTE</div>
             <h2 style="font-size: 1.4rem; font-weight: 800; line-height: 1.3;">Recevez des messages anonymes sur vos réseaux ! 💬</h2>
@@ -183,7 +191,7 @@
             <p style="font-size: 0.75rem; margin-top: 20px; opacity: 0.8;">En continuant, vous acceptez nos Conditions d'utilisation.</p>
         </div>
 
-        <!-- PAGE SAISIE D'IDENTIFIANT -->
+        <!-- 4. PAGE SAISIE D'IDENTIFIANT -->
         <div id="step2View" style="display: none;">
             <div class="logo-title" style="font-size: 2.5rem;">HUSHNOTE</div>
             <h3 style="font-size: 1.2rem; font-weight: 800; margin-bottom: 15px;">Quel est votre ID souhaité ?</h3>
@@ -191,7 +199,7 @@
             <button class="main-btn" onclick="handleLoginOrRegister()">Continuer 🚀</button>
         </div>
 
-        <!-- PAGE DASHBOARD (PLAY & INBOX) -->
+        <!-- 5. PAGE DASHBOARD (PLAY & INBOX) -->
         <div id="dashboardView" style="display: none;">
             <div class="nav-tabs">
                 <div class="nav-tab active" id="tabPlay" onclick="switchTab('play')">PLAY</div>
@@ -249,8 +257,9 @@
 
         function init() {
             if (targetRecipient) {
-                document.getElementById('sendMsgView').style.display = 'block';
-                document.getElementById('targetRecipientLabel').innerText = "Pose une question anonyme à @" + targetRecipient;
+                // ÉTAPE INITIALE : Splash pour le visiteur
+                document.getElementById('visitorSplashView').style.display = 'block';
+                document.getElementById('visitorSplashTitle').innerText = "Envoyez un message anonyme à @" + targetRecipient + " ! 💬";
             } else if (currentUser) {
                 if (isUnlocked) currentUser.is_subscribed = true;
                 showDashboard();
@@ -259,8 +268,14 @@
             }
         }
 
+        function openVisitorForm() {
+            document.getElementById('visitorSplashView').style.display = 'none';
+            document.getElementById('sendMsgView').style.display = 'block';
+            document.getElementById('targetRecipientLabel').innerText = "Pose une question anonyme à @" + targetRecipient;
+        }
+
         function chooseCategory(cardEl, categoryName, placeholderText) {
-            document.querySelectorAll('.card-carousel .theme-card').forEach(c => c.classList.remove('selected'));
+            document.querySelectorAll('#sendMsgView .card-carousel .theme-card').forEach(c => c.classList.remove('selected'));
             cardEl.classList.add('selected');
             currentSelectedCategory = categoryName;
             document.getElementById('selectedCategoryBadge').innerText = categoryName.toUpperCase();
@@ -306,6 +321,7 @@
         }
 
         function showDashboard() {
+            document.getElementById('visitorSplashView').style.display = 'none';
             document.getElementById('sendMsgView').style.display = 'none';
             document.getElementById('landingView').style.display = 'none';
             document.getElementById('step2View').style.display = 'none';
