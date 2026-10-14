@@ -132,7 +132,6 @@
         .msg-author.blurred { color: transparent; text-shadow: 0 0 10px rgba(0,0,0,0.6); user-select: none; }
         .paywall-banner { background: #f3e5f5; border: 2px dashed #7b1fa2; padding: 15px; border-radius: 20px; color: #222; margin-bottom: 15px; }
 
-        /* MODAL POPUP DE PARTAGE MULTI-RÉSEAUX */
         .social-modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.7); backdrop-filter: blur(5px);
@@ -141,10 +140,8 @@
         .social-modal-card {
             background: #fff; color: #222; width: 100%; max-width: 420px;
             border-radius: 30px 30px 0 0; padding: 25px; text-align: center;
-            animation: slideUp 0.3s ease-out;
             max-height: 80vh; overflow-y: auto;
         }
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         .social-grid {
             display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 20px 0;
         }
@@ -166,7 +163,6 @@
         .bg-pin { background: #E60023; }
         .bg-yt { background: #FF0000; }
         .bg-tw { background: #000000; }
-        .bg-other { background: #7b1fa2; }
         .msg-share-btn {
             background: #7b1fa2; color: #fff; border: none; padding: 8px 14px;
             border-radius: 12px; font-weight: 800; font-size: 0.8rem; margin-top: 10px; cursor: pointer;
@@ -176,7 +172,7 @@
 </head>
 <body>
     <div class="app-container">
-        <!-- ÉCRAN 1: PAGE D'ACCUEIL UNIVERSELLE -->
+        <!-- ÉCRAN 1: LANDING PAGE -->
         <div id="landingView">
             <div class="logo-title">HUSHNOTE</div>
             <h2 style="font-size: 1.4rem; font-weight: 800; line-height: 1.3;" id="landingWelcomeTitle">Recevez des messages anonymes sur vos réseaux ! 💬✨</h2>
@@ -184,7 +180,7 @@
             <p style="font-size: 0.75rem; margin-top: 20px; opacity: 0.8;">En continuant, vous acceptez nos Conditions d'utilisation.</p>
         </div>
 
-        <!-- ÉCRAN 2: CHOIX DE RUBRIQUE & RÉDACTION DU MESSAGE -->
+        <!-- ÉCRAN 2: RUBRIQUES & FORMULAIRE DE MESSAGE -->
         <div id="sendMsgView" style="display: none;">
             <div class="logo-title">HUSHNOTE</div>
             
@@ -222,7 +218,7 @@
             <button class="main-btn" onclick="sendMessage()">Envoyer anonymement 🚀</button>
         </div>
 
-        <!-- ÉCRAN 3: CONFIRMATION & CHOIX SUIVANT -->
+        <!-- ÉCRAN 3: CONFIRMATION POST-ENVOI -->
         <div id="afterSendView" style="display: none;">
             <div class="logo-title">HUSHNOTE</div>
             <div style="background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); padding: 25px; border-radius: 30px; border: 2px solid rgba(255,255,255,0.3);">
@@ -234,7 +230,7 @@
             </div>
         </div>
 
-        <!-- ÉCRAN SAISIE DU PSEUDO FIXE PERSO -->
+        <!-- ÉCRAN 4: SAISIE PSEUDO PROPRIÉTAIRE -->
         <div id="enterPseudoView" style="display: none;">
             <div class="logo-title">HUSHNOTE</div>
             <h3 style="font-size: 1.2rem; font-weight: 800; margin-bottom: 15px;">Quel est ton identifiant / pseudo ?</h3>
@@ -243,7 +239,7 @@
             <button class="main-btn" onclick="saveCustomPseudoAndShowDashboard()">Créer mon espace 🚀</button>
         </div>
 
-        <!-- ÉCRAN 4: DASHBOARD PERSO -->
+        <!-- ÉCRAN 5: DASHBOARD & INBOX PERSO -->
         <div id="dashboardView" style="display: none;">
             <div class="nav-tabs">
                 <div class="nav-tab active" id="tabPlay" onclick="switchTab('play')">PLAY</div>
@@ -289,11 +285,11 @@
         </div>
     </div>
 
-    <!-- MODAL POPUP DE SÉLECTION DU RÉSEAU SOCIAL (LINK OU MESSAGE) -->
+    <!-- MODAL PARTAGE SOCIAL -->
     <div class="social-modal-overlay" id="socialModal" onclick="closeSocialModal(event)">
         <div class="social-modal-card" onclick="event.stopPropagation()">
             <h3 style="font-size:1.1rem; font-weight:900; color:#7b1fa2;">Partager dans ta Story 📸</h3>
-            <p style="font-size:0.8rem; color:#666; margin-top:4px;">Choisis où publier :</p>
+            <p style="font-size:0.8rem; color:#666; margin-top:4px;">Choisis ton réseau social :</p>
             
             <div class="social-grid">
                 <div class="social-item" onclick="shareToPlatform('whatsapp')">
@@ -355,13 +351,9 @@
 
         function init() {
             hideAllViews();
+            document.getElementById('landingView').style.display = 'block';
             if (targetRecipient) {
-                document.getElementById('landingView').style.display = 'block';
                 document.getElementById('landingWelcomeTitle').innerText = "Envoyez un message anonyme à @" + targetRecipient + " ! 💬✨";
-            } else if (myUserId) {
-                showDashboard();
-            } else {
-                document.getElementById('landingView').style.display = 'block';
             }
         }
 
@@ -429,7 +421,6 @@
 
             myUserId = rawInput;
             localStorage.setItem('hushnote_owner_id', myUserId);
-            hideAllViews();
             showDashboard();
         }
 
@@ -498,7 +489,7 @@
                 window.location.href = "https://pinterest.com/pin/create/button/?url=" + encodeURIComponent(link) + "&description=" + encodeURIComponent(text);
             } else if (platform === 'instagram' || platform === 'tiktok' || platform === 'snapchat' || platform === 'youtube') {
                 navigator.clipboard.writeText(text);
-                alert("Texte et lien copiés ! Ouvrez votre application " + platform.toUpperCase() + " pour le coller dans votre Story 📸");
+                alert("Texte et lien copiés ! Ouvrez " + platform.toUpperCase() + " pour le coller dans votre Story 📸");
             }
         }
 
