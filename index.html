@@ -59,13 +59,13 @@
             padding: 16px;
             border-radius: 20px;
             border: none;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 700;
             text-align: center;
             outline: none;
             background: rgba(255, 255, 255, 0.25);
             color: #fff;
-            margin-top: 15px;
+            margin-top: 12px;
         }
         .input-id::placeholder { color: rgba(255, 255, 255, 0.8); }
         .card-carousel {
@@ -140,7 +140,7 @@
         .social-modal-card {
             background: #fff; color: #222; width: 100%; max-width: 420px;
             border-radius: 30px 30px 0 0; padding: 25px; text-align: center;
-            max-height: 80vh; overflow-y: auto;
+            max-height: 85vh; overflow-y: auto;
         }
         .social-grid {
             display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 20px 0;
@@ -163,6 +163,17 @@
         .bg-pin { background: #E60023; }
         .bg-yt { background: #FF0000; }
         .bg-tw { background: #000000; }
+        .bottom-action-row {
+            display: flex; gap: 10px; margin-top: 10px;
+        }
+        .modal-other-btn {
+            flex: 1; background: #7b1fa2; color: #fff; border: none; padding: 14px;
+            border-radius: 20px; font-weight: 800; font-size: 0.95rem; cursor: pointer;
+        }
+        .modal-cancel-btn {
+            flex: 1; background: #f1f1f1; color: #555; border: none; padding: 14px;
+            border-radius: 20px; font-weight: 800; font-size: 0.95rem; cursor: pointer;
+        }
         .msg-share-btn {
             background: #7b1fa2; color: #fff; border: none; padding: 8px 14px;
             border-radius: 12px; font-weight: 800; font-size: 0.8rem; margin-top: 10px; cursor: pointer;
@@ -230,13 +241,14 @@
             </div>
         </div>
 
-        <!-- ÉCRAN 4: SAISIE PSEUDO PROPRIÉTAIRE -->
+        <!-- ÉCRAN 4: SAISIE PSEUDO & MOT DE PASSE PROPRIÉTAIRE -->
         <div id="enterPseudoView" style="display: none;">
             <div class="logo-title">HUSHNOTE</div>
-            <h3 style="font-size: 1.2rem; font-weight: 800; margin-bottom: 15px;">Quel est ton identifiant / pseudo ?</h3>
-            <p style="font-size: 0.85rem; opacity: 0.9; margin-bottom: 15px;">Ce pseudo générera ton lien unique pour recevoir tes messages.</p>
-            <input type="text" id="customPseudoInput" class="input-id" placeholder="Ex: arielle">
-            <button class="main-btn" onclick="saveCustomPseudoAndShowDashboard()">Créer mon espace 🚀</button>
+            <h3 style="font-size: 1.2rem; font-weight: 800; margin-bottom: 10px;">Crée ton espace personnel</h3>
+            <p style="font-size: 0.85rem; opacity: 0.9; margin-bottom: 15px;">Indique ton pseudo et choisis un mot de passe pour sécuriser l'accès à tes messages.</p>
+            <input type="text" id="customPseudoInput" class="input-id" placeholder="Ton Pseudo (ex: arielle)">
+            <input type="password" id="customPasswordInput" class="input-id" placeholder="Ton Mot de passe secret">
+            <button class="main-btn" onclick="saveCustomCredentialsAndShowDashboard()">Valider et créer mon espace 🚀</button>
         </div>
 
         <!-- ÉCRAN 5: DASHBOARD & INBOX PERSO -->
@@ -285,7 +297,7 @@
         </div>
     </div>
 
-    <!-- MODAL PARTAGE SOCIAL -->
+    <!-- MODAL PARTAGE SOCIAL AVEC BOUTON AUTRES -->
     <div class="social-modal-overlay" id="socialModal" onclick="closeSocialModal(event)">
         <div class="social-modal-card" onclick="event.stopPropagation()">
             <h3 style="font-size:1.1rem; font-weight:900; color:#7b1fa2;">Partager dans ta Story 📸</h3>
@@ -330,7 +342,10 @@
                 </div>
             </div>
 
-            <button onclick="closeSocialModalDirect()" style="background:#f1f1f1; border:none; padding:12px; border-radius:20px; width:100%; font-weight:bold; color:#555; cursor:pointer;">Annuler</button>
+            <div class="bottom-action-row">
+                <button class="modal-other-btn" onclick="shareToPlatform('native')">📲 Autres</button>
+                <button class="modal-cancel-btn" onclick="closeSocialModalDirect()">Annuler</button>
+            </div>
         </div>
     </div>
 
@@ -415,12 +430,16 @@
             }
         }
 
-        function saveCustomPseudoAndShowDashboard() {
+        function saveCustomCredentialsAndShowDashboard() {
             var rawInput = document.getElementById('customPseudoInput').value.replace('@','').trim().toLowerCase();
+            var rawPass = document.getElementById('customPasswordInput').value.trim();
+            
             if (!rawInput) return alert("Veuillez entrer un pseudo valide.");
+            if (!rawPass) return alert("Veuillez entrer un mot de passe pour sécuriser votre compte.");
 
             myUserId = rawInput;
             localStorage.setItem('hushnote_owner_id', myUserId);
+            localStorage.setItem('hushnote_owner_pass', rawPass);
             showDashboard();
         }
 
@@ -487,6 +506,12 @@
                 window.location.href = "https://twitter.com/intent/tweet?text=" + encodeURIComponent(text);
             } else if (platform === 'pinterest') {
                 window.location.href = "https://pinterest.com/pin/create/button/?url=" + encodeURIComponent(link) + "&description=" + encodeURIComponent(text);
+            } else if (platform === 'native') {
+                if (navigator.share) {
+                    navigator.share({ title: 'Hushnote', text: text, url: link }).catch(() => {});
+                } else {
+                    copyUserLink();
+                }
             } else if (platform === 'instagram' || platform === 'tiktok' || platform === 'snapchat' || platform === 'youtube') {
                 navigator.clipboard.writeText(text);
                 alert("Texte et lien copiés ! Ouvrez " + platform.toUpperCase() + " pour le coller dans votre Story 📸");
@@ -518,6 +543,7 @@
 
         function logout() {
             localStorage.removeItem('hushnote_owner_id');
+            localStorage.removeItem('hushnote_owner_pass');
             location.href = "https://hushnote-a.onrender.com";
         }
 
