@@ -52,7 +52,7 @@
             border-radius: 35px;
             cursor: pointer;
             width: 100%;
-            margin-top: 10px;
+            margin-top: 12px;
         }
         .input-id {
             width: 100%;
@@ -368,9 +368,13 @@
 
         function init() {
             hideAllViews();
-            document.getElementById('landingView').style.display = 'block';
             if (targetRecipient) {
+                document.getElementById('landingView').style.display = 'block';
                 document.getElementById('landingWelcomeTitle').innerText = "Envoyez un message anonyme à @" + targetRecipient + " ! 💬✨";
+            } else if (myUserId) {
+                showDashboard();
+            } else {
+                document.getElementById('landingView').style.display = 'block';
             }
         }
 
@@ -425,9 +429,13 @@
             hideAllViews();
             window.history.replaceState({}, document.title, window.location.pathname);
             
-            document.getElementById('customPseudoInput').value = myUserId || '';
-            document.getElementById('customPasswordInput').value = '';
-            document.getElementById('enterPseudoView').style.display = 'block';
+            if (myUserId) {
+                showDashboard();
+            } else {
+                document.getElementById('customPseudoInput').value = '';
+                document.getElementById('customPasswordInput').value = '';
+                document.getElementById('enterPseudoView').style.display = 'block';
+            }
         }
 
         function handleAuthAndAccess() {
