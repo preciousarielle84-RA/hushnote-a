@@ -132,7 +132,7 @@
         .msg-author.blurred { color: transparent; text-shadow: 0 0 10px rgba(0,0,0,0.6); user-select: none; }
         .paywall-banner { background: #f3e5f5; border: 2px dashed #7b1fa2; padding: 15px; border-radius: 20px; color: #222; margin-bottom: 15px; }
 
-        /* MODAL DE PARTAGE SOCIAL */
+        /* MODAL POPUP DE PARTAGE MULTI-RÉSEAUX */
         .social-modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.7); backdrop-filter: blur(5px);
@@ -142,26 +142,36 @@
             background: #fff; color: #222; width: 100%; max-width: 420px;
             border-radius: 30px 30px 0 0; padding: 25px; text-align: center;
             animation: slideUp 0.3s ease-out;
+            max-height: 80vh; overflow-y: auto;
         }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         .social-grid {
             display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 20px 0;
         }
         .social-item {
-            display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer;
-            font-size: 0.8rem; font-weight: 800; color: #444; text-decoration: none;
+            display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer;
+            font-size: 0.75rem; font-weight: 800; color: #444; text-decoration: none;
         }
         .social-icon-btn {
-            width: 60px; height: 60px; border-radius: 20px; display: flex;
-            justify-content: center; align-items: center; font-size: 1.8rem; color: #fff;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+            width: 55px; height: 55px; border-radius: 18px; display: flex;
+            justify-content: center; align-items: center; font-size: 1.6rem; color: #fff;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
         .bg-wa { background: #25D366; }
         .bg-fb { background: #1877F2; }
         .bg-tg { background: #229ED9; }
         .bg-tt { background: #000000; }
         .bg-sc { background: #FFFC00; color: #000 !important; }
-        .bg-other { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+        .bg-ig { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+        .bg-pin { background: #E60023; }
+        .bg-yt { background: #FF0000; }
+        .bg-tw { background: #000000; }
+        .bg-other { background: #7b1fa2; }
+        .msg-share-btn {
+            background: #7b1fa2; color: #fff; border: none; padding: 8px 14px;
+            border-radius: 12px; font-weight: 800; font-size: 0.8rem; margin-top: 10px; cursor: pointer;
+            display: inline-block; width: 100%;
+        }
     </style>
 </head>
 <body>
@@ -259,7 +269,7 @@
                 </div>
 
                 <div style="margin-top: 15px;">
-                    <button class="share-btn" onclick="openSocialModal()">Partager dans ma Story 📸</button>
+                    <button class="share-btn" onclick="openSocialModal('link')">Partager dans ma Story 📸</button>
                 </div>
             </div>
 
@@ -279,24 +289,24 @@
         </div>
     </div>
 
-    <!-- MODAL POPUP DE SÉLECTION DU RÉSEAU SOCIAL -->
+    <!-- MODAL POPUP DE SÉLECTION DU RÉSEAU SOCIAL (LINK OU MESSAGE) -->
     <div class="social-modal-overlay" id="socialModal" onclick="closeSocialModal(event)">
         <div class="social-modal-card" onclick="event.stopPropagation()">
-            <h3 style="font-size:1.1rem; font-weight:900; color:#7b1fa2;">Partager sur ta Story 📸</h3>
-            <p style="font-size:0.8rem; color:#666; margin-top:4px;">Choisis ton réseau social préféré :</p>
+            <h3 style="font-size:1.1rem; font-weight:900; color:#7b1fa2;">Partager dans ta Story 📸</h3>
+            <p style="font-size:0.8rem; color:#666; margin-top:4px;">Choisis où publier :</p>
             
             <div class="social-grid">
                 <div class="social-item" onclick="shareToPlatform('whatsapp')">
                     <div class="social-icon-btn bg-wa">💬</div>
                     <span>WhatsApp</span>
                 </div>
+                <div class="social-item" onclick="shareToPlatform('instagram')">
+                    <div class="social-icon-btn bg-ig">📸</div>
+                    <span>Instagram</span>
+                </div>
                 <div class="social-item" onclick="shareToPlatform('facebook')">
                     <div class="social-icon-btn bg-fb">f</div>
                     <span>Facebook</span>
-                </div>
-                <div class="social-item" onclick="shareToPlatform('telegram')">
-                    <div class="social-icon-btn bg-tg">✈️</div>
-                    <span>Telegram</span>
                 </div>
                 <div class="social-item" onclick="shareToPlatform('tiktok')">
                     <div class="social-icon-btn bg-tt">🎵</div>
@@ -306,9 +316,21 @@
                     <div class="social-icon-btn bg-sc">👻</div>
                     <span>Snapchat</span>
                 </div>
-                <div class="social-item" onclick="shareToPlatform('native')">
-                    <div class="social-icon-btn bg-other">📲</div>
-                    <span>Autres</span>
+                <div class="social-item" onclick="shareToPlatform('telegram')">
+                    <div class="social-icon-btn bg-tg">✈️</div>
+                    <span>Telegram</span>
+                </div>
+                <div class="social-item" onclick="shareToPlatform('pinterest')">
+                    <div class="social-icon-btn bg-pin">📌</div>
+                    <span>Pinterest</span>
+                </div>
+                <div class="social-item" onclick="shareToPlatform('youtube')">
+                    <div class="social-icon-btn bg-yt">▶️</div>
+                    <span>YouTube</span>
+                </div>
+                <div class="social-item" onclick="shareToPlatform('twitter')">
+                    <div class="social-icon-btn bg-tw">𝕏</div>
+                    <span>Twitter/X</span>
                 </div>
             </div>
 
@@ -321,8 +343,18 @@
         var urlParams = new URLSearchParams(window.location.search);
         var targetRecipient = urlParams.get('u');
         var myUserId = localStorage.getItem('hushnote_owner_id');
+        var activeShareText = "";
+
+        function hideAllViews() {
+            document.getElementById('landingView').style.display = 'none';
+            document.getElementById('sendMsgView').style.display = 'none';
+            document.getElementById('afterSendView').style.display = 'none';
+            document.getElementById('enterPseudoView').style.display = 'none';
+            document.getElementById('dashboardView').style.display = 'none';
+        }
 
         function init() {
+            hideAllViews();
             if (targetRecipient) {
                 document.getElementById('landingView').style.display = 'block';
                 document.getElementById('landingWelcomeTitle').innerText = "Envoyez un message anonyme à @" + targetRecipient + " ! 💬✨";
@@ -334,7 +366,7 @@
         }
 
         function startMessagingFlow() {
-            document.getElementById('landingView').style.display = 'none';
+            hideAllViews();
             document.getElementById('sendMsgView').style.display = 'block';
         }
 
@@ -367,7 +399,7 @@
             .then(data => {
                 document.getElementById('noteContent').value = '';
                 document.getElementById('senderPseudo').value = '';
-                document.getElementById('sendMsgView').style.display = 'none';
+                hideAllViews();
                 document.getElementById('afterSendView').style.display = 'block';
             })
             .catch(() => {
@@ -376,15 +408,12 @@
         }
 
         function resetToSendForm() {
-            document.getElementById('afterSendView').style.display = 'none';
+            hideAllViews();
             document.getElementById('sendMsgView').style.display = 'block';
         }
 
         function openCreateOrDashboardSpace() {
-            document.getElementById('afterSendView').style.display = 'none';
-            document.getElementById('landingView').style.display = 'none';
-            document.getElementById('sendMsgView').style.display = 'none';
-
+            hideAllViews();
             window.history.replaceState({}, document.title, window.location.pathname);
 
             if (myUserId) {
@@ -400,11 +429,12 @@
 
             myUserId = rawInput;
             localStorage.setItem('hushnote_owner_id', myUserId);
-            document.getElementById('enterPseudoView').style.display = 'none';
+            hideAllViews();
             showDashboard();
         }
 
         function showDashboard() {
+            hideAllViews();
             document.getElementById('dashboardView').style.display = 'block';
             var shareUrl = "https://hushnote-a.onrender.com/?u=" + myUserId;
             document.getElementById('shareLinkDisplay').innerText = shareUrl;
@@ -433,7 +463,13 @@
             alert("Lien copié dans le presse-papiers ! 📲");
         }
 
-        function openSocialModal() {
+        function openSocialModal(type, customText) {
+            var link = "https://hushnote-a.onrender.com/?u=" + myUserId;
+            if (type === 'message' && customText) {
+                activeShareText = "💬 Message anonyme reçu sur Hushnote :\n\"" + customText + "\"\n\nPose-moi tes questions ici 👉 " + link;
+            } else {
+                activeShareText = "Pose-moi des questions anonymes sur Hushnote ! 💬 " + link;
+            }
             document.getElementById('socialModal').style.display = 'flex';
         }
 
@@ -447,26 +483,22 @@
 
         function shareToPlatform(platform) {
             var link = "https://hushnote-a.onrender.com/?u=" + myUserId;
-            var msg = "Pose-moi des questions anonymes sur Hushnote ! 💬 " + link;
+            var text = activeShareText || ("Pose-moi des questions anonymes sur Hushnote ! 💬 " + link);
             closeSocialModalDirect();
 
             if (platform === 'whatsapp') {
-                window.location.href = "https://api.whatsapp.com/send?text=" + encodeURIComponent(msg);
+                window.location.href = "https://api.whatsapp.com/send?text=" + encodeURIComponent(text);
             } else if (platform === 'facebook') {
                 window.location.href = "https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(link);
             } else if (platform === 'telegram') {
-                window.location.href = "https://t.me/share/url?url=" + encodeURIComponent(link) + "&text=" + encodeURIComponent("Pose-moi des questions anonymes ! 💬");
-            } else if (platform === 'tiktok' || platform === 'snapchat') {
-                copyUserLink();
-                alert("Lien copié ! Vous êtes redirigé vers l'application pour le coller dans votre Story 📸");
-                if (platform === 'tiktok') window.location.href = "snssdk1128://";
-                if (platform === 'snapchat') window.location.href = "snapchat://";
-            } else if (platform === 'native') {
-                if (navigator.share) {
-                    navigator.share({ title: 'Hushnote', text: 'Pose-moi des questions anonymes ! 💬', url: link }).catch(() => {});
-                } else {
-                    copyUserLink();
-                }
+                window.location.href = "https://t.me/share/url?url=" + encodeURIComponent(link) + "&text=" + encodeURIComponent(text);
+            } else if (platform === 'twitter') {
+                window.location.href = "https://twitter.com/intent/tweet?text=" + encodeURIComponent(text);
+            } else if (platform === 'pinterest') {
+                window.location.href = "https://pinterest.com/pin/create/button/?url=" + encodeURIComponent(link) + "&description=" + encodeURIComponent(text);
+            } else if (platform === 'instagram' || platform === 'tiktok' || platform === 'snapchat' || platform === 'youtube') {
+                navigator.clipboard.writeText(text);
+                alert("Texte et lien copiés ! Ouvrez votre application " + platform.toUpperCase() + " pour le coller dans votre Story 📸");
             }
         }
 
@@ -481,10 +513,12 @@
                 }
                 var html = '';
                 data.messages.forEach(m => {
+                    var safeContent = m.content.replace(/'/g, "\\'").replace(/"/g, '&quot;');
                     html += '<div class="msg-card">' +
                         '<div class="msg-header"><span>' + m.category + '</span></div>' +
                         '<div class="msg-body">' + m.content + '</div>' +
                         '<div>Auteur : <span class="msg-author blurred">' + m.sender_pseudo + '</span></div>' +
+                        '<button class="msg-share-btn" onclick="openSocialModal(\'message\', \'' + safeContent + '\')">Partager ce message 📸</button>' +
                     '</div>';
                 });
                 list.innerHTML = html;
