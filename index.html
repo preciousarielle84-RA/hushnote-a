@@ -197,9 +197,9 @@
         <div id="enterPseudoView" style="display: none;">
             <div class="logo-title">HUSHNOTE</div>
             <h3 style="font-size: 1.2rem; font-weight: 800; margin-bottom: 15px;">Quel est ton identifiant / pseudo ?</h3>
-            <p style="font-size: 0.85rem; opacity: 0.9; margin-bottom: 15px;">Ce pseudo sera utilisé dans ton lien unique.</p>
+            <p style="font-size: 0.85rem; opacity: 0.9; margin-bottom: 15px;">Ce pseudo générera ton lien unique pour recevoir tes messages.</p>
             <input type="text" id="customPseudoInput" class="input-id" placeholder="Ex: arielle">
-            <button class="main-btn" onclick="saveCustomPseudoAndShowDashboard()">Valider mon lien 🚀</button>
+            <button class="main-btn" onclick="saveCustomPseudoAndShowDashboard()">Créer mon espace 🚀</button>
         </div>
 
         <!-- ÉCRAN 4: DASHBOARD PERSO -->
@@ -252,13 +252,15 @@
         var currentSelectedCategory = '❓ Question';
         var urlParams = new URLSearchParams(window.location.search);
         var targetRecipient = urlParams.get('u');
-        var myUserId = localStorage.getItem('hushnote_user_id');
+        var myUserId = localStorage.getItem('hushnote_owner_id');
 
         function init() {
             if (targetRecipient) {
+                // Si l'URL a ?u=..., c'est un lien envoyé à un AMI -> UNIQUEMENT L'ÉCRAN D'ENVOI
                 document.getElementById('landingView').style.display = 'block';
                 document.getElementById('landingWelcomeTitle').innerText = "Envoyez un message anonyme à @" + targetRecipient + " ! 💬✨";
             } else if (myUserId) {
+                // Si l'utilisateur ouvre le site directement sur SON appareil -> SON DASHBOARD PRIVÉ
                 showDashboard();
             } else {
                 document.getElementById('landingView').style.display = 'block';
@@ -317,6 +319,9 @@
             document.getElementById('landingView').style.display = 'none';
             document.getElementById('sendMsgView').style.display = 'none';
 
+            // On retire le paramètre ?u= de l'URL pour ne pas mélanger l'envoi et la boîte perso
+            window.history.replaceState({}, document.title, window.location.pathname);
+
             if (myUserId) {
                 showDashboard();
             } else {
@@ -329,7 +334,7 @@
             if (!rawInput) return alert("Veuillez entrer un pseudo valide.");
 
             myUserId = rawInput;
-            localStorage.setItem('hushnote_user_id', myUserId);
+            localStorage.setItem('hushnote_owner_id', myUserId);
             document.getElementById('enterPseudoView').style.display = 'none';
             showDashboard();
         }
@@ -375,7 +380,7 @@
                 navigator.share(shareData).catch(() => {});
             } else {
                 copyUserLink();
-                alert("Lien copié ! Vous pouvez maintenant le coller dans votre Story (WhatsApp, Facebook, TikTok, Instagram, Telegram, Snapchat, YouTube...) 📸");
+                alert("Lien copié ! Vous pouvez maintenant le coller dans votre Story 📸");
             }
         }
 
@@ -401,7 +406,7 @@
         }
 
         function logout() {
-            localStorage.removeItem('hushnote_user_id');
+            localStorage.removeItem('hushnote_owner_id');
             location.href = "https://hushnote-a.onrender.com";
         }
 
