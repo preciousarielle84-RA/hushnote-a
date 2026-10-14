@@ -244,8 +244,8 @@
         <!-- ÉCRAN 4: SAISIE PSEUDO & CODE A 2 CHIFFRES -->
         <div id="enterPseudoView" style="display: none;">
             <div class="logo-title">HUSHNOTE</div>
-            <h3 style="font-size: 1.2rem; font-weight: 800; margin-bottom: 10px;" id="authTitle">Espace Réception</h3>
-            <p style="font-size: 0.85rem; opacity: 0.9; margin-bottom: 15px;" id="authDesc">Entrez votre pseudo unique et choisissez votre code secret à <strong>2 chiffres</strong> pour sécuriser vos messages.</p>
+            <h3 style="font-size: 1.2rem; font-weight: 800; margin-bottom: 10px;">Espace Réception</h3>
+            <p style="font-size: 0.85rem; opacity: 0.9; margin-bottom: 15px;">Entrez votre pseudo unique et votre code secret à <strong>2 chiffres</strong>.</p>
             
             <input type="text" id="customPseudoInput" class="input-id" placeholder="Ton Pseudo unique (ex: arielle)">
             <input type="password" id="customPasswordInput" class="input-id" maxlength="2" inputmode="numeric" placeholder="Code à 2 chiffres (ex: 12)">
@@ -356,7 +356,6 @@
         var urlParams = new URLSearchParams(window.location.search);
         var targetRecipient = urlParams.get('u');
         var myUserId = localStorage.getItem('hushnote_owner_id');
-        var myUserPass = localStorage.getItem('hushnote_owner_pass');
         var activeShareText = "";
 
         function hideAllViews() {
@@ -369,9 +368,13 @@
 
         function init() {
             hideAllViews();
-            document.getElementById('landingView').style.display = 'block';
             if (targetRecipient) {
+                document.getElementById('landingView').style.display = 'block';
                 document.getElementById('landingWelcomeTitle').innerText = "Envoyez un message anonyme à @" + targetRecipient + " ! 💬✨";
+            } else if (myUserId) {
+                showDashboard();
+            } else {
+                document.getElementById('landingView').style.display = 'block';
             }
         }
 
@@ -426,9 +429,13 @@
             hideAllViews();
             window.history.replaceState({}, document.title, window.location.pathname);
             
-            document.getElementById('customPseudoInput').value = myUserId || '';
-            document.getElementById('customPasswordInput').value = '';
-            document.getElementById('enterPseudoView').style.display = 'block';
+            if (myUserId) {
+                showDashboard();
+            } else {
+                document.getElementById('customPseudoInput').value = '';
+                document.getElementById('customPasswordInput').value = '';
+                document.getElementById('enterPseudoView').style.display = 'block';
+            }
         }
 
         function handleAuthAndAccess() {
