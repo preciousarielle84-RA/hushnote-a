@@ -245,10 +245,10 @@
         <div id="enterPseudoView" style="display: none;">
             <div class="logo-title">HUSHNOTE</div>
             <h3 style="font-size: 1.2rem; font-weight: 800; margin-bottom: 10px;">Crée ton espace personnel</h3>
-            <p style="font-size: 0.85rem; opacity: 0.9; margin-bottom: 15px;">Indique ton pseudo et choisis un mot de passe pour sécuriser l'accès à tes messages.</p>
-            <input type="text" id="customPseudoInput" class="input-id" placeholder="Ton Pseudo (ex: arielle)">
+            <p style="font-size: 0.85rem; opacity: 0.9; margin-bottom: 15px;">Entrez votre pseudo pour obtenir votre lien unique et personnalisé.</p>
+            <input type="text" id="customPseudoInput" class="input-id" placeholder="Ton Pseudo unique (ex: arielle)">
             <input type="password" id="customPasswordInput" class="input-id" placeholder="Ton Mot de passe secret">
-            <button class="main-btn" onclick="saveCustomCredentialsAndShowDashboard()">Valider et créer mon espace 🚀</button>
+            <button class="main-btn" onclick="saveCustomCredentialsAndShowDashboard()">Obtenir mon lien unique 🚀</button>
         </div>
 
         <!-- ÉCRAN 5: DASHBOARD & INBOX PERSO -->
@@ -422,12 +422,11 @@
         function openCreateOrDashboardSpace() {
             hideAllViews();
             window.history.replaceState({}, document.title, window.location.pathname);
-
-            if (myUserId) {
-                showDashboard();
-            } else {
-                document.getElementById('enterPseudoView').style.display = 'block';
-            }
+            
+            // Toujours réinitialiser pour forcer la saisie du pseudo personnalisé
+            document.getElementById('customPseudoInput').value = '';
+            document.getElementById('customPasswordInput').value = '';
+            document.getElementById('enterPseudoView').style.display = 'block';
         }
 
         function saveCustomCredentialsAndShowDashboard() {
