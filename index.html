@@ -196,23 +196,13 @@
         <!-- ÉCRAN SAISIE DU PSEUDO FIXE PERSO -->
         <div id="enterPseudoView" style="display: none;">
             <div class="logo-title">HUSHNOTE</div>
-            <h3 style="font-size: 1.2rem; font-weight: 800; margin-bottom: 15px;">Crée ton profil personnalisé</h3>
-            <p style="font-size: 0.85rem; opacity: 0.9; margin-bottom: 15px;">Choisis ton identifiant et un code PIN secret pour protéger l'accès à tes messages.</p>
-            <input type="text" id="customPseudoInput" class="input-id" placeholder="Ton pseudo (ex: arielle)">
-            <input type="password" id="customPinInput" class="input-id" style="margin-top:10px;" placeholder="Code PIN secret (ex: 1234)">
+            <h3 style="font-size: 1.2rem; font-weight: 800; margin-bottom: 15px;">Quel est ton identifiant / pseudo ?</h3>
+            <p style="font-size: 0.85rem; opacity: 0.9; margin-bottom: 15px;">Ce pseudo sera utilisé dans ton lien unique.</p>
+            <input type="text" id="customPseudoInput" class="input-id" placeholder="Ex: arielle">
             <button class="main-btn" onclick="saveCustomPseudoAndShowDashboard()">Valider mon lien 🚀</button>
         </div>
 
-        <!-- ÉCRAN DE DÉVERROUILLAGE PROPRIÉTAIRE -->
-        <div id="ownerLoginView" style="display: none;">
-            <div class="logo-title">HUSHNOTE</div>
-            <h3 style="font-size: 1.2rem; font-weight: 800; margin-bottom: 15px;">Accès Propriétaire 🔒</h3>
-            <p style="font-size: 0.85rem; opacity: 0.9; margin-bottom: 15px;">Entrez votre code PIN secret pour lire vos messages.</p>
-            <input type="password" id="loginPinInput" class="input-id" placeholder="Code PIN secret">
-            <button class="main-btn" onclick="verifyOwnerPin()">Déverrouiller ma boîte 🔓</button>
-        </div>
-
-        <!-- ÉCRAN 4: DASHBOARD PERSO (ACCÈS SÉCURISÉ) -->
+        <!-- ÉCRAN 4: DASHBOARD PERSO -->
         <div id="dashboardView" style="display: none;">
             <div class="nav-tabs">
                 <div class="nav-tab active" id="tabPlay" onclick="switchTab('play')">PLAY</div>
@@ -227,7 +217,7 @@
                     </div>
                     <div class="theme-card">
                         <h2>TON CRUSH</h2>
-                        <p>Dites-moi qui me kiffe en secret 🫣</p>
+                        <p>Dites-moi qui est votre crush anonymement 🫣</p>
                     </div>
                 </div>
 
@@ -254,7 +244,7 @@
                 </div>
             </div>
 
-            <button onclick="logout()" style="background:none; border:none; color:rgba(255,255,255,0.8); text-decoration:underline; font-weight:bold; margin-top:25px; cursor:pointer;">Se déconnecter de la session</button>
+            <button onclick="logout()" style="background:none; border:none; color:rgba(255,255,255,0.8); text-decoration:underline; font-weight:bold; margin-top:25px; cursor:pointer;">Changer d'utilisateur / Se déconnecter</button>
         </div>
     </div>
 
@@ -263,16 +253,13 @@
         var urlParams = new URLSearchParams(window.location.search);
         var targetRecipient = urlParams.get('u');
         var myUserId = localStorage.getItem('hushnote_user_id');
-        var myUserPin = localStorage.getItem('hushnote_user_pin');
 
         function init() {
             if (targetRecipient) {
-                // Si l'URL contient un paramètre ?u=pseudo, c'est un lien partagé pour ENVOYER des messages
                 document.getElementById('landingView').style.display = 'block';
                 document.getElementById('landingWelcomeTitle').innerText = "Envoyez un message anonyme à @" + targetRecipient + " ! 💬✨";
-            } else if (myUserId && myUserPin) {
-                // Si l'utilisateur est sur son appareil sans ?u=, on lui demande son PIN
-                document.getElementById('ownerLoginView').style.display = 'block';
+            } else if (myUserId) {
+                showDashboard();
             } else {
                 document.getElementById('landingView').style.display = 'block';
             }
@@ -330,8 +317,8 @@
             document.getElementById('landingView').style.display = 'none';
             document.getElementById('sendMsgView').style.display = 'none';
 
-            if (myUserId && myUserPin) {
-                document.getElementById('ownerLoginView').style.display = 'block';
+            if (myUserId) {
+                showDashboard();
             } else {
                 document.getElementById('enterPseudoView').style.display = 'block';
             }
@@ -339,28 +326,12 @@
 
         function saveCustomPseudoAndShowDashboard() {
             var rawInput = document.getElementById('customPseudoInput').value.replace('@','').trim().toLowerCase();
-            var rawPin = document.getElementById('customPinInput').value.trim();
-            
             if (!rawInput) return alert("Veuillez entrer un pseudo valide.");
-            if (!rawPin || rawPin.length < 4) return alert("Veuillez entrer un code PIN d'au moins 4 chiffres.");
 
             myUserId = rawInput;
-            myUserPin = rawPin;
             localStorage.setItem('hushnote_user_id', myUserId);
-            localStorage.setItem('hushnote_user_pin', myUserPin);
-
             document.getElementById('enterPseudoView').style.display = 'none';
             showDashboard();
-        }
-
-        function verifyOwnerPin() {
-            var inputPin = document.getElementById('loginPinInput').value.trim();
-            if (inputPin === myUserPin) {
-                document.getElementById('ownerLoginView').style.display = 'none';
-                showDashboard();
-            } else {
-                alert("Code PIN incorrect. Accès refusé !");
-            }
         }
 
         function showDashboard() {
@@ -430,8 +401,8 @@
         }
 
         function logout() {
-            document.getElementById('dashboardView').style.display = 'none';
-            document.getElementById('landingView').style.display = 'block';
+            localStorage.removeItem('hushnote_user_id');
+            location.href = "https://hushnote-a.onrender.com";
         }
 
         document.addEventListener('DOMContentLoaded', init);
