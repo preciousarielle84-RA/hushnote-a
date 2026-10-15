@@ -98,7 +98,7 @@
       <div class="home-subtitle">
         Recevez des messages<br>anonymes sur vos réseaux ! 💬<br>✨
       </div>
-      <button class="main-btn" onclick="handleHomeAction()">Obtenir des questions 🚀</button>
+      <button class="main-btn" onclick="showView('sendMsgView')">Obtenir des questions 🚀</button>
       <div class="terms-text">En continuant, vous acceptez nos Conditions d'utilisation.</div>
     </div>
 
@@ -162,15 +162,6 @@
   </div>
 
   <script>
-    function handleHomeAction() {
-      const path = window.location.pathname.replace('/', '').trim();
-      if (path && path !== '') {
-        showView('sendMsgView');
-      } else {
-        openCreateAccountModal();
-      }
-    }
-
     function showView(viewId) {
       document.getElementById('homeView').style.display = 'none';
       document.getElementById('sendMsgView').style.display = 'none';
@@ -205,7 +196,7 @@
       showView('sendMsgView');
     }
 
-    // Modal de création de compte avec PIN à 4 chiffres
+    // Modal de création de compte uniquement déclenchée au clic sur "Recevoir mes propres messages"
     function openCreateAccountModal() {
       const pseudo = prompt("Entrez votre pseudo pour recevoir des messages anonymes :");
       if (!pseudo) return;
@@ -251,12 +242,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-      const path = window.location.pathname.replace('/', '').trim();
-      if (path && path !== '') {
-        showView('sendMsgView');
-      } else {
-        showView('homeView');
-      }
+      showView('homeView');
       initCarouselDots();
     });
   </script>
