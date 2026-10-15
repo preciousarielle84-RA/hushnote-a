@@ -245,10 +245,10 @@
         <div id="enterPseudoView" style="display: none;">
             <div class="logo-title">HUSHNOTE</div>
             <h3 style="font-size: 1.2rem; font-weight: 800; margin-bottom: 10px;">Espace Réception</h3>
-            <p style="font-size: 0.85rem; opacity: 0.9; margin-bottom: 15px;">Entrez votre pseudo unique et votre code secret à <strong>2 chiffres</strong>.</p>
+            <p style="font-size: 0.85rem; opacity: 0.9; margin-bottom: 15px;">Entrez votre pseudo unique et votre code secret à <strong>4 chiffres</strong>.</p>
             
             <input type="text" id="customPseudoInput" class="input-id" placeholder="Ton Pseudo unique (ex: arielle)">
-            <input type="password" id="customPasswordInput" class="input-id" maxlength="2" inputmode="numeric" placeholder="Code à 2 chiffres (ex: 12)">
+            <input type="password" id="customPasswordInput" class="input-id" maxlength="2" inputmode="numeric" placeholder="Code à 4 chiffres (ex: 12)">
             
             <button class="main-btn" onclick="handleAuthAndAccess()">Accéder à mes messages 🚀</button>
             <button class="sec-btn" style="margin-top:10px; background:rgba(255,255,255,0.2); color:#fff;" onclick="init()">← Retour</button>
@@ -444,7 +444,7 @@
             var rawPass = document.getElementById('customPasswordInput').value.trim();
             
             if (!rawInput) return alert("Veuillez entrer votre pseudo.");
-            if (!/^\d{2}$/.test(rawPass)) return alert("Le code secret doit comporter exactement 2 chiffres (ex: 12, 00, 85).");
+            if (!/^\d{2}$/.test(rawPass)) return alert("Le code secret doit comporter exactement 4 chiffres (ex: 12, 00, 85).");
 
             var savedPass = localStorage.getItem('hushnote_pass_' + rawInput);
 
