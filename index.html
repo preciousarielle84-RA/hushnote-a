@@ -6,42 +6,108 @@
   <title>HushNote</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    body { background: #8A2BE2; min-height: 100vh; color: white; display: flex; justify-content: center; padding: 20px 10px; }
+    
+    body {
+      background: linear-gradient(180deg, #7b1fa2 0%, #a01284 50%, #e91e63 100%);
+      min-height: 100vh;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px 15px;
+    }
+
     .container { width: 100%; max-width: 420px; text-align: center; }
-    .logo-title { font-size: 2.2rem; font-weight: 900; font-style: italic; letter-spacing: 1px; margin-bottom: 20px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
-    .section-title { font-size: 1rem; font-weight: 700; margin-bottom: 12px; opacity: 0.95; }
+    .logo-title { font-size: 2.5rem; font-weight: 900; font-style: italic; letter-spacing: 1.5px; margin-bottom: 15px; text-shadow: 2px 3px 6px rgba(0,0,0,0.3); }
     
-    /* Carrousel */
-    .card-carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 15px; padding: 5px 0 15px 0; scrollbar-width: none !important; -ms-overflow-style: none !important; }
+    /* Vue Accueil */
+    .home-subtitle { font-size: 1.25rem; font-weight: 800; line-height: 1.4; margin-bottom: 35px; text-shadow: 1px 2px 4px rgba(0,0,0,0.2); }
+    .terms-text { font-size: 0.75rem; opacity: 0.85; margin-top: 15px; }
+
+    /* Titles */
+    .section-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 12px; opacity: 0.95; }
+
+    /* Carrousel des rubriques */
+    .card-carousel {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      gap: 15px;
+      padding: 5px 0 10px 0;
+      scrollbar-width: none !important;
+      -ms-overflow-style: none !important;
+    }
     .card-carousel::-webkit-scrollbar { display: none !important; }
-    .theme-card { flex: 0 0 100%; scroll-snap-align: center; background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); border-radius: 25px; border: 2px solid rgba(255, 255, 255, 0.3); padding: 30px 20px; cursor: pointer; transition: transform 0.2s; }
-    .theme-card h2 { font-size: 1.8rem; font-weight: 900; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
-    .theme-card p { background: white; color: #333; padding: 12px 18px; border-radius: 20px; font-weight: bold; font-size: 0.95rem; display: inline-block; box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
-    
-    /* Indicateurs de points (Dots) */
-    .dots-container { display: flex; justify-content: center; align-items: center; gap: 8px; margin: 10px 0 25px 0; }
-    .dot-indicator { width: 8px; height: 8px; background: rgba(255, 255, 255, 0.35); border-radius: 50%; transition: all 0.3s ease; }
+
+    .theme-card {
+      flex: 0 0 100%;
+      scroll-snap-align: center;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      border-radius: 30px;
+      border: 2px solid rgba(255, 255, 255, 0.35);
+      padding: 35px 20px;
+      cursor: pointer;
+    }
+    .theme-card h2 { font-size: 1.9rem; font-weight: 900; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
+    .theme-card p { background: white; color: #333; padding: 12px 20px; border-radius: 25px; font-weight: 800; font-size: 0.95rem; display: inline-block; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+
+    /* Indicateurs dynamiques (Dots) */
+    .dots-container { display: flex; justify-content: center; align-items: center; gap: 8px; margin: 12px 0 25px 0; }
+    .dot-indicator { width: 8px; height: 8px; background: rgba(255, 255, 255, 0.4); border-radius: 50%; transition: all 0.3s ease; }
     .dot-indicator.active { background: #ffffff; transform: scale(1.4); }
-    
-    /* Formulaire de rédaction */
+
+    /* Formulaire envoi */
     .send-card { background: white; border-radius: 25px; padding: 20px; color: #333; text-align: left; box-shadow: 0 10px 25px rgba(0,0,0,0.2); margin-bottom: 20px; }
-    .box-title { font-weight: 900; color: #8e2de2; font-size: 0.9rem; margin-bottom: 10px; text-transform: uppercase; }
-    textarea { width: 100%; height: 90px; border: none; resize: none; font-size: 1rem; outline: none; color: #444; }
+    .box-title { font-weight: 900; color: #8a1282; font-size: 0.9rem; margin-bottom: 10px; text-transform: uppercase; }
+    textarea { width: 100%; height: 95px; border: none; resize: none; font-size: 1rem; outline: none; color: #333; }
     .sender-input { width: 100%; border: 1px solid #eee; border-radius: 15px; padding: 12px; font-size: 0.9rem; outline: none; margin-top: 10px; background: #f9f9f9; }
-    
+
     /* Boutons */
-    .main-btn { background: white; color: #8e2de2; border: none; width: 100%; padding: 15px; border-radius: 25px; font-weight: 900; font-size: 1.05rem; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.2); margin-bottom: 25px; }
-    .secondary-btn { background: transparent; color: white; border: 2px solid rgba(255,255,255,0.6); width: 100%; padding: 12px; border-radius: 25px; font-weight: bold; cursor: pointer; }
+    .main-btn {
+      background: white;
+      color: #8a1282;
+      border: none;
+      width: 100%;
+      padding: 16px;
+      border-radius: 30px;
+      font-weight: 900;
+      font-size: 1.1rem;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+    }
+    .secondary-btn {
+      background: transparent;
+      color: white;
+      border: 2px solid rgba(255,255,255,0.7);
+      width: 100%;
+      padding: 13px;
+      border-radius: 30px;
+      font-weight: 800;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <div id="sendMsgView">
+
+    <!-- 1. PAGE D'ACCUEIL (Rétablie) -->
+    <div id="homeView">
+      <div class="logo-title">HUSHNOTE</div>
+      <div class="home-subtitle">
+        Recevez des messages<br>anonymes sur vos réseaux ! 💬<br>✨
+      </div>
+      <button class="main-btn" onclick="handleHomeAction()">Obtenir des questions 🚀</button>
+      <div class="terms-text">En continuant, vous acceptez nos Conditions d'utilisation.</div>
+    </div>
+
+    <!-- 2. VUE ENVOI DE MESSAGE (Carrousel + Formulaire) -->
+    <div id="sendMsgView" style="display:none;">
       <div class="logo-title">HUSHNOTE</div>
 
       <div class="section-title">1. Choisis une rubrique</div>
       
-      <!-- Carrousel des rubriques -->
       <div class="card-carousel" id="cardCarousel">
         <div class="theme-card" onclick="chooseCategory('❓ QUESTION', 'Pose ta question anonyme ici... 🤫')">
           <h2>QUESTION</h2>
@@ -65,7 +131,7 @@
         </div>
       </div>
 
-      <!-- Indicateurs dynamiques (Remplace la barre de défilement) -->
+      <!-- Dots dynamiques -->
       <div class="dots-container" id="carouselDots"></div>
 
       <div class="section-title">2. Rédige ton message</div>
@@ -75,50 +141,83 @@
         <input type="text" id="senderPseudo" class="sender-input" placeholder="Ton pseudo, prénom ou un indice...">
       </div>
 
-      <button class="main-btn" onclick="submitMessage()">Envoyer anonymement 🚀</button>
+      <button class="main-btn" style="margin-bottom: 25px;" onclick="submitMessage()">Envoyer anonymement 🚀</button>
 
       <div class="section-title">3. Tu veux tes propres messages ?</div>
       <button class="secondary-btn" onclick="openCreateAccountModal()">Recevoir mes propres messages 📲</button>
     </div>
 
-    <!-- Écran de succès après envoi -->
+    <!-- 3. VUE CONFIRMATION D'ENVOI -->
     <div id="afterSendView" style="display:none;">
       <div class="logo-title">HUSHNOTE</div>
-      <div style="background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); padding: 25px; border-radius: 30px; border: 2px solid rgba(255, 255, 255, 0.3);">
+      <div style="background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); padding: 30px 20px; border-radius: 30px; border: 2px solid rgba(255, 255, 255, 0.35);">
         <h2 style="font-size: 1.6rem; font-weight: 900; margin-bottom: 10px;">Message envoyé ! 🎉</h2>
-        <p style="font-size: 0.95rem; font-weight: 700; margin-bottom: 20px;">Que souhaites-tu faire maintenant ?</p>
-        <button class="main-btn" style="margin-top:0;" onclick="resetToSendForm()">Envoyer un autre message ✍️</button>
-        <button onclick="openCreateAccountModal()" style="margin-top: 12px; background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.4); padding: 12px 20px; border-radius: 25px; font-weight: bold; width: 100%; cursor: pointer;">← Retour à l'accueil</button>
+        <p style="font-size: 0.95rem; font-weight: 700; margin-bottom: 25px;">Que souhaites-tu faire maintenant ?</p>
+        
+        <button class="main-btn" style="margin-bottom: 15px;" onclick="resetToSendForm()">Envoyer un autre message ✍️</button>
+        <button class="secondary-btn" onclick="goToHome()">← Retour à l'accueil</button>
       </div>
     </div>
+
   </div>
 
   <script>
+    // Navigation & Vues
+    function handleHomeAction() {
+      const path = window.location.pathname.replace('/', '').trim();
+      if (path && path !== '') {
+        showView('sendMsgView');
+      } else {
+        openCreateAccountModal();
+      }
+    }
+
+    function showView(viewId) {
+      document.getElementById('homeView').style.display = 'none';
+      document.getElementById('sendMsgView').style.display = 'none';
+      document.getElementById('afterSendView').style.display = 'none';
+      document.getElementById(viewId).style.display = 'block';
+    }
+
+    function goToHome() {
+      showView('homeView');
+    }
+
     function chooseCategory(name, placeholder) {
       document.getElementById('selectedCategoryBadge').innerText = name;
       document.getElementById('noteContent').placeholder = placeholder;
     }
 
+    // Validation du formulaire
     function submitMessage() {
-  var msg = document.getElementById("noteContent") ? document.getElementById("noteContent").value.trim() : "";
-  if (!msg) { alert("Veuillez rédiger un message avant d'envoyer !"); return; }
       const content = document.getElementById('noteContent').value.trim();
       if (!content) {
-        alert("Veuillez saisir un message avant d'envoyer !");
+        alert("Veuillez rédiger un message avant d'envoyer !");
         return;
       }
-      document.getElementById('sendMsgView').style.display = 'none';
-      document.getElementById('afterSendView').style.display = 'block';
+      showView('afterSendView');
     }
 
     function resetToSendForm() {
-      document.getElementById('afterSendView').style.display = 'none';
-      document.getElementById('sendMsgView').style.display = 'block';
       document.getElementById('noteContent').value = '';
       document.getElementById('senderPseudo').value = '';
+      showView('sendMsgView');
     }
 
-    // Gestion dynamique des points du carrousel
+    // Modal de création de lien avec PIN à 4 chiffres
+    function openCreateAccountModal() {
+      const pseudo = prompt("Entrez votre pseudo pour recevoir des messages anonymes :");
+      if (!pseudo) return;
+      const pin = prompt("Créez votre code secret à 4 chiffres :");
+      if (!pin || pin.length !== 4 || isNaN(pin)) {
+        alert("Le code secret doit comporter exactement 4 chiffres !");
+        return;
+      }
+      alert("Votre compte a été configuré ! Voici votre lien personnel pour " + pseudo);
+      window.location.href = "/" + encodeURIComponent(pseudo);
+    }
+
+    // Synchronisation des 5 points du carrousel
     function initCarouselDots() {
       const carousel = document.getElementById('cardCarousel');
       const dotsContainer = document.getElementById('carouselDots');
@@ -127,7 +226,6 @@
       const cards = carousel.querySelectorAll('.theme-card');
       dotsContainer.innerHTML = '';
 
-      // Génère exactement un point par carte (5 rubriques = 5 points)
       cards.forEach((_, idx) => {
         const dot = document.createElement('div');
         dot.className = 'dot-indicator' + (idx === 0 ? ' active' : '');
@@ -136,7 +234,6 @@
 
       const dots = dotsContainer.querySelectorAll('.dot-indicator');
 
-      // Met à jour la surbrillance du point pendant le scroll
       carousel.addEventListener('scroll', () => {
         const scrollPos = carousel.scrollLeft;
         const cardWidth = cards[0].offsetWidth || 1;
@@ -152,43 +249,16 @@
       });
     }
 
-    document.addEventListener('DOMContentLoaded', initCarouselDots);
-    setTimeout(initCarouselDots, 200);
+    // Initialisation au chargement
+    document.addEventListener('DOMContentLoaded', () => {
+      const path = window.location.pathname.replace('/', '').trim();
+      if (path && path !== '') {
+        showView('sendMsgView');
+      } else {
+        showView('homeView');
+      }
+      initCarouselDots();
+    });
   </script>
-<script>
-function syncCarouselDots() {
-  var carousel = document.querySelector(".card-carousel") || document.querySelector("[class*="carousel"]");
-  if (!carousel) return;
-  var cards = carousel.querySelectorAll(".theme-card") || carousel.children;
-  if (!cards || !cards.length) return;
-
-  var dotsContainer = document.getElementById("carouselDots");
-  if (!dotsContainer) {
-    dotsContainer = document.createElement("div");
-    dotsContainer.id = "carouselDots";
-    dotsContainer.style.cssText = "display:flex;justify-content:center;align-items:center;gap:8px;margin:12px 0 20px 0;";
-    carousel.parentNode.insertBefore(dotsContainer, carousel.nextSibling);
-  }
-
-  dotsContainer.innerHTML = "";
-  for (var i = 0; i < cards.length; i++) {
-    var dot = document.createElement("span");
-    dot.className = i === 0 ? "dot-indicator active" : "dot-indicator";
-    dotsContainer.appendChild(dot);
-  }
-
-  carousel.addEventListener("scroll", function() {
-    var dots = dotsContainer.querySelectorAll(".dot-indicator");
-    var cardW = cards[0].offsetWidth || 1;
-    var idx = Math.round(carousel.scrollLeft / cardW);
-    for (var j = 0; j < dots.length; j++) {
-      if (j === idx) { dots[j].classList.add("active"); }
-      else { dots[j].classList.remove("active"); }
-    }
-  });
-}
-document.addEventListener("DOMContentLoaded", syncCarouselDots);
-setTimeout(syncCarouselDots, 300);
-</script>
 </body>
 </html>
