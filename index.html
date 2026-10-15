@@ -227,19 +227,30 @@
       closeShareModal();
       const link = currentLink || window.location.href;
       const text = encodeURIComponent("Envoyez-moi des messages anonymes sur HushNote ! 💬 " + link);
-      if (app === "whatsapp") window.open("https://api.whatsapp.com/send?text=" + text, "_blank");
-      else if (app === "facebook") window.open("https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(link), "_blank");
-      else if (app === "telegram") window.open("https://t.me/share/url?url=" + encodeURIComponent(link) + "&text=" + encodeURIComponent("Envoyez-moi des messages anonymes ! 💬"), "_blank");
-      else if (app === "twitter") window.open("https://twitter.com/intent/tweet?text=" + text, "_blank");
-      else if (app === "pinterest") window.open("https://pinterest.com/pin/create/button/?url=" + encodeURIComponent(link), "_blank");
-      else {
-        navigator.clipboard.writeText(link).then(() => {
-          alert("Lien copié ! Ouverture de l'application...");
-          if (app === "instagram") window.location.href = "instagram://story-camera";
-          else if (app === "snapchat") window.location.href = "snapchat://";
-          else if (app === "tiktok") window.location.href = "snssdk1128://";
-          else if (app === "youtube") window.location.href = "youtube://";
-        }).catch(() => nativeShare());
+      const urlEnc = encodeURIComponent(link);
+
+      navigator.clipboard.writeText(link);
+
+      if (app === "whatsapp") {
+        window.location.href = "intent://send?text=" + text + "#Intent;package=com.whatsapp;scheme=whatsapp;S.browser_fallback_url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.whatsapp;end";
+      } else if (app === "facebook") {
+        window.location.href = "intent://#Intent;package=com.facebook.katana;scheme=https;S.browser_fallback_url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.facebook.katana;end";
+      } else if (app === "telegram") {
+        window.location.href = "intent://msg?text=" + text + "#Intent;package=org.telegram.messenger;scheme=tg;S.browser_fallback_url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dorg.telegram.messenger;end";
+      } else if (app === "twitter") {
+        window.location.href = "intent://tweet?text=" + text + "#Intent;package=com.twitter.android;scheme=twitter;S.browser_fallback_url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.twitter.android;end";
+      } else if (app === "pinterest") {
+        window.location.href = "intent://#Intent;package=com.pinterest;scheme=pinterest;S.browser_fallback_url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.pinterest;end";
+      } else if (app === "instagram") {
+        window.location.href = "intent://#Intent;package=com.instagram.android;scheme=https;S.browser_fallback_url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.instagram.android;end";
+      } else if (app === "snapchat") {
+        window.location.href = "intent://#Intent;package=com.snapchat.android;scheme=https;S.browser_fallback_url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.snapchat.android;end";
+      } else if (app === "tiktok") {
+        window.location.href = "intent://#Intent;package=com.zhiliaoapp.musically;scheme=https;S.browser_fallback_url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.zhiliaoapp.musically;end";
+      } else if (app === "youtube") {
+        window.location.href = "intent://#Intent;package=com.google.android.youtube;scheme=https;S.browser_fallback_url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.google.android.youtube;end";
+      } else {
+        nativeShare();
       }
     }
     function nativeShare() {
