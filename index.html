@@ -131,6 +131,25 @@
     .social-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 20px 0; }
     .social-item { display: flex; flex-direction: column; align-items: center; gap: 8px; font-weight: 700; font-size: 0.85rem; color: #444; cursor: pointer; }
     .social-icon { width: 50px; height: 50px; border-radius: 15px; display: flex; justify-content: center; align-items: center; font-size: 1.5rem; color: white; }
+
+    /* Conteneur des boutons du bas de la modale */
+    .modal-actions { display: flex; gap: 12px; margin-top: 15px; }
+    .modal-btn {
+      flex: 1;
+      padding: 14px;
+      border-radius: 30px;
+      font-weight: 800;
+      font-size: 0.95rem;
+      cursor: pointer;
+      border: 1.5px solid #ccc;
+      background: transparent;
+      color: #555;
+    }
+    .modal-btn-primary {
+      border: none;
+      background: #8a1282;
+      color: white;
+    }
   </style>
 </head>
 <body>
@@ -257,7 +276,7 @@
 
   </div>
 
-  <!-- MODALE DE PARTAGE -->
+  <!-- MODALE DE PARTAGE AVEC BOUTON AUTRE -->
   <div class="modal-overlay" id="shareModal">
     <div class="modal-content">
       <h3 style="font-size: 1.2rem; font-weight: 900; color: #8a1282;">Partager dans ta Story 📸</h3>
@@ -302,7 +321,10 @@
         </div>
       </div>
 
-      <button class="secondary-btn" style="color: #666; border-color: #ccc; margin-top: 10px;" onclick="closeShareModal()">Annuler</button>
+      <div class="modal-actions">
+        <button class="modal-btn" onclick="closeShareModal()">Annuler</button>
+        <button class="modal-btn modal-btn-primary" onclick="nativeShare()">Autre...</button>
+      </div>
     </div>
   </div>
 
@@ -350,7 +372,6 @@
       showView('sendMsgView');
     }
 
-    // Passage direct au tableau de bord SANS alert pop-up
     function accessMyMessages() {
       const pseudo = document.getElementById('accountPseudo').value.trim();
       const pin = document.getElementById('accountPin').value.trim();
@@ -405,12 +426,19 @@
 
     function shareTo(platform) {
       closeShareModal();
+      nativeShare();
+    }
+
+    function nativeShare() {
+      closeShareModal();
       if (navigator.share) {
         navigator.share({
           title: 'HushNote',
-          text: 'Envoyez-moi des messages anonymes !',
-          url: currentLink
+          text: 'Envoyez-moi des messages anonymes sur HushNote ! 💬',
+          url: currentLink || window.location.href
         }).catch(() => {});
+      } else {
+        copyMyLink();
       }
     }
 
