@@ -184,14 +184,35 @@
     }
     function resetToSendForm() { clearMsgForm(); showView('sendMsgView'); }
     function accessMyMessages() {
-      const p = document.getElementById('accountPseudo').value.trim();
-      const pin = document.getElementById('accountPin').value.trim();
-      if (!p) { alert("Veuillez entrer votre pseudo unique !"); return; }
-      if (!pin || pin.length !== 4 || isNaN(pin)) { alert("Le code secret doit comporter exactement 4 chiffres !"); return; }
+      const p = document.getElementById("accountPseudo").value.trim().toLowerCase();
+      const pin = document.getElementById("accountPin").value.trim();
+
+      if (!p) {
+        alert("Veuillez entrer votre pseudo unique !");
+        return;
+      }
+      if (!pin || pin.length !== 4 || isNaN(pin)) {
+        alert("Le code secret doit comporter exactement 4 chiffres !");
+        return;
+      }
+
+      const userKey = p + "_" + pin;
+      const registeredKeys = JSON.parse(localStorage.getItem("hushnote_accounts") || "[]");
+
+      if (registeredKeys.includes(userKey)) {
+        // Le compte existe déjà pour cet utilisateur
+      } else {
+        // Nouveau compte unique créé avec cette combinaison Pseudo + PIN
+        registeredKeys.push(userKey);
+        localStorage.setItem("hushnote_accounts", JSON.stringify(registeredKeys));
+      }
+
       currentLink = window.location.origin + "/?u=" + encodeURIComponent(p) + "_" + encodeURIComponent(pin);
-      const l = document.getElementById('userGeneratedLink');
-      l.innerText = currentLink; l.href = currentLink;
-      showView('dashboardView');
+      const l = document.getElementById("userGeneratedLink");
+      l.innerText = currentLink;
+      l.href = currentLink;
+
+      showView("dashboardView");
     }
     function switchDashboardTab(t) {
       document.getElementById('tabPlay').classList.toggle('active', t==='play');
