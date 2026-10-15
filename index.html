@@ -100,6 +100,8 @@
     }
 
     function submitMessage() {
+  var msg = document.getElementById("noteContent") ? document.getElementById("noteContent").value.trim() : "";
+  if (!msg) { alert("Veuillez rédiger un message avant d'envoyer !"); return; }
       const content = document.getElementById('noteContent').value.trim();
       if (!content) {
         alert("Veuillez saisir un message avant d'envoyer !");
@@ -153,5 +155,40 @@
     document.addEventListener('DOMContentLoaded', initCarouselDots);
     setTimeout(initCarouselDots, 200);
   </script>
+<script>
+function syncCarouselDots() {
+  var carousel = document.querySelector(".card-carousel") || document.querySelector("[class*="carousel"]");
+  if (!carousel) return;
+  var cards = carousel.querySelectorAll(".theme-card") || carousel.children;
+  if (!cards || !cards.length) return;
+
+  var dotsContainer = document.getElementById("carouselDots");
+  if (!dotsContainer) {
+    dotsContainer = document.createElement("div");
+    dotsContainer.id = "carouselDots";
+    dotsContainer.style.cssText = "display:flex;justify-content:center;align-items:center;gap:8px;margin:12px 0 20px 0;";
+    carousel.parentNode.insertBefore(dotsContainer, carousel.nextSibling);
+  }
+
+  dotsContainer.innerHTML = "";
+  for (var i = 0; i < cards.length; i++) {
+    var dot = document.createElement("span");
+    dot.className = i === 0 ? "dot-indicator active" : "dot-indicator";
+    dotsContainer.appendChild(dot);
+  }
+
+  carousel.addEventListener("scroll", function() {
+    var dots = dotsContainer.querySelectorAll(".dot-indicator");
+    var cardW = cards[0].offsetWidth || 1;
+    var idx = Math.round(carousel.scrollLeft / cardW);
+    for (var j = 0; j < dots.length; j++) {
+      if (j === idx) { dots[j].classList.add("active"); }
+      else { dots[j].classList.remove("active"); }
+    }
+  });
+}
+document.addEventListener("DOMContentLoaded", syncCarouselDots);
+setTimeout(syncCarouselDots, 300);
+</script>
 </body>
 </html>
