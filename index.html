@@ -187,13 +187,13 @@
       document.getElementById('noteContent').placeholder = placeholder;
     }
 
-    // Validation stricte du message ET du pseudo/prénom/indice
+    // Validation du message et du pseudo / indice
     function submitMessage() {
       const content = document.getElementById('noteContent').value.trim();
       const pseudo = document.getElementById('senderPseudo').value.trim();
       
       if (!content || !pseudo) {
-        alert("Veuillez écrire votre message ET indiquer votre prénom/pseudo/indice !");
+        alert("Veuillez écrire votre message et votre pseudo ou un indice !");
         return;
       }
       showView('afterSendView');
@@ -250,7 +250,6 @@
       });
     }
 
-    // Détection de l'URL au chargement
     document.addEventListener('DOMContentLoaded', () => {
       const path = window.location.pathname.replace('/', '').trim();
       if (path && path !== '') {
