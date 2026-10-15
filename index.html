@@ -6,7 +6,7 @@
   <title>HushNote</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    body { background: linear-gradient(135deg, #8e2de2, #4a00e0); min-height: 100vh; color: white; display: flex; justify-content: center; padding: 20px 10px; }
+    body { background: #8A2BE2; min-height: 100vh; color: white; display: flex; justify-content: center; padding: 20px 10px; }
     .container { width: 100%; max-width: 420px; text-align: center; }
     .logo-title { font-size: 2.2rem; font-weight: 900; font-style: italic; letter-spacing: 1px; margin-bottom: 20px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
     .section-title { font-size: 1rem; font-weight: 700; margin-bottom: 12px; opacity: 0.95; }
@@ -78,7 +78,7 @@
       <button class="main-btn" onclick="submitMessage()">Envoyer anonymement 🚀</button>
 
       <div class="section-title">3. Tu veux tes propres messages ?</div>
-      <button class="secondary-btn" onclick="window.location.href='/'">Recevoir mes propres messages 📲</button>
+      <button class="secondary-btn" onclick="openCreateAccountModal()">Recevoir mes propres messages 📲</button>
     </div>
 
     <!-- Écran de succès après envoi -->
@@ -88,7 +88,7 @@
         <h2 style="font-size: 1.6rem; font-weight: 900; margin-bottom: 10px;">Message envoyé ! 🎉</h2>
         <p style="font-size: 0.95rem; font-weight: 700; margin-bottom: 20px;">Que souhaites-tu faire maintenant ?</p>
         <button class="main-btn" style="margin-top:0;" onclick="resetToSendForm()">Envoyer un autre message ✍️</button>
-        <button onclick="window.location.href='/'" style="margin-top: 12px; background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.4); padding: 12px 20px; border-radius: 25px; font-weight: bold; width: 100%; cursor: pointer;">← Retour à l'accueil</button>
+        <button onclick="openCreateAccountModal()" style="margin-top: 12px; background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.4); padding: 12px 20px; border-radius: 25px; font-weight: bold; width: 100%; cursor: pointer;">← Retour à l'accueil</button>
       </div>
     </div>
   </div>
@@ -100,6 +100,11 @@
     }
 
     function submitMessage() {
+      const content = document.getElementById('noteContent').value.trim();
+      if (!content) {
+        alert("Veuillez saisir un message avant d'envoyer !");
+        return;
+      }
       document.getElementById('sendMsgView').style.display = 'none';
       document.getElementById('afterSendView').style.display = 'block';
     }
