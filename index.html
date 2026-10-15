@@ -191,6 +191,26 @@
   }
 </style>
 
+<style>
+  .card-carousel {
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+  }
+  .card-carousel::-webkit-scrollbar {
+    display: none !important;
+  }
+  .dot-indicator {
+    width: 8px;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+    transition: all 0.3s ease;
+  }
+  .dot-indicator.active {
+    background: #ffffff;
+    transform: scale(1.3);
+  }
+</style>
 </head>
 <body>
     <div class="app-container">
@@ -204,9 +224,9 @@
 
         <!-- ÉCRAN 2: RUBRIQUES & FORMULAIRE DE MESSAGE -->
         <div id="sendMsgView" style="display: none;">
-            <div class="logo-title">HUSHNOTE</div>
-            
-            <p style="font-size: 0.9rem; font-weight: bold; margin-bottom: 10px;">1. Choisis une rubrique</p>
+            <div class="logo-title">HUSHNOTE
+<div id="carouselDots" style="display:flex;justify-content:center;align-items:center;gap:8px;margin:12px 0 20px 0;"></div>
+<p style="font-size: 0.9rem; font-weight: bold; margin-bottom: 10px;">1. Choisis une rubrique</p>
             <div class="card-carousel">
                 <div class="theme-card selected" onclick="chooseCategory(this, '❓ Question', 'Pose ta question anonyme ici... 🤫')">
                     <h2>QUESTION</h2>
@@ -587,5 +607,31 @@
 
         document.addEventListener('DOMContentLoaded', init);
     </script>
+<script>
+function initDots() {
+  var c = document.querySelector(".card-carousel");
+  var d = document.getElementById("carouselDots");
+  if (!c || !d) return;
+  var cards = c.querySelectorAll(".theme-card");
+  if (!cards.length) return;
+  d.innerHTML = "";
+  for (var i = 0; i < cards.length; i++) {
+    var span = document.createElement("span");
+    span.className = i === 0 ? "dot-indicator active" : "dot-indicator";
+    d.appendChild(span);
+  }
+  c.addEventListener("scroll", function() {
+    var dots = d.querySelectorAll(".dot-indicator");
+    var cardW = cards[0].offsetWidth || 1;
+    var idx = Math.round(c.scrollLeft / cardW);
+    for (var j = 0; j < dots.length; j++) {
+      if (j === idx) { dots[j].classList.add("active"); }
+      else { dots[j].classList.remove("active"); }
+    }
+  });
+}
+document.addEventListener("DOMContentLoaded", initDots);
+setTimeout(initDots, 300);
+</script>
 </body>
 </html>
