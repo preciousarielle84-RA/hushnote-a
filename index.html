@@ -1,637 +1,152 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hushnote - Messages Anonymes</title>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body { 
-            background: linear-gradient(180deg, #7b1fa2 0%, #e91e63 100%);
-            min-height: 100vh;
-            color: #fff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 15px;
-        }
-        .app-container {
-            width: 100%;
-            max-width: 420px;
-            text-align: center;
-            position: relative;
-        }
-        .logo-title {
-            font-size: 3.5rem;
-            font-weight: 900;
-            font-style: italic;
-            text-shadow: 3px 3px 0px #000;
-            margin-bottom: 20px;
-            letter-spacing: -1px;
-        }
-        .main-btn {
-            background: #ffffff;
-            color: #7b1fa2;
-            font-size: 1.15rem;
-            font-weight: 800;
-            padding: 16px 30px;
-            border-radius: 35px;
-            border: none;
-            cursor: pointer;
-            width: 100%;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            margin-top: 25px;
-        }
-        .sec-btn {
-            background: rgba(255, 255, 255, 0.2);
-            color: #fff;
-            border: 2px solid #fff;
-            font-size: 1rem;
-            font-weight: 800;
-            padding: 14px 25px;
-            border-radius: 35px;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 12px;
-        }
-        .input-id {
-            width: 100%;
-            padding: 16px;
-            border-radius: 20px;
-            border: none;
-            font-size: 1.1rem;
-            font-weight: 700;
-            text-align: center;
-            outline: none;
-            background: rgba(255, 255, 255, 0.25);
-            color: #fff;
-            margin-top: 12px;
-        }
-        .input-id::placeholder { color: rgba(255, 255, 255, 0.8); }
-        .card-carousel {
-            display: flex;
-            gap: 15px;
-            overflow-x: auto;
-            scroll-snap-type: x mandatory;
-            padding-bottom: 15px;
-            margin-bottom: 20px;
-        }
-        .theme-card {
-            min-width: 280px;
-            height: 180px;
-            background: rgba(255, 255, 255, 0.18);
-            backdrop-filter: blur(10px);
-            border-radius: 30px;
-            border: 2px solid rgba(255,255,255,0.3);
-            padding: 20px;
-            scroll-snap-align: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-        }
-        .theme-card.selected { border: 3px solid #fff; background: rgba(255, 255, 255, 0.35); }
-        .theme-card h2 { font-size: 1.8rem; font-weight: 900; margin-bottom: 10px; text-transform: uppercase; }
-        .theme-card p { font-size: 0.95rem; background: #fff; color: #222; padding: 10px 16px; border-radius: 20px; font-weight: 700; }
-
-        .send-card {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 25px;
-            padding: 20px;
-            color: #222;
-            text-align: left;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            margin-bottom: 15px;
-        }
-        .send-card .box-title { font-size: 0.85rem; font-weight: 800; color: #7b1fa2; text-transform: uppercase; margin-bottom: 8px; }
-        .send-card textarea { width: 100%; border: none; outline: none; font-size: 1rem; height: 80px; resize: none; font-weight: 600; color: #222; }
-        .sender-input { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #ddd; margin-top: 10px; font-weight: bold; font-size: 0.9rem; }
-
-        .action-box {
-            background: #ffffff;
-            border-radius: 25px;
-            padding: 20px;
-            color: #222;
-            margin-bottom: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-        .action-box h4 { font-size: 0.9rem; color: #666; margin-bottom: 8px; }
-        .action-box .link-val { font-size: 0.85rem; font-weight: bold; color: #7b1fa2; margin-bottom: 12px; word-break: break-all; }
-        .sub-btn { background: none; border: 2px solid #7b1fa2; color: #7b1fa2; font-weight: 800; padding: 10px 20px; border-radius: 20px; width: 100%; cursor: pointer; }
-        .share-btn { background: linear-gradient(90deg, #7b1fa2, #e91e63); color: #fff; font-size: 1.1rem; font-weight: 800; border: none; padding: 15px; border-radius: 30px; width: 100%; cursor: pointer; }
-        
-        .nav-tabs { display: flex; justify-content: center; gap: 30px; margin-bottom: 20px; font-size: 1.2rem; font-weight: 900; }
-        .nav-tab { color: rgba(255,255,255,0.5); cursor: pointer; }
-        .nav-tab.active { color: #fff; border-bottom: 3px solid #fff; padding-bottom: 4px; }
-        .inbox-list { display: flex; flex-direction: column; gap: 12px; text-align: left; }
-        .msg-card { background: #fff; color: #222; padding: 16px; border-radius: 20px; }
-        .msg-header { display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: bold; color: #7b1fa2; margin-bottom: 6px; }
-        .msg-body { font-size: 1rem; font-weight: 700; margin-bottom: 8px; }
-        .msg-author { font-size: 0.85rem; font-weight: bold; color: #e91e63; }
-        .msg-author.blurred { color: transparent; text-shadow: 0 0 10px rgba(0,0,0,0.6); user-select: none; }
-        .paywall-banner { background: #f3e5f5; border: 2px dashed #7b1fa2; padding: 15px; border-radius: 20px; color: #222; margin-bottom: 15px; }
-
-        .social-modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7); backdrop-filter: blur(5px);
-            display: none; justify-content: center; align-items: flex-end; z-index: 1000;
-        }
-        .social-modal-card {
-            background: #fff; color: #222; width: 100%; max-width: 420px;
-            border-radius: 30px 30px 0 0; padding: 25px; text-align: center;
-            max-height: 85vh; overflow-y: auto;
-        }
-        .social-grid {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 20px 0;
-        }
-        .social-item {
-            display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer;
-            font-size: 0.75rem; font-weight: 800; color: #444; text-decoration: none;
-        }
-        .social-icon-btn {
-            width: 55px; height: 55px; border-radius: 18px; display: flex;
-            justify-content: center; align-items: center; font-size: 1.6rem; color: #fff;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-        .bg-wa { background: #25D366; }
-        .bg-fb { background: #1877F2; }
-        .bg-tg { background: #229ED9; }
-        .bg-tt { background: #000000; }
-        .bg-sc { background: #FFFC00; color: #000 !important; }
-        .bg-ig { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
-        .bg-pin { background: #E60023; }
-        .bg-yt { background: #FF0000; }
-        .bg-tw { background: #000000; }
-        .bottom-action-row {
-            display: flex; gap: 10px; margin-top: 10px;
-        }
-        .modal-other-btn {
-            flex: 1; background: #7b1fa2; color: #fff; border: none; padding: 14px;
-            border-radius: 20px; font-weight: 800; font-size: 0.95rem; cursor: pointer;
-        }
-        .modal-cancel-btn {
-            flex: 1; background: #f1f1f1; color: #555; border: none; padding: 14px;
-            border-radius: 20px; font-weight: 800; font-size: 0.95rem; cursor: pointer;
-        }
-        .msg-share-btn {
-            background: #7b1fa2; color: #fff; border: none; padding: 8px 14px;
-            border-radius: 12px; font-weight: 800; font-size: 0.8rem; margin-top: 10px; cursor: pointer;
-            display: inline-block; width: 100%;
-        }
-    </style>
-
-<style>
-  .carousel-container, .themes-scroll, [class*="theme"] {
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none;  /* IE and Edge */
-  }
-  .carousel-container::-webkit-scrollbar, .themes-scroll::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera */
-  }
-</style>
-
-<style>
-  .card-carousel {
-    scrollbar-width: none !important;
-    -ms-overflow-style: none !important;
-  }
-  .card-carousel::-webkit-scrollbar {
-    display: none !important;
-  }
-  .dot-indicator {
-    width: 8px;
-    height: 8px;
-    background: rgba(255, 255, 255, 0.4);
-    border-radius: 50%;
-    transition: all 0.3s ease;
-  }
-  .dot-indicator.active {
-    background: #ffffff;
-    transform: scale(1.3);
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HushNote</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background: linear-gradient(135deg, #8e2de2, #4a00e0); min-height: 100vh; color: white; display: flex; justify-content: center; padding: 20px 10px; }
+    .container { width: 100%; max-width: 420px; text-align: center; }
+    .logo-title { font-size: 2.2rem; font-weight: 900; font-style: italic; letter-spacing: 1px; margin-bottom: 20px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+    .section-title { font-size: 1rem; font-weight: 700; margin-bottom: 12px; opacity: 0.95; }
+    
+    /* Carrousel */
+    .card-carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 15px; padding: 5px 0 15px 0; scrollbar-width: none !important; -ms-overflow-style: none !important; }
+    .card-carousel::-webkit-scrollbar { display: none !important; }
+    .theme-card { flex: 0 0 100%; scroll-snap-align: center; background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); border-radius: 25px; border: 2px solid rgba(255, 255, 255, 0.3); padding: 30px 20px; cursor: pointer; transition: transform 0.2s; }
+    .theme-card h2 { font-size: 1.8rem; font-weight: 900; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
+    .theme-card p { background: white; color: #333; padding: 12px 18px; border-radius: 20px; font-weight: bold; font-size: 0.95rem; display: inline-block; box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
+    
+    /* Indicateurs de points (Dots) */
+    .dots-container { display: flex; justify-content: center; align-items: center; gap: 8px; margin: 10px 0 25px 0; }
+    .dot-indicator { width: 8px; height: 8px; background: rgba(255, 255, 255, 0.35); border-radius: 50%; transition: all 0.3s ease; }
+    .dot-indicator.active { background: #ffffff; transform: scale(1.4); }
+    
+    /* Formulaire de rédaction */
+    .send-card { background: white; border-radius: 25px; padding: 20px; color: #333; text-align: left; box-shadow: 0 10px 25px rgba(0,0,0,0.2); margin-bottom: 20px; }
+    .box-title { font-weight: 900; color: #8e2de2; font-size: 0.9rem; margin-bottom: 10px; text-transform: uppercase; }
+    textarea { width: 100%; height: 90px; border: none; resize: none; font-size: 1rem; outline: none; color: #444; }
+    .sender-input { width: 100%; border: 1px solid #eee; border-radius: 15px; padding: 12px; font-size: 0.9rem; outline: none; margin-top: 10px; background: #f9f9f9; }
+    
+    /* Boutons */
+    .main-btn { background: white; color: #8e2de2; border: none; width: 100%; padding: 15px; border-radius: 25px; font-weight: 900; font-size: 1.05rem; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.2); margin-bottom: 25px; }
+    .secondary-btn { background: transparent; color: white; border: 2px solid rgba(255,255,255,0.6); width: 100%; padding: 12px; border-radius: 25px; font-weight: bold; cursor: pointer; }
+  </style>
 </head>
 <body>
-    <div class="app-container">
-        <!-- ÉCRAN 1: LANDING PAGE -->
-        <div id="landingView">
-            <div class="logo-title">HUSHNOTE</div>
-            <h2 style="font-size: 1.4rem; font-weight: 800; line-height: 1.3;" id="landingWelcomeTitle">Recevez des messages anonymes sur vos réseaux ! 💬✨</h2>
-            <button class="main-btn" onclick="startMessagingFlow()">Obtenir des questions 🚀</button>
-            <p style="font-size: 0.75rem; margin-top: 20px; opacity: 0.8;">En continuant, vous acceptez nos Conditions d'utilisation.</p>
-        </div>
+  <div class="container">
+    <div id="sendMsgView">
+      <div class="logo-title">HUSHNOTE</div>
 
-        <!-- ÉCRAN 2: RUBRIQUES & FORMULAIRE DE MESSAGE -->
-        <div id="sendMsgView" style="display: none;">
-            <div class="logo-title">HUSHNOTE
-<div id="carouselDots" style="display:flex;justify-content:center;align-items:center;gap:8px;margin:12px 0 20px 0;"></div>
-<p style="font-size: 0.9rem; font-weight: bold; margin-bottom: 10px;">1. Choisis une rubrique</p>
-            <div class="card-carousel">
-                <div class="theme-card selected" onclick="chooseCategory(this, '❓ Question', 'Pose ta question anonyme ici... 🤫')">
-                    <h2>QUESTION</h2>
-                    <p>Pose ta question anonyme ! ❓</p>
-                </div>
-                <div class="theme-card" onclick="chooseCategory(this, '📖 Histoire', 'Raconte une histoire anonyme... 📖')">
-                    <h2>HISTOIRE</h2>
-                    <p>Partage une histoire folle ! 📖</p>
-                </div>
-                <div class="theme-card" onclick="chooseCategory(this, '🔒 Secret', 'Raconte un secret inavouable... 🔒')">
-                    <h2>SECRET</h2>
-                    <p>Partage un secret inavouable ! 🔒</p>
+      <div class="section-title">1. Choisis une rubrique</div>
       
-                </div>
-                <div class="theme-card" onclick="chooseCategory(this, '✨ Vœu', 'Écris un vœu anonyme... ✨')">
-                    <h2>VŒU</h2>
-                    <p>Fais un vœu sincère ! ✨</p>
-                </div>
-                <div class="theme-card" onclick="chooseCategory(this, '🫣 Ton Crush', 'Dites-moi qui est votre crush... 🫣')">
-                    <h2>TON CRUSH</h2>
-                    <p>Avoue ton crush anonymement ! 🫣</p>
-                </div>
-    </div>
-
-    <!-- Points indicateurs du carrousel -->
-    <div style="display: flex; justify-content: center; gap: 8px; margin: 15px 0;">
-      <span style="width: 8px; height: 8px; background: white; border-radius: 50%; display: inline-block;"></span>
-      <span style="width: 8px; height: 8px; background: rgba(255,255,255,0.4); border-radius: 50%; display: inline-block;"></span>
-      <span style="width: 8px; height: 8px; background: rgba(255,255,255,0.4); border-radius: 50%; display: inline-block;"></span>
-    </div>
-
-    <p style="font-size: 0.9rem; font-weight: bold; margin-bottom: 10px;">2. Rédige ton message</p>
-            <div class="send-card">
-                <div class="box-title" id="selectedCategoryBadge">❓ QUESTION</div>
-                <textarea id="noteContent" placeholder="Pose ta question anonyme ici... 🤫"></textarea>
-                <input type="text" id="senderPseudo" class="sender-input" placeholder="Ton pseudo, prénom ou un indice...">
-            </div>
-
-            <button class="main-btn" onclick="sendMessage()">Envoyer anonymement 🚀</button>
-            <div style="margin-top:25px; border-top:1px solid rgba(255,255,255,0.3); padding-top:20px;"><p style="font-size:0.9rem; font-weight:bold; margin-bottom:10px;">3. Tu veux tes propres messages ?</p><button class="sec-btn" style="margin-top:0;" onclick="openCreateOrDashboardSpace()">Recevoir mes propres messages 📲</button>
-</div>
+      <!-- Carrousel des rubriques -->
+      <div class="card-carousel" id="cardCarousel">
+        <div class="theme-card" onclick="chooseCategory('❓ QUESTION', 'Pose ta question anonyme ici... 🤫')">
+          <h2>QUESTION</h2>
+          <p>Pose ta question anonyme ! ❓</p>
         </div>
+        <div class="theme-card" onclick="chooseCategory('🔒 SECRET', 'Raconte un secret inavouable... 🔒')">
+          <h2>SECRET</h2>
+          <p>Partage un secret inavouable ! 🔒</p>
+        </div>
+        <div class="theme-card" onclick="chooseCategory('😍 TON CRUSH', 'Dites-moi qui est votre crush... 🤫')">
+          <h2>TON CRUSH</h2>
+          <p>Avoue ton crush anonymement ! 🤫</p>
+        </div>
+        <div class="theme-card" onclick="chooseCategory('✨ VŒU', 'Fais un vœu sincère... ✨')">
+          <h2>VŒU</h2>
+          <p>Fais un vœu sincère ! ✨</p>
+        </div>
+        <div class="theme-card" onclick="chooseCategory('📖 HISTOIRE', 'Partage une histoire folle... 📖')">
+          <h2>HISTOIRE</h2>
+          <p>Partage une histoire folle ! 📖</p>
+        </div>
+      </div>
 
-        <!-- ÉCRAN 3: CONFIRMATION POST-ENVOI -->
-        <div id="afterSendView" style="display:none;">
-    <div class="logo-title">HUSHNOTE</div>
-    <div style="background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); padding: 25px; border-radius: 30px; border: 2px solid rgba(255, 255, 255, 0.3);">
-      <h2 style="font-size: 1.6rem; font-weight: 900; margin-bottom: 10px;">Message envoyé ! 🎉</h2>
-      <p style="font-size: 0.95rem; font-weight: 700; margin-bottom: 20px;">Que souhaites-tu faire maintenant ?</p>
-      <button class="main-btn" style="margin-top:0;" onclick="resetToSendForm()">Envoyer un autre message ✍️</button>
-      <button onclick="window.location.href='/'" style="margin-top: 12px; background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.4); padding: 12px 20px; border-radius: 25px; font-weight: bold; width: 100%; cursor: pointer;">← Retour à l'accueil</button>
+      <!-- Indicateurs dynamiques (Remplace la barre de défilement) -->
+      <div class="dots-container" id="carouselDots"></div>
+
+      <div class="section-title">2. Rédige ton message</div>
+      <div class="send-card">
+        <div class="box-title" id="selectedCategoryBadge">❓ QUESTION</div>
+        <textarea id="noteContent" placeholder="Pose ta question anonyme ici... 🤫"></textarea>
+        <input type="text" id="senderPseudo" class="sender-input" placeholder="Ton pseudo, prénom ou un indice...">
+      </div>
+
+      <button class="main-btn" onclick="submitMessage()">Envoyer anonymement 🚀</button>
+
+      <div class="section-title">3. Tu veux tes propres messages ?</div>
+      <button class="secondary-btn" onclick="window.location.href='/'">Recevoir mes propres messages 📲</button>
+    </div>
+
+    <!-- Écran de succès après envoi -->
+    <div id="afterSendView" style="display:none;">
+      <div class="logo-title">HUSHNOTE</div>
+      <div style="background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); padding: 25px; border-radius: 30px; border: 2px solid rgba(255, 255, 255, 0.3);">
+        <h2 style="font-size: 1.6rem; font-weight: 900; margin-bottom: 10px;">Message envoyé ! 🎉</h2>
+        <p style="font-size: 0.95rem; font-weight: 700; margin-bottom: 20px;">Que souhaites-tu faire maintenant ?</p>
+        <button class="main-btn" style="margin-top:0;" onclick="resetToSendForm()">Envoyer un autre message ✍️</button>
+        <button onclick="window.location.href='/'" style="margin-top: 12px; background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.4); padding: 12px 20px; border-radius: 25px; font-weight: bold; width: 100%; cursor: pointer;">← Retour à l'accueil</button>
+      </div>
     </div>
   </div>
 
-        <!-- ÉCRAN 4: SAISIE PSEUDO & CODE A 2 CHIFFRES -->
-        <div id="enterPseudoView" style="display: none;">
-            <div class="logo-title">HUSHNOTE</div>
-            <h3 style="font-size: 1.2rem; font-weight: 800; margin-bottom: 10px;">Espace Réception</h3>
-            <p style="font-size: 0.85rem; opacity: 0.9; margin-bottom: 15px;">Entrez votre pseudo unique et votre code secret à <strong>4 chiffres</strong>.</p>
-            
-            <input type="text" id="customPseudoInput" class="input-id" placeholder="Ton Pseudo unique (ex: arielle)">
-            <input type="password" id="customPasswordInput" class="input-id" maxlength="2" inputmode="numeric" placeholder="Code à 4 chiffres (1234)">
-            
-            <button class="main-btn" onclick="handleAuthAndAccess()">Accéder à mes messages 🚀</button>
-            <button class="sec-btn" style="margin-top:10px; background:rgba(255,255,255,0.2); color:#fff;" onclick="init()">← Retour</button>
-        </div>
-
-        <!-- ÉCRAN 5: DASHBOARD & INBOX PERSO -->
-        <div id="dashboardView" style="display: none;">
-            <div class="nav-tabs">
-                <div class="nav-tab active" id="tabPlay" onclick="switchTab('play')">PLAY</div>
-                <div class="nav-tab" id="tabInbox" onclick="switchTab('inbox')">INBOX 📬</div>
-            </div>
-
-            <div id="playSection">
-                <div class="card-carousel">
-                    <div class="theme-card">
-                        <h2>MESSAGES</h2>
-                        <p>Envoyez-moi des messages anonymes ! 🤫</p>
-                    </div>
-                    <div class="theme-card">
-                        <h2>TON CRUSH</h2>
-                        <p>Dites-moi qui est votre crush anonymement 🫣</p>
-                    </div>
-                </div>
-
-                <div class="action-box">
-                    <h4>Mon lien unique à partager :</h4>
-                    <div class="link-val" id="shareLinkDisplay">hushnote-a.onrender.com/?u=...</div>
-                    <button class="sub-btn" onclick="copyUserLink()">Copier le lien</button>
-                </div>
-
-                <div style="margin-top: 15px;">
-                    <button class="share-btn" onclick="openSocialModal('link')">Partager dans ma Story 📸</button>
-                </div>
-            </div>
-
-            <div id="inboxSection" style="display: none;">
-                <div id="paywallBox" class="paywall-banner">
-                    <h3 style="color:#7b1fa2; font-size:1rem; font-weight:900;">🔒 Noms des expéditeurs verrouillés</h3>
-                    <p style="font-size:0.85rem; margin: 6px 0 10px;">Abonnez-vous à <strong>650 FCFA / mois</strong> pour savoir qui vous a écrit.</p>
-                    <a id="payLink" href="#" target="_blank" style="background:#7b1fa2; color:#fff; text-decoration:none; padding:10px 18px; border-radius:15px; font-weight:bold; font-size:0.9rem; display:inline-block;">Débloquer l'Abonnement 👑</a>
-                </div>
-
-                <div class="inbox-list" id="inboxList">
-                    <p style="text-align:center; color:#fff;">Chargement de vos messages...</p>
-                </div>
-            </div>
-
-            <button onclick="logout()" style="background:none; border:none; color:rgba(255,255,255,0.8); text-decoration:underline; font-weight:bold; margin-top:25px; cursor:pointer;">Changer d'utilisateur / Se déconnecter</button>
-        </div>
-    </div>
-
-    <!-- MODAL PARTAGE SOCIAL -->
-    <div class="social-modal-overlay" id="socialModal" onclick="closeSocialModal(event)">
-        <div class="social-modal-card" onclick="event.stopPropagation()">
-            <h3 style="font-size:1.1rem; font-weight:900; color:#7b1fa2;">Partager dans ta Story 📸</h3>
-            <p style="font-size:0.8rem; color:#666; margin-top:4px;">Choisis ton réseau social :</p>
-            
-            <div class="social-grid">
-                <div class="social-item" onclick="shareToPlatform('whatsapp')">
-                    <div class="social-icon-btn bg-wa">💬</div>
-                    <span>WhatsApp</span>
-                </div>
-                <div class="social-item" onclick="shareToPlatform('instagram')">
-                    <div class="social-icon-btn bg-ig">📸</div>
-                    <span>Instagram</span>
-                </div>
-                <div class="social-item" onclick="shareToPlatform('facebook')">
-                    <div class="social-icon-btn bg-fb">f</div>
-                    <span>Facebook</span>
-                </div>
-                <div class="social-item" onclick="shareToPlatform('tiktok')">
-                    <div class="social-icon-btn bg-tt">🎵</div>
-                    <span>TikTok</span>
-                </div>
-                <div class="social-item" onclick="shareToPlatform('snapchat')">
-                    <div class="social-icon-btn bg-sc">👻</div>
-                    <span>Snapchat</span>
-                </div>
-                <div class="social-item" onclick="shareToPlatform('telegram')">
-                    <div class="social-icon-btn bg-tg">✈️</div>
-                    <span>Telegram</span>
-                </div>
-                <div class="social-item" onclick="shareToPlatform('pinterest')">
-                    <div class="social-icon-btn bg-pin">📌</div>
-                    <span>Pinterest</span>
-                </div>
-                <div class="social-item" onclick="shareToPlatform('youtube')">
-                    <div class="social-icon-btn bg-yt">▶️</div>
-                    <span>YouTube</span>
-                </div>
-                <div class="social-item" onclick="shareToPlatform('twitter')">
-                    <div class="social-icon-btn bg-tw">𝕏</div>
-                    <span>Twitter/X</span>
-                </div>
-            </div>
-
-            <div class="bottom-action-row">
-                <button class="modal-other-btn" onclick="shareToPlatform('native')">📲 Autres</button>
-                <button class="modal-cancel-btn" onclick="closeSocialModalDirect()">Annuler</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        var currentSelectedCategory = '❓ Question';
-        var urlParams = new URLSearchParams(window.location.search);
-        var targetRecipient = urlParams.get('u');
-        var myUserId = localStorage.getItem('hushnote_owner_id');
-        var activeShareText = "";
-
-        function hideAllViews() {
-            document.getElementById('landingView').style.display = 'none';
-            document.getElementById('sendMsgView').style.display = 'none';
-            document.getElementById('afterSendView').style.display = 'none';
-            document.getElementById('enterPseudoView').style.display = 'none';
-            document.getElementById('dashboardView').style.display = 'none';
-        }
-
-        function init() {
-            hideAllViews();
-            if (targetRecipient) {
-                document.getElementById('landingView').style.display = 'block';
-                document.getElementById('landingWelcomeTitle').innerText = "Envoyez un message anonyme à @" + targetRecipient + " ! 💬✨";
-            } else if (myUserId) {
-                showDashboard();
-            } else {
-                document.getElementById('landingView').style.display = 'block';
-            }
-        }
-
-        function startMessagingFlow() {
-            hideAllViews();
-            document.getElementById('sendMsgView').style.display = 'block';
-        }
-
-        function chooseCategory(cardEl, categoryName, placeholderText) {
-            document.querySelectorAll('#sendMsgView .card-carousel .theme-card').forEach(c => c.classList.remove('selected'));
-            cardEl.classList.add('selected');
-            currentSelectedCategory = categoryName;
-            document.getElementById('selectedCategoryBadge').innerText = categoryName.toUpperCase();
-            document.getElementById('noteContent').placeholder = placeholderText;
-        }
-
-        function sendMessage() {
-            var content = document.getElementById('noteContent').value.trim();
-            var pseudo = document.getElementById('senderPseudo').value.trim();
-            if (!content || !pseudo) return alert("Veuillez écrire votre message ET indiquer votre prénom/pseudo/indice !");
-
-            var finalRecipient = targetRecipient || myUserId || 'admin';
-
-            fetch('/api/send-message', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    recipient_username: finalRecipient, 
-                    category: currentSelectedCategory, 
-                    content: content, 
-                    sender_pseudo: pseudo 
-                })
-            })
-            .then(res => res.json())
-            .then(data => {
-                document.getElementById('noteContent').value = '';
-                document.getElementById('senderPseudo').value = '';
-                hideAllViews();
-                document.getElementById('afterSendView').style.display = 'block';
-            })
-            .catch(() => {
-                alert("Erreur lors de l'envoi du message.");
-            });
-        }
-
-        function resetToSendForm() {
-            hideAllViews();
-            document.getElementById('sendMsgView').style.display = 'block';
-        }
-
-        function openCreateOrDashboardSpace() {
-            hideAllViews();
-            window.history.replaceState({}, document.title, window.location.pathname);
-            
-            if (myUserId) {
-                showDashboard();
-            } else {
-                document.getElementById('customPseudoInput').value = '';
-                document.getElementById('customPasswordInput').value = '';
-                document.getElementById('enterPseudoView').style.display = 'block';
-            }
-        }
-
-        function handleAuthAndAccess() {
-            var rawInput = document.getElementById('customPseudoInput').value.replace('@','').trim().toLowerCase();
-            var rawPass = document.getElementById('customPasswordInput').value.trim();
-            
-            if (!rawInput) return alert("Veuillez entrer votre pseudo.");
-            if (!/^\d{2}$/.test(rawPass)) return alert("Le code secret doit comporter exactement 4 chiffres (123434, 0000).");
-
-            var savedPass = localStorage.getItem('hushnote_pass_' + rawInput);
-
-            if (savedPass) {
-                if (savedPass !== rawPass) {
-                    return alert("Code secret incorrect pour ce pseudo !");
-                }
-            } else {
-                localStorage.setItem('hushnote_pass_' + rawInput, rawPass);
-            }
-
-            myUserId = rawInput;
-            localStorage.setItem('hushnote_owner_id', myUserId);
-            showDashboard();
-        }
-
-        function showDashboard() {
-            hideAllViews();
-            document.getElementById('dashboardView').style.display = 'block';
-            var shareUrl = "https://hushnote-a.onrender.com/?u=" + myUserId;
-            document.getElementById('shareLinkDisplay').innerText = shareUrl;
-            document.getElementById('payLink').href = "https://ici-y-a-tout.mymaketou.shop/products/ia-business-le-guide-pour-generer-des-revenus/checkout?username=" + myUserId;
-
-            loadInbox();
-        }
-
-        function switchTab(tab) {
-            if (tab === 'play') {
-                document.getElementById('tabPlay').classList.add('active');
-                document.getElementById('tabInbox').classList.remove('active');
-                document.getElementById('playSection').style.display = 'block';
-                document.getElementById('inboxSection').style.display = 'none';
-            } else {
-                document.getElementById('tabInbox').classList.add('active');
-                document.getElementById('tabPlay').classList.remove('active');
-                document.getElementById('playSection').style.display = 'none';
-                document.getElementById('inboxSection').style.display = 'block';
-            }
-        }
-
-        function copyUserLink() {
-            var link = "https://hushnote-a.onrender.com/?u=" + myUserId;
-            navigator.clipboard.writeText(link);
-            alert("Lien copié dans le presse-papiers ! 📲");
-        }
-
-        function openSocialModal(type, customText) {
-            var link = "https://hushnote-a.onrender.com/?u=" + myUserId;
-            if (type === 'message' && customText) {
-                activeShareText = "💬 Message anonyme reçu sur Hushnote :\n\"" + customText + "\"\n\nPose-moi tes questions ici 👉 " + link;
-            } else {
-                activeShareText = "Pose-moi des questions anonymes sur Hushnote ! 💬 " + link;
-            }
-            document.getElementById('socialModal').style.display = 'flex';
-        }
-
-        function closeSocialModal(e) {
-            if (e.target.id === 'socialModal') closeSocialModalDirect();
-        }
-
-        function closeSocialModalDirect() {
-            document.getElementById('socialModal').style.display = 'none';
-        }
-
-        function shareToPlatform(platform) {
-            var link = "https://hushnote-a.onrender.com/?u=" + myUserId;
-            var text = activeShareText || ("Pose-moi des questions anonymes sur Hushnote ! 💬 " + link);
-            closeSocialModalDirect();
-
-            if (platform === 'whatsapp') {
-                window.location.href = "https://api.whatsapp.com/send?text=" + encodeURIComponent(text);
-            } else if (platform === 'facebook') {
-                window.location.href = "https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(link);
-            } else if (platform === 'telegram') {
-                window.location.href = "https://t.me/share/url?url=" + encodeURIComponent(link) + "&text=" + encodeURIComponent(text);
-            } else if (platform === 'twitter') {
-                window.location.href = "https://twitter.com/intent/tweet?text=" + encodeURIComponent(text);
-            } else if (platform === 'pinterest') {
-                window.location.href = "https://pinterest.com/pin/create/button/?url=" + encodeURIComponent(link) + "&description=" + encodeURIComponent(text);
-            } else if (platform === 'native') {
-                if (navigator.share) {
-                    navigator.share({ title: 'Hushnote', text: text, url: link }).catch(() => {});
-                } else {
-                    copyUserLink();
-                }
-            } else if (platform === 'instagram' || platform === 'tiktok' || platform === 'snapchat' || platform === 'youtube') {
-                navigator.clipboard.writeText(text);
-                alert("Texte et lien copiés ! Ouvrez " + platform.toUpperCase() + " pour le coller dans votre Story 📸");
-            }
-        }
-
-        function loadInbox() {
-    if (!myUserId) return;
-            fetch('/api/messages/' + myUserId)
-            .then(res => res.json())
-            .then(data => {
-                var list = document.getElementById('inboxList');
-                if (!data.messages || data.messages.length === 0) {
-                    list.innerHTML = '<p style="text-align:center; color:#fff;">Aucun message reçu pour le moment.</p>';
-                    return;
-                }
-                var html = '';
-                data.messages.forEach(m => {
-                    var safeContent = m.content.replace(/'/g, "\\'").replace(/"/g, '&quot;');
-                    html += '<div class="msg-card">' +
-                        '<div class="msg-header"><span>' + m.category + '</span></div>' +
-                        '<div class="msg-body">' + m.content + '</div>' +
-                        '<div>Auteur : <span class="msg-author blurred">' + m.sender_pseudo + '</span></div>' +
-                        '<button class="msg-share-btn" onclick="openSocialModal(\'message\', \'' + safeContent + '\')">Partager ce message 📸</button>' +
-                    '</div>';
-                });
-                list.innerHTML = html;
-            });
-        }
-
-        function logout() {
-            localStorage.removeItem('hushnote_owner_id');
-            location.href = "https://hushnote-a.onrender.com";
-        }
-
-        document.addEventListener('DOMContentLoaded', init);
-    </script>
-<script>
-function initDots() {
-  var c = document.querySelector(".card-carousel");
-  var d = document.getElementById("carouselDots");
-  if (!c || !d) return;
-  var cards = c.querySelectorAll(".theme-card");
-  if (!cards.length) return;
-  d.innerHTML = "";
-  for (var i = 0; i < cards.length; i++) {
-    var span = document.createElement("span");
-    span.className = i === 0 ? "dot-indicator active" : "dot-indicator";
-    d.appendChild(span);
-  }
-  c.addEventListener("scroll", function() {
-    var dots = d.querySelectorAll(".dot-indicator");
-    var cardW = cards[0].offsetWidth || 1;
-    var idx = Math.round(c.scrollLeft / cardW);
-    for (var j = 0; j < dots.length; j++) {
-      if (j === idx) { dots[j].classList.add("active"); }
-      else { dots[j].classList.remove("active"); }
+  <script>
+    function chooseCategory(name, placeholder) {
+      document.getElementById('selectedCategoryBadge').innerText = name;
+      document.getElementById('noteContent').placeholder = placeholder;
     }
-  });
-}
-document.addEventListener("DOMContentLoaded", initDots);
-setTimeout(initDots, 300);
-</script>
+
+    function submitMessage() {
+      document.getElementById('sendMsgView').style.display = 'none';
+      document.getElementById('afterSendView').style.display = 'block';
+    }
+
+    function resetToSendForm() {
+      document.getElementById('afterSendView').style.display = 'none';
+      document.getElementById('sendMsgView').style.display = 'block';
+      document.getElementById('noteContent').value = '';
+      document.getElementById('senderPseudo').value = '';
+    }
+
+    // Gestion dynamique des points du carrousel
+    function initCarouselDots() {
+      const carousel = document.getElementById('cardCarousel');
+      const dotsContainer = document.getElementById('carouselDots');
+      if (!carousel || !dotsContainer) return;
+
+      const cards = carousel.querySelectorAll('.theme-card');
+      dotsContainer.innerHTML = '';
+
+      // Génère exactement un point par carte (5 rubriques = 5 points)
+      cards.forEach((_, idx) => {
+        const dot = document.createElement('div');
+        dot.className = 'dot-indicator' + (idx === 0 ? ' active' : '');
+        dotsContainer.appendChild(dot);
+      });
+
+      const dots = dotsContainer.querySelectorAll('.dot-indicator');
+
+      // Met à jour la surbrillance du point pendant le scroll
+      carousel.addEventListener('scroll', () => {
+        const scrollPos = carousel.scrollLeft;
+        const cardWidth = cards[0].offsetWidth || 1;
+        const activeIndex = Math.round(scrollPos / cardWidth);
+
+        dots.forEach((dot, idx) => {
+          if (idx === activeIndex) {
+            dot.classList.add('active');
+          } else {
+            dot.classList.remove('active');
+          }
+        });
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', initCarouselDots);
+    setTimeout(initCarouselDots, 200);
+  </script>
 </body>
 </html>
