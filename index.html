@@ -108,6 +108,7 @@
 
       <div class="section-title">1. Choisis une rubrique</div>
       
+      <!-- Les 5 rubriques -->
       <div class="card-carousel" id="cardCarousel">
         <div class="theme-card" onclick="chooseCategory('❓ QUESTION', 'Pose ta question anonyme ici... 🤫')">
           <h2>QUESTION</h2>
@@ -131,7 +132,7 @@
         </div>
       </div>
 
-      <!-- Dots dynamiques -->
+      <!-- Les 5 points dynamiques sous le carrousel -->
       <div class="dots-container" id="carouselDots"></div>
 
       <div class="section-title">2. Rédige ton message</div>
@@ -178,7 +179,6 @@
       document.getElementById('noteContent').placeholder = placeholder;
     }
 
-    // Validation du message et du pseudo / indice
     function submitMessage() {
       const content = document.getElementById('noteContent').value.trim();
       const pseudo = document.getElementById('senderPseudo').value.trim();
@@ -196,7 +196,6 @@
       showView('sendMsgView');
     }
 
-    // Modal de création de compte uniquement déclenchée au clic sur "Recevoir mes propres messages"
     function openCreateAccountModal() {
       const pseudo = prompt("Entrez votre pseudo pour recevoir des messages anonymes :");
       if (!pseudo) return;
@@ -209,7 +208,7 @@
       window.location.href = "/" + encodeURIComponent(pseudo);
     }
 
-    // Synchronisation des 5 points du carrousel
+    // Génération et synchronisation des 5 points pour les 5 rubriques
     function initCarouselDots() {
       const carousel = document.getElementById('cardCarousel');
       const dotsContainer = document.getElementById('carouselDots');
