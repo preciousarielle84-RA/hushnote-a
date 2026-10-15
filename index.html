@@ -57,7 +57,7 @@
     .dot-indicator { width: 8px; height: 8px; background: rgba(255, 255, 255, 0.4); border-radius: 50%; transition: all 0.3s ease; }
     .dot-indicator.active { background: #ffffff; transform: scale(1.4); }
 
-    /* Inputs */
+    /* Formulaires */
     .send-card { background: white; border-radius: 25px; padding: 20px; color: #333; text-align: left; box-shadow: 0 10px 25px rgba(0,0,0,0.2); margin-bottom: 20px; }
     .box-title { font-weight: 900; color: #8a1282; font-size: 0.9rem; margin-bottom: 10px; text-transform: uppercase; }
     textarea { width: 100%; height: 95px; border: none; resize: none; font-size: 1rem; outline: none; color: #333; }
@@ -78,12 +78,12 @@
     }
     .account-input::placeholder { color: rgba(255, 255, 255, 0.85); }
 
-    /* Navigation Onglets PLAY / INBOX */
+    /* Onglets PLAY / INBOX */
     .nav-tabs { display: flex; justify-content: center; gap: 30px; margin-bottom: 20px; }
     .tab-btn { font-size: 1.4rem; font-weight: 900; opacity: 0.6; cursor: pointer; padding-bottom: 5px; border-bottom: 3px solid transparent; }
     .tab-btn.active { opacity: 1; border-bottom: 3px solid white; }
 
-    /* Carte de partage du lien */
+    /* Carte de lien */
     .share-card { background: white; border-radius: 25px; padding: 25px 20px; color: #333; box-shadow: 0 10px 25px rgba(0,0,0,0.2); margin-top: 20px; margin-bottom: 20px; }
     .share-card p { font-weight: 800; font-size: 1rem; margin-bottom: 10px; color: #444; }
     .link-display { color: #8a1282; font-weight: 800; word-break: break-all; font-size: 0.95rem; margin-bottom: 15px; display: block; text-decoration: none; }
@@ -125,11 +125,11 @@
       box-shadow: 0 6px 18px rgba(0,0,0,0.2);
     }
 
-    /* Modale Réseaux Sociaux */
+    /* Modale Partage Réseaux */
     .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); z-index: 100; justify-content: center; align-items: flex-end; }
     .modal-content { background: white; border-radius: 30px 30px 0 0; width: 100%; max-width: 420px; padding: 25px 20px; color: #333; text-align: center; }
     .social-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 20px 0; }
-    .social-item { display: flex; flex-direction: column; align-items: center; gap: 8px; font-weight: 700; font-size: 0.85rem; color: #444; }
+    .social-item { display: flex; flex-direction: column; align-items: center; gap: 8px; font-weight: 700; font-size: 0.85rem; color: #444; cursor: pointer; }
     .social-icon { width: 50px; height: 50px; border-radius: 15px; display: flex; justify-content: center; align-items: center; font-size: 1.5rem; color: white; }
   </style>
 </head>
@@ -190,7 +190,7 @@
       <button class="secondary-btn" onclick="showView('accountView')">Recevoir mes propres messages 📲</button>
     </div>
 
-    <!-- 3. ESPACE RÉCEPTION / SAISIE DES IDENTIFIANTS -->
+    <!-- 3. ESPACE RÉCEPTION -->
     <div id="accountView" style="display:none;">
       <div class="logo-title">HUSHNOTE</div>
       <h2 style="font-size: 1.6rem; font-weight: 900; margin-bottom: 8px;">Espace Réception</h2>
@@ -205,7 +205,7 @@
       <button class="secondary-btn" onclick="showView('sendMsgView')">← Retour</button>
     </div>
 
-    <!-- 4. TABLEAU DE BORD PERSONNEL (PLAY / INBOX) -->
+    <!-- 4. TABLEAU DE BORD (PLAY / INBOX) -->
     <div id="dashboardView" style="display:none;">
       <div class="logo-title">HUSHNOTE</div>
 
@@ -214,7 +214,6 @@
         <span class="tab-btn" id="tabInbox" onclick="switchDashboardTab('inbox')">INBOX 📬</span>
       </div>
 
-      <!-- Onglet PLAY -->
       <div id="playSection">
         <div class="card-carousel">
           <div class="theme-card">
@@ -236,7 +235,6 @@
         </div>
       </div>
 
-      <!-- Onglet INBOX -->
       <div id="inboxSection" style="display:none;">
         <div style="background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); border-radius: 25px; padding: 30px 20px; border: 2px solid rgba(255,255,255,0.3);">
           <h3 style="font-size: 1.2rem; font-weight: 800; margin-bottom: 10px;">Boîte de réception 📬</h3>
@@ -245,7 +243,7 @@
       </div>
     </div>
 
-    <!-- 5. VUE CONFIRMATION D'ENVOI -->
+    <!-- 5. CONFIRMATION D'ENVOI -->
     <div id="afterSendView" style="display:none;">
       <div class="logo-title">HUSHNOTE</div>
       <div style="background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); padding: 30px 20px; border-radius: 30px; border: 2px solid rgba(255, 255, 255, 0.35);">
@@ -259,46 +257,46 @@
 
   </div>
 
-  <!-- MODALE DE PARTAGE RÉSEAUX SOCIAUX -->
+  <!-- MODALE DE PARTAGE -->
   <div class="modal-overlay" id="shareModal">
     <div class="modal-content">
       <h3 style="font-size: 1.2rem; font-weight: 900; color: #8a1282;">Partager dans ta Story 📸</h3>
       <p style="font-size: 0.85rem; color: #666; margin-top: 4px;">Choisis ton réseau social :</p>
       
       <div class="social-grid">
-        <div class="social-item" onclick="shareTo('whatsapp')">
+        <div class="social-item" onclick="shareTo('WhatsApp')">
           <div class="social-icon" style="background: #25D366;">💬</div>
           <span>WhatsApp</span>
         </div>
-        <div class="social-item" onclick="shareTo('instagram')">
+        <div class="social-item" onclick="shareTo('Instagram')">
           <div class="social-icon" style="background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);">📸</div>
           <span>Instagram</span>
         </div>
-        <div class="social-item" onclick="shareTo('facebook')">
+        <div class="social-item" onclick="shareTo('Facebook')">
           <div class="social-icon" style="background: #1877F2;">f</div>
           <span>Facebook</span>
         </div>
-        <div class="social-item" onclick="shareTo('tiktok')">
+        <div class="social-item" onclick="shareTo('TikTok')">
           <div class="social-icon" style="background: #000000;">🎵</div>
           <span>TikTok</span>
         </div>
-        <div class="social-item" onclick="shareTo('snapchat')">
+        <div class="social-item" onclick="shareTo('Snapchat')">
           <div class="social-icon" style="background: #FFFC00; color: black;">👻</div>
           <span>Snapchat</span>
         </div>
-        <div class="social-item" onclick="shareTo('telegram')">
+        <div class="social-item" onclick="shareTo('Telegram')">
           <div class="social-icon" style="background: #0088cc;">✈️</div>
           <span>Telegram</span>
         </div>
-        <div class="social-item" onclick="shareTo('pinterest')">
+        <div class="social-item" onclick="shareTo('Pinterest')">
           <div class="social-icon" style="background: #E60023;">📌</div>
           <span>Pinterest</span>
         </div>
-        <div class="social-item" onclick="shareTo('youtube')">
+        <div class="social-item" onclick="shareTo('YouTube')">
           <div class="social-icon" style="background: #FF0000;">▶️</div>
           <span>YouTube</span>
         </div>
-        <div class="social-item" onclick="shareTo('twitter')">
+        <div class="social-item" onclick="shareTo('Twitter/X')">
           <div class="social-icon" style="background: #000000;">𝕏</div>
           <span>Twitter/X</span>
         </div>
@@ -352,6 +350,7 @@
       showView('sendMsgView');
     }
 
+    // Passage direct au tableau de bord SANS alert pop-up
     function accessMyMessages() {
       const pseudo = document.getElementById('accountPseudo').value.trim();
       const pin = document.getElementById('accountPin').value.trim();
@@ -390,7 +389,7 @@
     function copyMyLink() {
       if (!currentLink) return;
       navigator.clipboard.writeText(currentLink).then(() => {
-        alert("Lien copié dans le presse-papier !");
+        alert("Lien copié !");
       }).catch(() => {
         alert("Lien : " + currentLink);
       });
@@ -406,7 +405,13 @@
 
     function shareTo(platform) {
       closeShareModal();
-      alert("Partage sur " + platform + " en cours pour le lien : " + currentLink);
+      if (navigator.share) {
+        navigator.share({
+          title: 'HushNote',
+          text: 'Envoyez-moi des messages anonymes !',
+          url: currentLink
+        }).catch(() => {});
+      }
     }
 
     function logoutUser() {
