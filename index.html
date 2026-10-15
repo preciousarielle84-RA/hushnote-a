@@ -24,7 +24,7 @@
     .home-subtitle { font-size: 1.25rem; font-weight: 800; line-height: 1.4; margin-bottom: 35px; text-shadow: 1px 2px 4px rgba(0,0,0,0.2); }
     .terms-text { font-size: 0.75rem; opacity: 0.85; margin-top: 15px; }
 
-    /* Titles */
+    /* Titres */
     .section-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 12px; opacity: 0.95; }
 
     /* Carrousel des rubriques */
@@ -92,7 +92,7 @@
 <body>
   <div class="container">
 
-    <!-- 1. PAGE D'ACCUEIL (Rétablie) -->
+    <!-- 1. PAGE D'ACCUEIL -->
     <div id="homeView">
       <div class="logo-title">HUSHNOTE</div>
       <div class="home-subtitle">
@@ -102,7 +102,7 @@
       <div class="terms-text">En continuant, vous acceptez nos Conditions d'utilisation.</div>
     </div>
 
-    <!-- 2. VUE ENVOI DE MESSAGE (Carrousel + Formulaire) -->
+    <!-- 2. VUE ENVOI DE MESSAGE -->
     <div id="sendMsgView" style="display:none;">
       <div class="logo-title">HUSHNOTE</div>
 
@@ -162,7 +162,6 @@
   </div>
 
   <script>
-    // Navigation & Vues
     function handleHomeAction() {
       const path = window.location.pathname.replace('/', '').trim();
       if (path && path !== '') {
@@ -188,11 +187,13 @@
       document.getElementById('noteContent').placeholder = placeholder;
     }
 
-    // Validation du formulaire
+    // Validation stricte du message ET du pseudo/prénom/indice
     function submitMessage() {
       const content = document.getElementById('noteContent').value.trim();
-      if (!content) {
-        alert("Veuillez rédiger un message avant d'envoyer !");
+      const pseudo = document.getElementById('senderPseudo').value.trim();
+      
+      if (!content || !pseudo) {
+        alert("Veuillez écrire votre message ET indiquer votre prénom/pseudo/indice !");
         return;
       }
       showView('afterSendView');
@@ -204,7 +205,7 @@
       showView('sendMsgView');
     }
 
-    // Modal de création de lien avec PIN à 4 chiffres
+    // Modal de création de compte avec PIN à 4 chiffres
     function openCreateAccountModal() {
       const pseudo = prompt("Entrez votre pseudo pour recevoir des messages anonymes :");
       if (!pseudo) return;
@@ -249,7 +250,7 @@
       });
     }
 
-    // Initialisation au chargement
+    // Détection de l'URL au chargement
     document.addEventListener('DOMContentLoaded', () => {
       const path = window.location.pathname.replace('/', '').trim();
       if (path && path !== '') {
