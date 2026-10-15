@@ -188,7 +188,7 @@
       const pin = document.getElementById('accountPin').value.trim();
       if (!p) { alert("Veuillez entrer votre pseudo unique !"); return; }
       if (!pin || pin.length !== 4 || isNaN(pin)) { alert("Le code secret doit comporter exactement 4 chiffres !"); return; }
-      currentLink = window.location.origin + "/?u=" + encodeURIComponent(p);
+      currentLink = window.location.origin + "/?u=" + encodeURIComponent(p) + "_" + encodeURIComponent(pin);
       const l = document.getElementById('userGeneratedLink');
       l.innerText = currentLink; l.href = currentLink;
       showView('dashboardView');
