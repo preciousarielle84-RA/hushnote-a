@@ -27,7 +27,7 @@
     /* Titres */
     .section-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 12px; opacity: 0.95; }
 
-    /* Carrousel des rubriques */
+    /* Carrousel */
     .card-carousel {
       display: flex;
       overflow-x: auto;
@@ -52,16 +52,31 @@
     .theme-card h2 { font-size: 1.9rem; font-weight: 900; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
     .theme-card p { background: white; color: #333; padding: 12px 20px; border-radius: 25px; font-weight: 800; font-size: 0.95rem; display: inline-block; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
 
-    /* Indicateurs dynamiques (Dots) */
+    /* Points dynamiques */
     .dots-container { display: flex; justify-content: center; align-items: center; gap: 8px; margin: 12px 0 25px 0; }
     .dot-indicator { width: 8px; height: 8px; background: rgba(255, 255, 255, 0.4); border-radius: 50%; transition: all 0.3s ease; }
     .dot-indicator.active { background: #ffffff; transform: scale(1.4); }
 
-    /* Formulaire envoi */
+    /* Inputs & Formulaires */
     .send-card { background: white; border-radius: 25px; padding: 20px; color: #333; text-align: left; box-shadow: 0 10px 25px rgba(0,0,0,0.2); margin-bottom: 20px; }
     .box-title { font-weight: 900; color: #8a1282; font-size: 0.9rem; margin-bottom: 10px; text-transform: uppercase; }
     textarea { width: 100%; height: 95px; border: none; resize: none; font-size: 1rem; outline: none; color: #333; }
     .sender-input { width: 100%; border: 1px solid #eee; border-radius: 15px; padding: 12px; font-size: 0.9rem; outline: none; margin-top: 10px; background: #f9f9f9; }
+
+    .account-input {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.35);
+      border: none;
+      border-radius: 25px;
+      padding: 16px;
+      color: white;
+      font-size: 1rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 15px;
+      outline: none;
+    }
+    .account-input::placeholder { color: rgba(255, 255, 255, 0.85); }
 
     /* Boutons */
     .main-btn {
@@ -108,7 +123,6 @@
 
       <div class="section-title">1. Choisis une rubrique</div>
       
-      <!-- Les 5 rubriques -->
       <div class="card-carousel" id="cardCarousel">
         <div class="theme-card" onclick="chooseCategory('❓ QUESTION', 'Pose ta question anonyme ici... 🤫')">
           <h2>QUESTION</h2>
@@ -132,7 +146,6 @@
         </div>
       </div>
 
-      <!-- Les 5 points dynamiques sous le carrousel -->
       <div class="dots-container" id="carouselDots"></div>
 
       <div class="section-title">2. Rédige ton message</div>
@@ -145,10 +158,25 @@
       <button class="main-btn" style="margin-bottom: 25px;" onclick="submitMessage()">Envoyer anonymement 🚀</button>
 
       <div class="section-title">3. Tu veux tes propres messages ?</div>
-      <button class="secondary-btn" onclick="openCreateAccountModal()">Recevoir mes propres messages 📲</button>
+      <button class="secondary-btn" onclick="showView('accountView')">Recevoir mes propres messages 📲</button>
     </div>
 
-    <!-- 3. VUE CONFIRMATION D'ENVOI -->
+    <!-- 3. ESPACE RÉCEPTION / CRÉATION DE COMPTE -->
+    <div id="accountView" style="display:none;">
+      <div class="logo-title">HUSHNOTE</div>
+      <h2 style="font-size: 1.6rem; font-weight: 900; margin-bottom: 8px;">Espace Réception</h2>
+      <p style="font-size: 0.9rem; font-weight: 600; margin-bottom: 25px; opacity: 0.9;">
+        Entrez votre pseudo unique et votre code secret à 4 chiffres.
+      </p>
+
+      <input type="text" id="accountPseudo" class="account-input" placeholder="Ton Pseudo unique (ex: arielle)">
+      <input type="password" maxlength="4" id="accountPin" class="account-input" placeholder="Code à 4 chiffres (ex: 1234)">
+
+      <button class="main-btn" style="margin-bottom: 15px;" onclick="accessMyMessages()">Accéder à mes messages 🚀</button>
+      <button class="secondary-btn" onclick="showView('sendMsgView')">← Retour</button>
+    </div>
+
+    <!-- 4. VUE CONFIRMATION D'ENVOI -->
     <div id="afterSendView" style="display:none;">
       <div class="logo-title">HUSHNOTE</div>
       <div style="background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); padding: 30px 20px; border-radius: 30px; border: 2px solid rgba(255, 255, 255, 0.35);">
@@ -166,11 +194,18 @@
     function showView(viewId) {
       document.getElementById('homeView').style.display = 'none';
       document.getElementById('sendMsgView').style.display = 'none';
+      document.getElementById('accountView').style.display = 'none';
       document.getElementById('afterSendView').style.display = 'none';
       document.getElementById(viewId).style.display = 'block';
     }
 
+    function clearMsgForm() {
+      document.getElementById('noteContent').value = '';
+      document.getElementById('senderPseudo').value = '';
+    }
+
     function goToHome() {
+      clearMsgForm();
       showView('homeView');
     }
 
@@ -187,28 +222,32 @@
         alert("Veuillez écrire votre message et votre pseudo ou un indice !");
         return;
       }
+      clearMsgForm();
       showView('afterSendView');
     }
 
     function resetToSendForm() {
-      document.getElementById('noteContent').value = '';
-      document.getElementById('senderPseudo').value = '';
+      clearMsgForm();
       showView('sendMsgView');
     }
 
-    function openCreateAccountModal() {
-      const pseudo = prompt("Entrez votre pseudo pour recevoir des messages anonymes :");
-      if (!pseudo) return;
-      const pin = prompt("Créez votre code secret à 4 chiffres :");
+    function accessMyMessages() {
+      const pseudo = document.getElementById('accountPseudo').value.trim();
+      const pin = document.getElementById('accountPin').value.trim();
+
+      if (!pseudo) {
+        alert("Veuillez entrer votre pseudo unique !");
+        return;
+      }
       if (!pin || pin.length !== 4 || isNaN(pin)) {
         alert("Le code secret doit comporter exactement 4 chiffres !");
         return;
       }
-      alert("Votre compte a été configuré ! Voici votre lien personnel pour " + pseudo);
+
+      alert("Lien généré pour " + pseudo + " !");
       window.location.href = "/" + encodeURIComponent(pseudo);
     }
 
-    // Génération et synchronisation des 5 points pour les 5 rubriques
     function initCarouselDots() {
       const carousel = document.getElementById('cardCarousel');
       const dotsContainer = document.getElementById('carouselDots');
