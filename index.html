@@ -223,42 +223,20 @@
     function copyMyLink() { if (currentLink) navigator.clipboard.writeText(currentLink).then(() => alert("Lien copié !")); }
     function openShareModal() { document.getElementById('shareModal').style.display = 'flex'; }
     function closeShareModal() { document.getElementById('shareModal').style.display = 'none'; }
-    function shareToDirect(app) {
+    function nativeShare() {
       closeShareModal();
       const link = currentLink || window.location.href;
-      const text = "Envoyez-moi des messages anonymes sur HushNote ! 💬 " + link;
-      const encodedText = encodeURIComponent(text);
-      const encodedUrl = encodeURIComponent(link);
-
-      if (app === "whatsapp") {
-        window.open("https://api.whatsapp.com/send?text=" + encodedText, "_blank");
-      } else if (app === "facebook") {
-        window.open("https://www.facebook.com/sharer/sharer.php?u=" + encodedUrl, "_blank");
-      } else if (app === "telegram") {
-        window.open("https://t.me/share/url?url=" + encodedUrl + "&text=" + encodeURIComponent("Envoyez-moi des messages anonymes ! 💬"), "_blank");
-      } else if (app === "twitter") {
-        window.open("https://twitter.com/intent/tweet?text=" + encodedText, "_blank");
-      } else if (app === "pinterest") {
-        window.open("https://pinterest.com/pin/create/button/?url=" + encodedUrl + "&description=" + encodedText, "_blank");
-      } else if (app === "instagram") {
-        navigator.clipboard.writeText(link).then(() => {
-          alert("Lien copié ! Colle-le dans ta story Instagram 📸");
-          window.location.href = "instagram://story-camera";
-        });
-      } else if (app === "snapchat") {
-        navigator.clipboard.writeText(link).then(() => {
-          alert("Lien copié ! Colle-le dans ton Snap 👻");
-          window.location.href = "snapchat://";
-        });
-      } else if (app === "tiktok") {
-        navigator.clipboard.writeText(link).then(() => {
-          alert("Lien copié ! Colle-le dans ta vidéo/bio TikTok 🎵");
-          window.location.href = "snssdk1128://";
-        });
+      if (navigator.share) {
+        navigator.share({
+          title: "HushNote",
+          text: "Envoyez-moi des messages anonymes sur HushNote ! 💬",
+          url: link
+        }).catch(() => {});
       } else {
-        nativeShare();
+        copyMyLink();
       }
     }
+    function shareToDirect(app) { nativeShare(); }
     function nativeShare() {
       closeShareModal();
       if (navigator.share) navigator.share({ title: 'HushNote', text: 'Envoyez-moi des messages anonymes sur HushNote ! 💬', url: currentLink || window.location.href }).catch(() => {});
