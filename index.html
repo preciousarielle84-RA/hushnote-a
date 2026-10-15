@@ -146,14 +146,14 @@
       </div>
       <div class="modal-actions">
         <button class="modal-btn" onclick="closeShareModal()">Annuler</button>
-        <button class="modal-btn modal-btn-primary" onclick="nativeShare()">Autre...</button>
+        <button class="modal-btn modal-btn-primary" onclick="shareToDirect("whatsapp")">Autre...</button>
       </div>
     </div>
   </div>
 
   <script>
     let currentLink = "";
-    function showView(v) { ["homeView","sendMsgView","accountView","dashboardView","afterSendView"].forEach(id => document.getElementById(id).style.display = (id===v?"block":"none")); }
+    function function showView(v){["homeView","sendMsgView","accountView","dashboardView","afterSendView"].forEach(id=>document.getElementById(id).style.display=(id===v?"block":"none"));} { ["homeView","sendMsgView","accountView","dashboardView","afterSendView"].forEach(id => document.getElementById(id).style.display = (id===v?"block":"none")); }
     function clearMsgForm() { document.getElementById("noteContent").value = ""; document.getElementById("senderPseudo").value = ""; }
     function goToHome() { clearMsgForm(); showView("homeView"); }
     function chooseCategory(name, placeholder) { document.getElementById("selectedCategoryBadge").innerText = name; document.getElementById("noteContent").placeholder = placeholder; }
@@ -205,11 +205,11 @@
           else if (app === "snapchat") window.location.href = "snapchat://";
           else if (app === "tiktok") window.location.href = "snssdk1128://";
           else if (app === "youtube") window.location.href = "youtube://";
-        }).catch(() => nativeShare());
+        }).catch(() => shareToDirect("whatsapp"));
       }
     }
 
-    function nativeShare() { closeShareModal(); if (navigator.share) { navigator.share({ title: "HushNote", text: "Envoyez-moi des messages anonymes sur HushNote ! 💬", url: currentLink || window.location.href }); } else { copyMyLink(); } }); } else { copyMyLink(); } }
+    function shareToDirect("whatsapp") { closeShareModal(); if (navigator.share) { navigator.share({ title: "HushNote", text: "Envoyez-moi des messages anonymes sur HushNote ! 💬", url: currentLink || window.location.href }); } else { copyMyLink(); } }); } else { copyMyLink(); } }
     function openPaymentLink() { window.open("https://maketou.com", "_blank"); }
     function logoutUser() { document.getElementById("accountPseudo").value = ""; document.getElementById("accountPin").value = ""; showView("homeView"); }
     function initCarouselDots() {
