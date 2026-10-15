@@ -153,7 +153,7 @@
 
   <script>
     let currentLink = "";
-    function function showView(v){["homeView","sendMsgView","accountView","dashboardView","afterSendView"].forEach(id=>document.getElementById(id).style.display=(id===v?"block":"none"));} { ["homeView","sendMsgView","accountView","dashboardView","afterSendView"].forEach(id => document.getElementById(id).style.display = (id===v?"block":"none")); }
+    function function function showView(v){["homeView","sendMsgView","accountView","dashboardView","afterSendView"].forEach(function(i){if(document.getElementById(i))document.getElementById(i).style.display=(i===v?"block":"none");});}
     function clearMsgForm() { document.getElementById("noteContent").value = ""; document.getElementById("senderPseudo").value = ""; }
     function goToHome() { clearMsgForm(); showView("homeView"); }
     function chooseCategory(name, placeholder) { document.getElementById("selectedCategoryBadge").innerText = name; document.getElementById("noteContent").placeholder = placeholder; }
