@@ -180,6 +180,17 @@
             display: inline-block; width: 100%;
         }
     </style>
+
+<style>
+  .carousel-container, .themes-scroll, [class*="theme"] {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* IE and Edge */
+  }
+  .carousel-container::-webkit-scrollbar, .themes-scroll::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
+</style>
+
 </head>
 <body>
     <div class="app-container">
@@ -218,9 +229,16 @@
                     <h2>TON CRUSH</h2>
                     <p>Avoue ton crush anonymement ! 🫣</p>
                 </div>
-            </div>
+    </div>
 
-            <p style="font-size: 0.9rem; font-weight: bold; margin-bottom: 10px;">2. Rédige ton message</p>
+    <!-- Points indicateurs du carrousel -->
+    <div style="display: flex; justify-content: center; gap: 8px; margin: 15px 0;">
+      <span style="width: 8px; height: 8px; background: white; border-radius: 50%; display: inline-block;"></span>
+      <span style="width: 8px; height: 8px; background: rgba(255,255,255,0.4); border-radius: 50%; display: inline-block;"></span>
+      <span style="width: 8px; height: 8px; background: rgba(255,255,255,0.4); border-radius: 50%; display: inline-block;"></span>
+    </div>
+
+    <p style="font-size: 0.9rem; font-weight: bold; margin-bottom: 10px;">2. Rédige ton message</p>
             <div class="send-card">
                 <div class="box-title" id="selectedCategoryBadge">❓ QUESTION</div>
                 <textarea id="noteContent" placeholder="Pose ta question anonyme ici... 🤫"></textarea>
