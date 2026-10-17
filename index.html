@@ -267,5 +267,34 @@
 
     function openPaymentLink() { window.location.href = "https://maketou.com"; }
   </script>
+
+  <!-- MODALE DE PARTAGE EXCLUSIVE (WhatsApp, Facebook, Telegram, Autre, Annuler) -->
+  <div id="shareModal" class="modal-overlay">
+    <div class="modal-content">
+      <h3 style="color: #8a1282; font-size: 1.3rem; font-weight: 900; margin-bottom: 4px;">Partager dans ta Story 📸</h3>
+      <p style="font-size: 0.85rem; color: #666; font-weight: 700;">Choisis ton réseau social :</p>
+      
+      <div class="share-grid" style="grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 25px 0;">
+        <div class="share-item" onclick="shareTo('whatsapp')">
+          <div class="share-icon" style="background: #25D366; color: white;">💬</div>
+          <span>WhatsApp</span>
+        </div>
+        <div class="share-item" onclick="shareTo('facebook')">
+          <div class="share-icon" style="background: #1877F2; color: white;">f</div>
+          <span>Facebook</span>
+        </div>
+        <div class="share-item" onclick="shareTo('telegram')">
+          <div class="share-icon" style="background: #0088cc; color: white;">✈️</div>
+          <span>Telegram</span>
+        </div>
+      </div>
+
+      <div class="modal-btns">
+        <button class="modal-btn-cancel" onclick="closeShareModal()">Annuler</button>
+        <button class="modal-btn-other" onclick="nativeShare()">Autre...</button>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>
