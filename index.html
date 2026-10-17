@@ -112,14 +112,27 @@
       </div>
       <div id="inboxSection" style="display:none;">
         <div class="paywall-card">
-          <div class="paywall-title">🔒 Noms des expéditeurs verrouillés</div>
-          <div class="paywall-desc">Abonnez-vous à 650 FCFA / mois pour savoir qui vous a écrit.</div>
-          <button class="unlock-btn" onclick="openPaymentLink()">Débloquer l'Abonnement 👑</button>
+          <div class="paywall-title">🔒 3 Nouveaux messages anonymes !</div>
+          <div class="paywall-desc">Abonnez-vous à 650 FCFA / mois pour lire vos messages et découvrir les expéditeurs.</div>
+          <button class="unlock-btn" onclick="openPaymentLink()">Débloquer l'Abonnement (650 FCFA) 👑</button>
         </div>
-        <p style="font-size: 0.95rem; font-weight: 700; margin-bottom: 25px;">Aucun message reçu pour le moment.</p>
+
+        <!-- LISTE TEASING FLOUTÉE -->
+        <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;">
+          <div style="background: white; color: #333; padding: 15px; border-radius: 18px; text-align: left; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+            <div style="font-size: 0.75rem; color: #8a1282; font-weight: 800; margin-bottom: 5px;">❓ QUESTION • Il y a 10 min</div>
+            <div style="font-size: 0.95rem; font-weight: 700; filter: blur(4px); user-select: none;">Tu es vraiment trop belle sur ta photo...</div>
+            <div style="font-size: 0.75rem; color: #666; margin-top: 8px; font-weight: 600;">Expéditeur : 🔒 Verrouillé</div>
+          </div>
+          <div style="background: white; color: #333; padding: 15px; border-radius: 18px; text-align: left; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+            <div style="font-size: 0.75rem; color: #e91e63; font-weight: 800; margin-bottom: 5px;">😍 TON CRUSH • Il y a 1h</div>
+            <div style="font-size: 0.95rem; font-weight: 700; filter: blur(4px); user-select: none;">J'ai un gros secret à t'avouer depuis...</div>
+            <div style="font-size: 0.75rem; color: #666; margin-top: 8px; font-weight: 600;">Expéditeur : 🔒 Verrouillé</div>
+          </div>
+        </div>
+
         <div><a href="#" style="color: white; font-weight: 700; font-size: 0.9rem; text-decoration: underline;" onclick="logoutUser()">Changer d'utilisateur / Se déconnecter</a></div>
       </div>
-    </div>
 
     <!-- CONFIRMATION -->
     <div id="afterSendView" style="display:none;">
