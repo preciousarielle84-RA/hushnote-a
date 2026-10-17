@@ -27,6 +27,20 @@
 </head>
 <body>
 
+  <div id="homeLandingSection" style="width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 80vh; text-align: center;">
+    <div style="font-size: 2.8rem; font-weight: 900; font-style: italic; margin-bottom: 20px; letter-spacing: 1px; text-shadow: 0 4px 10px rgba(0,0,0,0.2);">HUSHNOTE</div>
+    <div style="font-size: 1.25rem; font-weight: 800; line-height: 1.4; margin-bottom: 35px; max-width: 320px; color: white;">
+      Recevez des messages anonymes sur vos réseaux ! 💬 <br>✨
+    </div>
+    <button onclick="goToNextStep()" style="background: white; color: #8a1282; border: none; padding: 18px 30px; border-radius: 40px; font-weight: 900; font-size: 1.15rem; width: 100%; max-width: 340px; cursor: pointer; box-shadow: 0 6px 20px rgba(0,0,0,0.2);">
+      Obtenir des questions 🚀
+    </button>
+    <div style="font-size: 0.75rem; opacity: 0.85; margin-top: 25px; font-weight: 600; color: white;">
+      En continuant, vous acceptez nos Conditions d'utilisation.
+    </div>
+  </div>
+
+
   <div class="header">HUSHNOTE</div>
 
   <!-- RUBRIQUES (NAV TABS) APPARENTES POUR LES MEMBRES CONNECTÉS -->
@@ -358,6 +372,14 @@
     function openPaymentLink() { window.location.href = "https://maketou.com"; }
     function openShareModal() { document.getElementById("shareModal").style.display = "flex"; }
     function closeShareModal() { document.getElementById("shareModal").style.display = "none"; }
-  </script>
+  
+    function goToNextStep() {
+      const home = document.getElementById("homeLandingSection");
+      const login = document.getElementById("loginSection");
+      if (home) home.style.display = "none";
+      if (login) login.style.display = "block";
+    }
+
+</script>
 </body>
 </html>
