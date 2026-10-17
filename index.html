@@ -6,380 +6,74 @@
   <title>HushNote</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    body { background: linear-gradient(180deg, #8a1282 0%, #e91e63 100%); min-height: 100vh; color: white; text-align: center; padding: 20px 15px; }
-    .header { font-size: 2.2rem; font-weight: 900; font-style: italic; margin-bottom: 15px; letter-spacing: 1px; }
-    .nav-tabs { display: flex; justify-content: center; gap: 20px; margin-bottom: 25px; }
-    .tab-btn { font-size: 1.2rem; font-weight: 800; opacity: 0.6; cursor: pointer; padding-bottom: 5px; border-bottom: 3px solid transparent; }
-    .tab-btn.active { opacity: 1; border-bottom: 3px solid white; }
-    .card { background: white; color: #333; padding: 20px; border-radius: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); margin-bottom: 20px; text-align: center; }
-    .paywall-card { border: 2px dashed rgba(255,255,255,0.6); background: rgba(255,255,255,0.15); backdrop-filter: blur(5px); padding: 20px; border-radius: 20px; margin-bottom: 20px; color: white; }
-    .paywall-title { font-weight: 800; font-size: 1.1rem; margin-bottom: 10px; }
-    .paywall-desc { font-size: 0.85rem; margin-bottom: 15px; opacity: 0.95; line-height: 1.3; }
-    .unlock-btn { background: #8a1282; color: white; border: none; padding: 12px 20px; border-radius: 25px; font-weight: 800; font-size: 0.95rem; width: 100%; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
-    .action-btn { width: 100%; padding: 14px; background: linear-gradient(90deg, #ff4081, #e91e63); color: white; border: none; border-radius: 25px; font-weight: 800; font-size: 1rem; cursor: pointer; box-shadow: 0 4px 15px rgba(233,30,99,0.3); }
+    body { background: linear-gradient(180deg, #8a1282 0%, #e91e63 100%); min-height: 100vh; color: white; text-align: center; padding: 30px 20px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+    .header { font-size: 2.8rem; font-weight: 900; font-style: italic; margin-bottom: 20px; letter-spacing: 1px; text-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+    .subtitle { font-size: 1.25rem; font-weight: 800; line-height: 1.4; margin-bottom: 35px; max-width: 320px; color: white; }
+    .main-get-btn { background: white; color: #8a1282; border: none; padding: 18px 30px; border-radius: 40px; font-weight: 900; font-size: 1.15rem; width: 100%; max-width: 340px; cursor: pointer; box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
+    .terms-text { font-size: 0.75rem; opacity: 0.85; margin-top: 25px; font-weight: 600; color: white; }
+    
+    .card { background: white; color: #333; padding: 25px 20px; border-radius: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); margin-bottom: 20px; text-align: center; width: 100%; max-width: 350px; }
     .input-field { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 12px; font-size: 1rem; margin-bottom: 12px; }
-    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; justify-content: center; align-items: center; z-index: 1000; }
-    .modal-content { background: white; color: #222; padding: 25px 20px; border-radius: 24px; width: 90%; max-width: 350px; text-align: center; }
-    .social-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 20px 0; }
-    .social-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; }
-    .social-icon { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.4rem; font-weight: bold; margin-bottom: 5px; }
+    .action-btn { width: 100%; padding: 14px; background: linear-gradient(90deg, #ff4081, #e91e63); color: white; border: none; border-radius: 25px; font-weight: 800; font-size: 1rem; cursor: pointer; box-shadow: 0 4px 15px rgba(233,30,99,0.3); }
+    .container { width: 100%; max-width: 380px; display: flex; flex-direction: column; align-items: center; }
   </style>
 </head>
 <body>
 
-  <div id="homeLandingSection" style="width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 80vh; text-align: center;">
-    <div style="font-size: 2.8rem; font-weight: 900; font-style: italic; margin-bottom: 20px; letter-spacing: 1px; text-shadow: 0 4px 10px rgba(0,0,0,0.2);">HUSHNOTE</div>
-    <div style="font-size: 1.25rem; font-weight: 800; line-height: 1.4; margin-bottom: 35px; max-width: 320px; color: white;">
-      Recevez des messages anonymes sur vos réseaux ! 💬 <br>✨
-    </div>
-    <button onclick="goToNextStep()" style="background: white; color: #8a1282; border: none; padding: 18px 30px; border-radius: 40px; font-weight: 900; font-size: 1.15rem; width: 100%; max-width: 340px; cursor: pointer; box-shadow: 0 6px 20px rgba(0,0,0,0.2);">
-      Obtenir des questions 🚀
-    </button>
-    <div style="font-size: 0.75rem; opacity: 0.85; margin-top: 25px; font-weight: 600; color: white;">
-      En continuant, vous acceptez nos Conditions d'utilisation.
-    </div>
-  </div>
-
-
-  <div class="header">HUSHNOTE</div>
-
-  <!-- RUBRIQUES (NAV TABS) APPARENTES POUR LES MEMBRES CONNECTÉS -->
-  <div id="navTabs" class="nav-tabs" style="display:none;">
-    <div id="tabPlay" class="tab-btn active" onclick="switchTab('play')">PLAY</div>
-    <div id="tabInbox" class="tab-btn" onclick="switchTab('inbox')">INBOX 📬</div>
-  </div>
-
-  <!-- 1. ÉTAPE 1 : PAGE D'ACCUEIL POUR LE VISITEUR (ENVOI DE MESSAGE) -->
-  <div id="sendMsgSection">
-    <div class="card">
-      <h3 style="margin-bottom: 12px; color: #8a1282;" id="targetUserTitle">Envoyez un message anonyme 🤫</h3>
-      <textarea id="anonymousInput" rows="4" placeholder="Écris ton message anonyme ici..." class="input-field" style="resize: none;"></textarea>
-      
-      <!-- Champ pour l'indice sur l'expéditeur -->
-      <input type="text" id="senderHintInput" placeholder="Ton prénom ou un indice (optionnel)" class="input-field">
-      
-      <button onclick="sendAnonymousMessage()" class="action-btn">Envoyer le message 🚀</button>
-    </div>
-
-    <div style="margin-top: 15px;">
-      <a href="#" style="color: white; font-weight: 700; text-decoration: underline;" onclick="showLoginSection()">Déjà un compte ? Se connecter / Créer mon lien 🔗</a>
-    </div>
-  </div>
-
-  <!-- 2. ÉTAPE 2 : CONFIRMATION APRÈS ENVOI DU MESSAGE -->
-  <div id="sentSuccessSection" style="display:none;">
-    <div class="card">
-      <div style="font-size: 3rem; margin-bottom: 10px;">🎉</div>
-      <h3 style="color: #8a1282; margin-bottom: 10px;">Message envoyé !</h3>
-      <p style="color: #666; font-size: 0.95rem; margin-bottom: 20px;">Ton message a été transmis de façon 100% anonyme.</p>
-      
-      <div style="background: #f8f8f8; padding: 15px; border-radius: 15px; margin-bottom: 15px;">
-        <div style="font-weight: 800; color: #333; margin-bottom: 8px;">Tu veux toi aussi recevoir des messages anonymes ?</div>
-        <button onclick="showLoginSection()" class="action-btn">Créer mon lien unique 🚀</button>
+  <div class="container">
+    
+    <!-- 1. PAGE D'ACCUEIL SEULE -->
+    <div id="homeLandingSection" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+      <div class="header">HUSHNOTE</div>
+      <div class="subtitle">
+        Recevez des messages anonymes sur vos réseaux ! 💬 ✨
       </div>
-
-      <button onclick="resetSendForm()" style="background: transparent; color: #8a1282; border: none; font-weight: 700; cursor: pointer; text-decoration: underline;">Envoyer un autre message</button>
-    </div>
-  </div>
-
-  <!-- 3. ÉTAPE 3 : FORMULAIRE DE CRÉATION DE LIEN / CONNEXION (PSEUDO + PIN) -->
-  <div id="loginSection" style="display:none;">
-    <div class="card">
-      <h3 style="margin-bottom: 15px; color: #8a1282;">Créer mon espace / Connexion</h3>
-      <p style="font-size: 0.85rem; color: #666; margin-bottom: 15px;">Entrez un pseudo et un code PIN pour générer votre lien unique et lire vos messages.</p>
-      
-      <input type="text" id="accountPseudo" placeholder="Ton Pseudo (ex: Alex)" class="input-field">
-      <input type="password" id="accountPin" placeholder="Code PIN à 4 chiffres" class="input-field">
-      
-      <button onclick="loginUser()" class="action-btn">Obtenir mon lien unique 🔗</button>
-    </div>
-    <div>
-      <a href="#" style="color: white; font-weight: 700; text-decoration: underline;" onclick="showSendForm()">← Retour à l'envoi de message</a>
-    </div>
-  </div>
-
-  <!-- SECTION PLAY / DASHBOARD (UNE FOIS CONNECTÉ) -->
-  <div id="dashboardSection" style="display:none;">
-    <div style="background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); padding: 25px 20px; border-radius: 24px; border: 1px solid rgba(255,255,255,0.2); margin-bottom: 20px; text-align: center;">
-      <div style="font-size: 1.5rem; font-weight: 900; color: white; letter-spacing: 1px; margin-bottom: 15px;">MESSAGES</div>
-      <div style="background: white; color: #222; padding: 18px; border-radius: 18px; font-weight: 800; font-size: 1rem; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-        Envoyez-moi des messages anonymes ! 🤫
-      </div>
-    </div>
-
-    <div class="card">
-      <div style="font-size: 0.85rem; color: #666; font-weight: 700; margin-bottom: 5px;">Mon lien unique à partager :</div>
-      <a id="userGeneratedLink" href="#" target="_blank" style="display: block; word-break: break-all; color: #8a1282; font-weight: 800; font-size: 0.95rem; margin-bottom: 15px;">https://hushnote-a.onrender.com/?u=...</a>
-      
-      <button id="copyBtn" onclick="copyMyLinkSmooth()" style="width: 100%; padding: 12px; background: transparent; color: #8a1282; border: 2px solid #8a1282; border-radius: 25px; font-weight: 800; cursor: pointer;">
-        Copier le lien
+      <button onclick="showSendForm()" class="main-get-btn">
+        Obtenir des questions 🚀
       </button>
-    </div>
-
-    <button class="action-btn" onclick="openShareModal()">Partager dans ma Story 📸</button>
-
-    <div style="margin-top: 25px;"><a href="#" style="color: white; font-weight: 700; font-size: 0.9rem; text-decoration: underline;" onclick="logoutUser()">Changer d'utilisateur / Se déconnecter</a></div>
-  </div>
-
-  <!-- SECTION INBOX (BOÎTE DE RÉCEPTION) -->
-  <div id="inboxSection" style="display:none;">
-    <div class="paywall-card">
-      <div class="paywall-title">🔒 Identités des expéditeurs verrouillées</div>
-      <div class="paywall-desc">Les messages sont 100% gratuits. Abonnez-vous à 650 FCFA / mois pour savoir QUI vous a écrit !</div>
-      <button class="unlock-btn" onclick="openPaymentLink()">Débloquer l'identité des expéditeurs (650 FCFA) 👑</button>
-    </div>
-
-    <div id="messageCounterBadge" style="background: rgba(255, 255, 255, 0.2); color: white; padding: 12px 15px; border-radius: 15px; font-weight: 800; font-size: 0.95rem; margin: 15px 0; text-align: center;">
-      📩 Chargement des messages...
-    </div>
-
-    <!-- STATISTIQUES DANS L'INBOX -->
-    <div style="display: flex; justify-content: space-around; align-items: center; background: white; padding: 12px; border-radius: 18px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-      <div style="text-align: center;">
-        <div style="font-size: 1.1rem; font-weight: 900; color: #8a1282;" id="statViewsCount">0</div>
-        <div style="font-size: 0.75rem; color: #666; font-weight: 700;">👁️ Vues</div>
-      </div>
-      <div style="text-align: center;">
-        <div style="font-size: 1.1rem; font-weight: 900; color: #8a1282;" id="statMsgsCount">0</div>
-        <div style="font-size: 0.75rem; color: #666; font-weight: 700;">💬 Messages</div>
-      </div>
-      <div style="text-align: center;">
-        <div style="font-size: 0.95rem; font-weight: 900; color: #8a1282;" id="statStatus">Gratuit</div>
-        <div style="font-size: 0.75rem; color: #666; font-weight: 700;">👑 Statut</div>
+      <div class="terms-text">
+        En continuant, vous acceptez nos Conditions d'utilisation.
       </div>
     </div>
 
-    <!-- LISTE DES MESSAGES REÇUS -->
-    <div id="realMessagesList" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 25px;"></div>
-
-    <div><a href="#" style="color: white; font-weight: 700; font-size: 0.9rem; text-decoration: underline;" onclick="logoutUser()">Changer d'utilisateur / Se déconnecter</a></div>
-  </div>
-
-  <!-- MODALE DE PARTAGE -->
-  <div id="shareModal" class="modal-overlay">
-    <div class="modal-content">
-      <h3 style="color: #8a1282; margin-bottom: 15px;">Partager mon lien</h3>
-      <div class="social-grid">
-        <div class="social-item" onclick="window.location.href='https://api.whatsapp.com/send?text=' + encodeURIComponent('Envoyez-moi des messages anonymes sur HushNote ! 💬 ' + currentLink)">
-          <div class="social-icon" style="background: #25D366;">💬</div>
-          <span style="font-size: 0.8rem; font-weight: 700;">WhatsApp</span>
-        </div>
-        <div class="social-item" onclick="window.location.href='https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(currentLink)">
-          <div class="social-icon" style="background: #1877F2;">f</div>
-          <span style="font-size: 0.8rem; font-weight: 700;">Facebook</span>
-        </div>
-        <div class="social-item" onclick="window.location.href='https://t.me/share/url?url=' + encodeURIComponent(currentLink) + '&text=' + encodeURIComponent('Envoyez-moi des messages anonymes sur HushNote ! 💬')">
-          <div class="social-icon" style="background: #0088cc;">✈️</div>
-          <span style="font-size: 0.8rem; font-weight: 700;">Telegram</span>
-        </div>
+    <!-- 2. PAGE D'ENVOI DE MESSAGE (CACHÉE AU DÉPART) -->
+    <div id="sendMsgSection" style="display: none; width: 100%;">
+      <div class="header">HUSHNOTE</div>
+      <div class="card">
+        <h3 style="margin-bottom: 12px; color: #8a1282;" id="targetUserTitle">Envoyez un message anonyme 🤫</h3>
+        <textarea id="anonymousInput" rows="4" placeholder="Écris ton message anonyme ici..." class="input-field" style="resize: none;"></textarea>
+        <input type="text" id="senderHintInput" placeholder="Ton prénom ou un indice (optionnel)" class="input-field">
+        <button onclick="sendAnonymousMessage()" class="action-btn">Envoyer le message 🚀</button>
       </div>
-      <button onclick="navigator.share ? navigator.share({title:'HushNote', url:currentLink}) : copyMyLinkSmooth()" style="width: 100%; padding: 10px; background: #333; color: white; border: none; border-radius: 12px; font-weight: 700; margin-bottom: 10px;">Autre...</button>
-      <button onclick="closeShareModal()" style="width: 100%; padding: 10px; background: #eee; color: #333; border: none; border-radius: 12px; font-weight: 700;">Retour</button>
+      <div>
+        <a href="#" style="color: white; font-weight: 700; text-decoration: underline;" onclick="showHomeLanding()">← Retour à l'accueil</a>
+      </div>
     </div>
+
   </div>
 
   <script>
-    let currentLink = "";
-    let targetUserKey = "";
-
-    const BAD_WORDS = ["connard", "salope", "pute", "enculé", "chienne", "bâtard", "batard", "pd", "pédé", "suicide", "moche", "imbécile"];
-
-    function containsBadWords(text) {
-      if (!text) return false;
-      const lower = text.toLowerCase();
-      return BAD_WORDS.some(word => lower.includes(word));
+    function showHomeLanding() {
+      document.getElementById("homeLandingSection").style.display = "flex";
+      document.getElementById("sendMsgSection").style.display = "none";
     }
-
-    window.onload = function() {
-      const urlParams = new URLSearchParams(window.location.search);
-      targetUserKey = urlParams.get('u');
-
-      const savedUser = localStorage.getItem("hushnote_current_user");
-
-      if (targetUserKey) {
-        // Mode visiteur : afficher directement l'envoi de message pour ce destinataire
-        showSendForm();
-        const pseudoOnly = targetUserKey.split('_')[0];
-        document.getElementById("targetUserTitle").innerText = "Envoyez un message anonyme à " + pseudoOnly + " 🤫";
-        
-        let views = parseInt(localStorage.getItem("hushnote_views_" + targetUserKey) || "0");
-        views++;
-        localStorage.setItem("hushnote_views_" + targetUserKey, views);
-      } else if (savedUser) {
-        // Utilisateur déjà connecté
-        showUserSpace(savedUser);
-      } else {
-        // Page d'accueil générale
-        showSendForm();
-      }
-    };
 
     function showSendForm() {
+      document.getElementById("homeLandingSection").style.display = "none";
       document.getElementById("sendMsgSection").style.display = "block";
-      document.getElementById("sentSuccessSection").style.display = "none";
-      document.getElementById("loginSection").style.display = "none";
-      document.getElementById("navTabs").style.display = "none";
-      document.getElementById("dashboardSection").style.display = "none";
-      document.getElementById("inboxSection").style.display = "none";
-    }
-
-    function showLoginSection() {
-      document.getElementById("sendMsgSection").style.display = "none";
-      document.getElementById("sentSuccessSection").style.display = "none";
-      document.getElementById("loginSection").style.display = "block";
-      document.getElementById("navTabs").style.display = "none";
-      document.getElementById("dashboardSection").style.display = "none";
-      document.getElementById("inboxSection").style.display = "none";
-    }
-
-    function resetSendForm() {
-      document.getElementById("anonymousInput").value = "";
-      document.getElementById("senderHintInput").value = "";
-      showSendForm();
     }
 
     function sendAnonymousMessage() {
       const input = document.getElementById("anonymousInput");
-      const hintInput = document.getElementById("senderHintInput");
       const text = input.value.trim();
-      const hint = hintInput ? hintInput.value.trim() : "";
-
       if (!text) {
         alert("Veuillez écrire un message avant d'envoyer.");
         return;
       }
-
-      if (containsBadWords(text)) {
-        alert("Ce message contient des termes inappropriés. Gardons HushNote bienveillant ! 🤍");
-        return;
-      }
-
-      const dest = targetUserKey || "admin_general";
-      const existingMsgs = JSON.parse(localStorage.getItem("hushnote_messages_" + dest) || "[]");
-      
-      existingMsgs.unshift({ 
-        text: text, 
-        sender: hint || "Anonyme", 
-        date: new Date().toISOString() 
-      });
-
-      localStorage.setItem("hushnote_messages_" + dest, JSON.stringify(existingMsgs));
-
-      // Étape 2 : Passer à l'écran de succès
-      document.getElementById("sendMsgSection").style.display = "none";
-      document.getElementById("sentSuccessSection").style.display = "block";
+      alert("Message envoyé anonymement ! 🚀");
+      input.value = "";
+      if (document.getElementById("senderHintInput")) document.getElementById("senderHintInput").value = "";
     }
-
-    function loginUser() {
-      const p = document.getElementById("accountPseudo").value.trim().toLowerCase();
-      const pin = document.getElementById("accountPin").value.trim();
-      if (!p || !pin) { alert("Veuillez remplir votre Pseudo et votre PIN."); return; }
-      
-      const userKey = p + "_" + pin;
-      localStorage.setItem("hushnote_current_user", userKey);
-      showUserSpace(userKey);
-    }
-
-    function logoutUser() {
-      localStorage.removeItem("hushnote_current_user");
-      window.location.href = window.location.origin + window.location.pathname;
-    }
-
-    function showUserSpace(userKey) {
-      document.getElementById("sendMsgSection").style.display = "none";
-      document.getElementById("sentSuccessSection").style.display = "none";
-      document.getElementById("loginSection").style.display = "none";
-      
-      document.getElementById("navTabs").style.display = "flex";
-
-      const baseUrl = window.location.origin + window.location.pathname;
-      currentLink = baseUrl + "?u=" + encodeURIComponent(userKey);
-      
-      const linkElem = document.getElementById("userGeneratedLink");
-      if (linkElem) {
-        linkElem.href = currentLink;
-        linkElem.innerText = currentLink;
-      }
-
-      switchTab('play');
-    }
-
-    function switchTab(tab) {
-      if (tab === 'play') {
-        document.getElementById("tabPlay").classList.add("active");
-        document.getElementById("tabInbox").classList.remove("active");
-        document.getElementById("dashboardSection").style.display = "block";
-        document.getElementById("inboxSection").style.display = "none";
-      } else {
-        document.getElementById("tabInbox").classList.add("active");
-        document.getElementById("tabPlay").classList.remove("active");
-        document.getElementById("dashboardSection").style.display = "none";
-        document.getElementById("inboxSection").style.display = "block";
-        renderInboxMessages();
-      }
-    }
-
-    function renderInboxMessages() {
-      const userKey = localStorage.getItem("hushnote_current_user");
-      if (!userKey) return;
-
-      const listContainer = document.getElementById("realMessagesList");
-      const counterBadge = document.getElementById("messageCounterBadge");
-
-      const views = localStorage.getItem("hushnote_views_" + userKey) || "0";
-      document.getElementById("statViewsCount").innerText = views;
-
-      const allMessages = JSON.parse(localStorage.getItem("hushnote_messages_" + userKey) || "[]");
-      document.getElementById("statMsgsCount").innerText = allMessages.length;
-
-      if (allMessages.length === 0) {
-        counterBadge.innerText = "📩 Vous avez reçu 0 message";
-        listContainer.innerHTML = `<div style="background: white; color: #666; padding: 20px; border-radius: 18px; text-align: center; font-weight: 700;">💬 Aucun message reçu pour l'instant.<br>Partage ton lien dans ta Story pour en recevoir !</div>`;
-        return;
-      }
-
-      counterBadge.innerText = `📩 Vous avez reçu ${allMessages.length} message${allMessages.length > 1 ? "s" : ""}`;
-
-      listContainer.innerHTML = allMessages.map(msg => `
-        <div style="background: white; color: #333; padding: 15px; border-radius: 18px; text-align: left; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-          <div style="font-size: 0.75rem; color: #8a1282; font-weight: 800; margin-bottom: 5px;">💬 MESSAGE REÇU</div>
-          <div style="font-size: 0.95rem; font-weight: 700; color: #222; margin-bottom: 8px;">${msg.text}</div>
-          <div style="font-size: 0.8rem; background: #f0f0f0; padding: 6px 12px; border-radius: 10px; display: inline-block; color: #666; font-weight: 700;">
-            Expéditeur : <span style="filter: blur(4px); user-select: none;">${msg.sender || "Anonyme"}</span> 🔒 <a href="#" onclick="openPaymentLink()" style="color: #8a1282; text-decoration: underline; margin-left: 5px;">Voir qui c'est</a>
-          </div>
-        </div>
-      `).join("");
-    }
-
-    function copyMyLinkSmooth() {
-      navigator.clipboard.writeText(currentLink).then(() => {
-        const btn = document.getElementById("copyBtn");
-        if (btn) {
-          btn.innerText = "Lien copié ! ✓";
-          btn.style.background = "#25D366";
-          btn.style.color = "white";
-          btn.style.borderColor = "#25D366";
-          setTimeout(() => {
-            btn.innerText = "Copier le lien";
-            btn.style.background = "transparent";
-            btn.style.color = "#8a1282";
-            btn.style.borderColor = "#8a1282";
-          }, 2000);
-        }
-      });
-    }
-
-    function openPaymentLink() { window.location.href = "https://maketou.com"; }
-    function openShareModal() { document.getElementById("shareModal").style.display = "flex"; }
-    function closeShareModal() { document.getElementById("shareModal").style.display = "none"; }
-  
-    function goToNextStep() {
-      const home = document.getElementById("homeLandingSection");
-      const login = document.getElementById("loginSection");
-      if (home) home.style.display = "none";
-      if (login) login.style.display = "block";
-    }
-
-</script>
+  </script>
 </body>
 </html>
