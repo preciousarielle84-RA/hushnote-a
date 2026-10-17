@@ -76,6 +76,41 @@
       });
     }
 
+
+    // Liste de modération anti-insultes/harcèlement
+    const BAD_WORDS = ["connard", "salope", "pute", "enculé", "chienne", "bâtard", "batard", "pd", "pédé", "fDP", "suicide", "tue toi", "tu es laide", "moche", "poufiasse", "imbécile"];
+
+    function containsBadWords(text) {
+      if (!text) return false;
+      const lower = text.toLowerCase();
+      return BAD_WORDS.some(word => lower.includes(word));
+    }
+
+
+    function updateProfileStats() {
+      const p = document.getElementById("accountPseudo") ? document.getElementById("accountPseudo").value.trim().toLowerCase() : "";
+      const pin = document.getElementById("accountPin") ? document.getElementById("accountPin").value.trim() : "";
+      const userKey = p + "_" + pin;
+
+      // Compte des messages
+      const allMessages = JSON.parse(localStorage.getItem("hushnote_messages_" + userKey) || "[]");
+      const msgsElem = document.getElementById("statMsgsCount");
+      if (msgsElem) msgsElem.innerText = allMessages.length;
+
+      // Compte des vues
+      const views = localStorage.getItem("hushnote_views_" + userKey) || "0";
+      const viewsElem = document.getElementById("statViewsCount");
+      if (viewsElem) viewsElem.innerText = views;
+    }
+
+    // Incrémenter les vues quand un visiteur ouvre la page du destinataire
+    function trackLinkVisit(targetUserKey) {
+      if (!targetUserKey) return;
+      let currentViews = parseInt(localStorage.getItem("hushnote_views_" + targetUserKey) || "0");
+      currentViews++;
+      localStorage.setItem("hushnote_views_" + targetUserKey, currentViews);
+    }
+
 </script>
 </head>
 <body>
@@ -132,7 +167,24 @@
       <div id="playSection">
         <div class="card-carousel"><div class="theme-card"><h2>MESSAGES</h2><p>Envoyez-moi des messages anonymes ! 🤫</p></div></div>
         <div class="share-card">
-          <p>Mon lien unique à partager :</p>
+          <p>
+        <!-- STATISTIQUES DU PROFIL -->
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px;">
+          <div style="background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(5px); border-radius: 16px; padding: 12px 8px; color: white; text-align: center;">
+            <div style="font-size: 1.2rem; font-weight: 900;" id="statViewsCount">0</div>
+            <div style="font-size: 0.7rem; font-weight: 700; opacity: 0.9;">👁️ Vues</div>
+          </div>
+          <div style="background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(5px); border-radius: 16px; padding: 12px 8px; color: white; text-align: center;">
+            <div style="font-size: 1.2rem; font-weight: 900;" id="statMsgsCount">0</div>
+            <div style="font-size: 0.7rem; font-weight: 700; opacity: 0.9;">💬 Messages</div>
+          </div>
+          <div style="background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(5px); border-radius: 16px; padding: 12px 8px; color: white; text-align: center;">
+            <div style="font-size: 1rem; font-weight: 900;" id="statStatus">Gratuit</div>
+            <div style="font-size: 0.7rem; font-weight: 700; opacity: 0.9;">👑 Statut</div>
+          </div>
+        </div>
+
+          <div style="font-size: 0.85rem; color: #666; font-weight: 700;">Mon lien unique à partager :</p>
           <a href="#" id="userGeneratedLink" class="link-display" target="_blank">https://hushnote-a.onrender.com/?u=user</a>
           <button class="secondary-btn" style="color: #8a1282; border-color: #8a1282;" onclick="copyMyLink()">Copier le lien</button>
         </div>
