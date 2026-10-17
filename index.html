@@ -216,12 +216,28 @@
           <button class="unlock-btn" onclick="openPaymentLink()">Débloquer l'identité des expéditeurs (650 FCFA) 👑</button>
         </div>
 
-        <!-- INDICATEUR DE NOMBRE DE MESSAGES ET LISTE DES VRAIS MESSAGES -->
-        <div id="messageCounterBadge" style="background: rgba(255, 255, 255, 0.2); color: white; padding: 10px 15px; border-radius: 12px; font-weight: 800; font-size: 0.95rem; margin: 15px 0; text-align: center;">
+        <div id="messageCounterBadge" style="background: rgba(255, 255, 255, 0.2); color: white; padding: 12px 15px; border-radius: 15px; font-weight: 800; font-size: 0.95rem; margin: 15px 0; text-align: center;">
           📩 Chargement des messages...
         </div>
 
-        <div id="realMessagesList" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;">
+        <!-- STATISTIQUES DANS L'INBOX -->
+        <div style="display: flex; justify-content: space-around; align-items: center; background: white; padding: 12px; border-radius: 18px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+          <div style="text-align: center;">
+            <div style="font-size: 1.1rem; font-weight: 900; color: #8a1282;" id="statViewsCount">0</div>
+            <div style="font-size: 0.75rem; color: #666; font-weight: 700;">👁️ Vues</div>
+          </div>
+          <div style="text-align: center;">
+            <div style="font-size: 1.1rem; font-weight: 900; color: #8a1282;" id="statMsgsCount">0</div>
+            <div style="font-size: 0.75rem; color: #666; font-weight: 700;">💬 Messages</div>
+          </div>
+          <div style="text-align: center;">
+            <div style="font-size: 0.95rem; font-weight: 900; color: #8a1282;" id="statStatus">Gratuit</div>
+            <div style="font-size: 0.75rem; color: #666; font-weight: 700;">👑 Statut</div>
+          </div>
+        </div>
+
+        <!-- VRAIS MESSAGES REÇUS -->
+        <div id="realMessagesList" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 25px;">
         </div>
 
         <div><a href="#" style="color: white; font-weight: 700; font-size: 0.9rem; text-decoration: underline;" onclick="logoutUser()">Changer d'utilisateur / Se déconnecter</a></div>
