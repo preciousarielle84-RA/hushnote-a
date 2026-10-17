@@ -378,12 +378,13 @@
 
 
   
+  
   <div id="shareModal" class="modal-overlay">
-    <div class="modal-content">
+    <div class="modal-content" style="padding-bottom: 25px !important; margin-bottom: 0 !important;">
       <h3 style="color: #8a1282; font-size: 1.35rem; font-weight: 900; margin-bottom: 4px;">Partager dans ta Story 📸</h3>
-      <p style="font-size: 0.85rem; color: #666; font-weight: 700;">Choisis ton réseau social :</p>
+      <p style="font-size: 0.85rem; color: #666; font-weight: 700; margin-bottom: 10px;">Choisis ton réseau social :</p>
       
-      <div style="display: flex; justify-content: space-around; align-items: center; margin: 25px 0;">
+      <div style="display: flex; justify-content: space-around; align-items: center; margin: 20px 0;">
         <div class="share-item-full" onclick="shareTo('whatsapp')">
           <div class="share-icon-full" style="background: #25D366; color: white;">💬</div>
           <span>WhatsApp</span>
@@ -398,12 +399,13 @@
         </div>
       </div>
 
-      <div class="modal-btns-full">
+      <div class="modal-btns-full" style="margin-top: 10px;">
         <button class="modal-btn-cancel-full" onclick="closeShareModal()">Annuler</button>
         <button class="modal-btn-other-full" onclick="nativeShare()">Autre...</button>
       </div>
     </div>
   </div>
+
 
 
 </body>
