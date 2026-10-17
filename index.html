@@ -139,14 +139,18 @@
       <h3 style="font-size: 1.2rem; font-weight: 900; color: #8a1282;">Partager dans ta Story 📸</h3>
       <p style="font-size: 0.85rem; color: #666; margin-top: 4px;">Choisis ton réseau social :</p>
       
-      <div class="social-grid" style="grid-template-columns: repeat(2, 1fr); gap: 25px; margin: 25px 0;">
+      <div class="social-grid" style="grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 25px 0;">
         <div class="social-item" onclick="window.location.href='https://api.whatsapp.com/send?text=' + encodeURIComponent('Envoyez-moi des messages anonymes sur HushNote ! 💬 ' + currentLink)">
-          <div class="social-icon" style="background: #25D366; width: 60px; height: 60px; font-size: 1.8rem;">💬</div>
-          <span style="font-size: 0.95rem;">WhatsApp</span>
+          <div class="social-icon" style="background: #25D366; width: 55px; height: 55px; font-size: 1.6rem;">💬</div>
+          <span style="font-size: 0.85rem;">WhatsApp</span>
         </div>
         <div class="social-item" onclick="window.location.href='https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(currentLink)">
-          <div class="social-icon" style="background: #1877F2; width: 60px; height: 60px; font-size: 1.8rem;">f</div>
-          <span style="font-size: 0.95rem;">Facebook</span>
+          <div class="social-icon" style="background: #1877F2; width: 55px; height: 55px; font-size: 1.6rem;">f</div>
+          <span style="font-size: 0.85rem;">Facebook</span>
+        </div>
+        <div class="social-item" onclick="window.location.href='https://t.me/share/url?url=' + encodeURIComponent(currentLink) + '&text=' + encodeURIComponent('Envoyez-moi des messages anonymes sur HushNote ! 💬')">
+          <div class="social-icon" style="background: #0088cc; width: 55px; height: 55px; font-size: 1.6rem;">✈️</div>
+          <span style="font-size: 0.85rem;">Telegram</span>
         </div>
       </div>
 
