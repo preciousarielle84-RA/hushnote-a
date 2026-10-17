@@ -64,7 +64,6 @@
       <button onclick="showLoginSection()" class="outline-btn">Recevoir mes propres messages 📲</button>
       <div style="margin-top: 15px;"><a href="#" style="color: white; font-weight: 700; text-decoration: underline; font-size: 0.85rem;" onclick="showHomeLanding()">← Retour à l'accueil</a></div>
     </div>
-
     <div id="loginSection" style="display: none; width: 100%;">
       <div class="header">HUSHNOTE</div>
       <div class="card" style="text-align: center;">
@@ -112,6 +111,7 @@
       <div><a href="#" style="color: white; font-weight: 700; font-size: 0.9rem; text-decoration: underline;" onclick="logoutUser()">Changer d'utilisateur / Se déconnecter</a></div>
     </div>
   </div>
+
   <script>
     const categories = [
       { title: "QUESTIONS", prompt: "Pose-moi une question anonyme ! ❓", tag: "❓ QUESTIONS" },
@@ -120,7 +120,8 @@
       { title: "VOEU", prompt: "Fais un voeu pour nous deux... ✨", tag: "✨ VOEU" },
       { title: "SECRET", prompt: "Confie-moi ton plus grand secret... 🤫", tag: "🤫 SECRET" }
     ];
-    let currentCatIndex = 0, touchStartX = 0, touchEndX = 0, targetUserKey = "", currentLink = "";
+    let currentCatIndex = 0, touchStartX = 0, touchEndX = 0, isSwiping = false, targetUserKey = "", currentLink = "";
+
     function selectCategory(index) {
       currentCatIndex = index;
       document.getElementById("catTitle").innerText = categories[index].title;
@@ -129,23 +130,141 @@
       document.getElementById("selectedPromptText").innerText = categories[index].prompt;
       document.querySelectorAll(".dot").forEach((dot, i) => { dot.className = "dot" + (i === index ? " active" : ""); });
     }
-    let isSwiping = false;
+
     function initSwipeEvents() {
       const card = document.getElementById("swipeCategoryCard");
       if (!card) return;
-      card.addEventListener("touchstart", e => { touchStartX = e.changedTouches[0].screenX; isSwiping = false; }, false);
-      card.addEventListener("touchend", e => { 
+      card.addEventListener("touchstart", e => { touchStartX = e.changedTouches[0].screenX; }, false);
+      card.addEventListener("touchend", e => {
         if (isSwiping) return;
-        touchEndX = e.changedTouches[0].screenX; 
-        const d = touchEndX - touchStartX; 
+        touchEndX = e.changedTouches[0].screenX;
+        const d = touchEndX - touchStartX;
         if (Math.abs(d) > 40) {
           isSwiping = true;
-          if (d < 0) { selectCategory((currentCatIndex + 1) % categories.length); }
-          else { selectCategory((currentCatIndex - 1 + categories.length) % categories.length); }
+          selectCategory(d < 0 ? (currentCatIndex + 1) % categories.length : (currentCatIndex - 1 + categories.length) % categories.length);
           setTimeout(() => { isSwiping = false; }, 300);
         }
       }, false);
     }
+
+    window.onload = function() {
+      selectCategory(0);
+      initSwipeEvents();
+      const urlParams = new URLSearchParams(window.location.search);
+      targetUserKey = urlParams.get('u');
+      const savedUser = localStorage.getItem("hushnote_current_user");
+      if (targetUserKey) { showSendForm(); localStorage.setItem("hushnote_views_" + targetUserKey, parseInt(localStorage.getItem("hushnote_views_" + targetUserKey) || "0") + 1); }
+      else if (savedUser) { showUserSpace(savedUser); }
+      else { showHomeLanding(); }
+    };
+
+    function showHomeLanding() {
+      document.getElementById("homeLandingSection").style.display = "flex";
+      document.getElementById("sendMsgSection").style.display = "none";
+      document.getElementById("loginSection").style.display = "none";
+      document.getElementById("navTabs").style.display = "none";
+      document.getElementById("dashboardSection").style.display = "none";
+      document.getElementById("inboxSection").style.display = "none";
+    }
+
+    function showSendForm() {
+      document.getElementById("homeLandingSection").style.display = "none";
+      document.getElementById("sendMsgSection").style.display = "block";
+      document.getElementById("loginSection").style.display = "none";
+      document.getElementById("navTabs").style.display = "none";
+      document.getElementById("dashboardSection").style.display = "none";
+      document.getElementById("inboxSection").style.display = "none";
+      setTimeout(initSwipeEvents, 100);
+    }
+
+    function showLoginSection() {
+      document.getElementById("homeLandingSection").style.display = "none";
+      document.getElementById("sendMsgSection").style.display = "none";
+      document.getElementById("loginSection").style.display = "block";
+      document.getElementById("navTabs").style.display = "none";
+      document.getElementById("dashboardSection").style.display = "none";
+      document.getElementById("inboxSection").style.display = "none";
+    }
+
+    function sendAnonymousMessage() {
+      const text = document.getElementById("anonymousInput").value.trim();
+      const hint = document.getElementById("senderHintInput").value.trim();
+      if (!text || !hint) {
+        alert("Veuillez écrire un message et votre nom ou un indice avant d'envoyer.");
+        return;
+      }
+      const dest = targetUserKey || "admin_general";
+      const existingMsgs = JSON.parse(localStorage.getItem("hushnote_messages_" + dest) || "[]");
+      existingMsgs.unshift({ text: "[" + categories[currentCatIndex].title + "] " + text, sender: hint, date: new Date().toISOString() });
+      localStorage.setItem("hushnote_messages_" + dest, JSON.stringify(existingMsgs));
+      document.getElementById("anonymousInput").value = "";
+      document.getElementById("senderHintInput").value = "";
+      alert("Message envoyé anonymement ! 🚀");
+    }
+
+    function loginUser() {
+      const p = document.getElementById("accountPseudo").value.trim().toLowerCase();
+      const pin = document.getElementById("accountPin").value.trim();
+      if (!p || !pin) { alert("Veuillez remplir votre Pseudo et votre PIN."); return; }
+      localStorage.setItem("hushnote_current_user", p + "_" + pin);
+      showUserSpace(p + "_" + pin);
+    }
+
+    function logoutUser() {
+      localStorage.removeItem("hushnote_current_user");
+      window.location.href = window.location.origin + window.location.pathname;
+    }
+
+    function showUserSpace(userKey) {
+      document.getElementById("homeLandingSection").style.display = "none";
+      document.getElementById("sendMsgSection").style.display = "none";
+      document.getElementById("loginSection").style.display = "none";
+      document.getElementById("navTabs").style.display = "flex";
+      currentLink = window.location.origin + window.location.pathname + "?u=" + encodeURIComponent(userKey);
+      const linkElem = document.getElementById("userGeneratedLink");
+      if (linkElem) { linkElem.href = currentLink; linkElem.innerText = currentLink; }
+      switchTab('play');
+    }
+
+    function switchTab(tab) {
+      if (tab === 'play') {
+        document.getElementById("tabPlay").classList.add("active");
+        document.getElementById("tabInbox").classList.remove("active");
+        document.getElementById("dashboardSection").style.display = "block";
+        document.getElementById("inboxSection").style.display = "none";
+      } else {
+        document.getElementById("tabInbox").classList.add("active");
+        document.getElementById("tabPlay").classList.remove("active");
+        document.getElementById("dashboardSection").style.display = "none";
+        document.getElementById("inboxSection").style.display = "block";
+        renderInboxMessages();
+      }
+    }
+
+    function renderInboxMessages() {
+      const userKey = localStorage.getItem("hushnote_current_user");
+      if (!userKey) return;
+      const listContainer = document.getElementById("realMessagesList");
+      const counterBadge = document.getElementById("messageCounterBadge");
+      document.getElementById("statViewsCount").innerText = localStorage.getItem("hushnote_views_" + userKey) || "0";
+      const allMessages = JSON.parse(localStorage.getItem("hushnote_messages_" + userKey) || "[]");
+      document.getElementById("statMsgsCount").innerText = allMessages.length;
+      if (allMessages.length === 0) {
+        counterBadge.innerText = "📩 Vous avez reçu 0 message";
+        listContainer.innerHTML = '<div style="background: white; color: #666; padding: 20px; border-radius: 18px;">💬 Aucun message reçu pour l\'instant.</div>';
+        return;
+      }
+      counterBadge.innerText = "📩 Vous avez reçu " + allMessages.length + " message" + (allMessages.length > 1 ? "s" : "");
+      listContainer.innerHTML = allMessages.map(msg => '<div style="background: white; color: #333; padding: 15px; border-radius: 18px; text-align: left; margin-bottom: 10px;"><div style="font-size: 0.75rem; color: #8a1282; font-weight: 800; margin-bottom: 5px;">💬 MESSAGE REÇU</div><div style="font-size: 0.95rem; font-weight: 700; color: #222; margin-bottom: 8px;">' + msg.text + '</div><div style="font-size: 0.8rem; background: #f0f0f0; padding: 6px 12px; border-radius: 10px; display: inline-block;">Expéditeur : <span style="filter: blur(4px);">' + (msg.sender || "Anonyme") + '</span> 🔒 <a href="#" onclick="openPaymentLink()" style="color: #8a1282; text-decoration: underline; margin-left: 5px;">Voir qui c\'est</a></div></div>').join("");
+    }
+
+    function copyMyLinkSmooth() {
+      navigator.clipboard.writeText(currentLink).then(() => {
+        const btn = document.getElementById("copyBtn");
+        if (btn) { btn.innerText = "Lien copié ! ✓"; setTimeout(() => { btn.innerText = "Copier le lien"; }, 2000); }
+      });
+    }
+
     function openPaymentLink() { window.location.href = "https://maketou.com"; }
   </script>
 </body>
