@@ -106,6 +106,17 @@
     cursor: pointer !important; 
   }
 
+
+  .modal-overlay { position: fixed !important; top: 0 !important; left: 0 !important; width: 100vw !important; height: 100vh !important; background: rgba(0, 0, 0, 0.6) !important; backdrop-filter: blur(4px) !important; display: none; justify-content: center; align-items: flex-end; z-index: 999999 !important; }
+  .modal-content { background: #ffffff !important; color: #333333 !important; width: 100% !important; max-width: 420px !important; border-radius: 30px 30px 0 0 !important; padding: 25px 20px 30px 20px !important; text-align: center !important; box-shadow: 0 -10px 30px rgba(0,0,0,0.3) !important; animation: slideUp 0.25s ease-out !important; }
+  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  .share-grid-full { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 18px 10px !important; margin: 20px 0 !important; }
+  .share-item-full { display: flex !important; flex-direction: column !important; align-items: center !important; cursor: pointer !important; font-size: 0.8rem !important; font-weight: 700 !important; color: #333 !important; gap: 6px !important; }
+  .share-icon-full { width: 56px !important; height: 56px !important; border-radius: 18px !important; display: flex !important; align-items: center !important; justify-content: center !important; font-size: 1.7rem !important; box-shadow: 0 4px 10px rgba(0,0,0,0.12) !important; }
+  .modal-btns-full { display: flex !important; gap: 12px !important; margin-top: 15px !important; }
+  .modal-btn-cancel-full { flex: 1 !important; padding: 14px !important; border: 2px solid #ddd !important; background: white !important; border-radius: 30px !important; font-weight: 800 !important; color: #444 !important; cursor: pointer !important; font-size: 0.95rem !important; }
+  .modal-btn-other-full { flex: 1 !important; padding: 14px !important; background: #8a1282 !important; border: none !important; border-radius: 30px !important; font-weight: 800 !important; color: white !important; cursor: pointer !important; font-size: 0.95rem !important; }
+
 </style>
 </head>
 <body>
@@ -353,25 +364,56 @@
 
 
 
+  
+
+
   <div id="shareModal" class="modal-overlay">
     <div class="modal-content">
-      <h3 style="color: #8a1282; font-size: 1.35rem; font-weight: 900; margin-bottom: 4px;">Partager dans ta Story 📸</h3>
+      <h3 style="color: #8a1282; font-size: 1.3rem; font-weight: 900; margin-bottom: 4px;">Partager dans ta Story 📸</h3>
       <p style="font-size: 0.85rem; color: #666; font-weight: 700;">Choisis ton réseau social :</p>
       
-      <div class="share-grid-clean">
-        <div class="share-item-clean" onclick="shareTo('whatsapp')">
-          <div class="share-icon-clean" style="background: #25D366; color: white;">💬</div>
+      <div class="share-grid-full">
+        <div class="share-item-full" onclick="shareTo('whatsapp')">
+          <div class="share-icon-full" style="background: #25D366; color: white;">💬</div>
           <span>WhatsApp</span>
         </div>
-        <div class="share-item-clean" onclick="shareTo('facebook')">
-          <div class="share-icon-clean" style="background: #1877F2; color: white; font-weight: 900; font-family: sans-serif;">f</div>
+        <div class="share-item-full" onclick="shareTo('instagram')">
+          <div class="share-icon-full" style="background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); color: white;">📸</div>
+          <span>Instagram</span>
+        </div>
+        <div class="share-item-full" onclick="shareTo('facebook')">
+          <div class="share-icon-full" style="background: #1877F2; color: white; font-weight: 900; font-family: sans-serif;">f</div>
           <span>Facebook</span>
+        </div>
+        <div class="share-item-full" onclick="shareTo('tiktok')">
+          <div class="share-icon-full" style="background: #000000; color: white;">🎵</div>
+          <span>TikTok</span>
+        </div>
+        <div class="share-item-full" onclick="shareTo('snapchat')">
+          <div class="share-icon-full" style="background: #FFFC00; color: black;">👻</div>
+          <span>Snapchat</span>
+        </div>
+        <div class="share-item-full" onclick="shareTo('telegram')">
+          <div class="share-icon-full" style="background: #0088cc; color: white;">✈️</div>
+          <span>Telegram</span>
+        </div>
+        <div class="share-item-full" onclick="shareTo('pinterest')">
+          <div class="share-icon-full" style="background: #E60023; color: white;">📌</div>
+          <span>Pinterest</span>
+        </div>
+        <div class="share-item-full" onclick="shareTo('youtube')">
+          <div class="share-icon-full" style="background: #FF0000; color: white;">▶️</div>
+          <span>YouTube</span>
+        </div>
+        <div class="share-item-full" onclick="shareTo('twitter')">
+          <div class="share-icon-full" style="background: #000000; color: white; font-weight: 900;">𝕏</div>
+          <span>Twitter/X</span>
         </div>
       </div>
 
-      <div class="modal-btns-clean">
-        <button class="modal-btn-cancel-clean" onclick="closeShareModal()">Retour</button>
-        <button class="modal-btn-other-clean" onclick="nativeShare()">Autre...</button>
+      <div class="modal-btns-full">
+        <button class="modal-btn-cancel-full" onclick="closeShareModal()">Annuler</button>
+        <button class="modal-btn-other-full" onclick="nativeShare()">Autre...</button>
       </div>
     </div>
   </div>
