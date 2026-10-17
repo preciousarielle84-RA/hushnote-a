@@ -117,7 +117,11 @@
           <button class="unlock-btn" onclick="openPaymentLink()">Débloquer l'identité des expéditeurs (650 FCFA) 👑</button>
         </div>
 
-        <!-- CONTENEUR DES VRAIS MESSAGES DYNAMIQUES -->
+        <!-- INDICATEUR DE NOMBRE DE MESSAGES ET LISTE DES VRAIS MESSAGES -->
+        <div id="messageCounterBadge" style="background: rgba(255, 255, 255, 0.2); color: white; padding: 10px 15px; border-radius: 12px; font-weight: 800; font-size: 0.95rem; margin: 15px 0; text-align: center;">
+          📩 Chargement des messages...
+        </div>
+
         <div id="realMessagesList" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;">
         </div>
 
@@ -302,7 +306,8 @@
     });
   function renderInboxMessages() {
       const listContainer = document.getElementById("realMessagesList");
-      if (!listContainer) return;
+      const counterBadge = document.getElementById("messageCounterBadge");
+      if (!listContainer || !counterBadge) return;
 
       const p = document.getElementById("accountPseudo") ? document.getElementById("accountPseudo").value.trim().toLowerCase() : "";
       const pin = document.getElementById("accountPin") ? document.getElementById("accountPin").value.trim() : "";
@@ -311,11 +316,14 @@
       const allMessages = JSON.parse(localStorage.getItem("hushnote_messages_" + userKey) || "[]");
 
       if (allMessages.length === 0) {
+        counterBadge.innerText = "📩 Vous avez reçu 0 message";
         listContainer.innerHTML = `<div style="background: white; color: #666; padding: 20px; border-radius: 18px; text-align: center; font-weight: 700;">
           💬 Aucun message reçu pour l'instant.<br>Partage ton lien dans ta Story pour en recevoir !
         </div>`;
         return;
       }
+
+      counterBadge.innerText = `📩 Vous avez reçu ${allMessages.length} message${allMessages.length > 1 ? "s" : ""}`;
 
       listContainer.innerHTML = allMessages.map(msg => `
         <div style="background: white; color: #333; padding: 15px; border-radius: 18px; text-align: left; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
