@@ -6,422 +6,49 @@
   <title>HushNote</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    body { background: linear-gradient(180deg, #8a1282 0%, #e91e63 100%); min-height: 100vh; color: white; text-align: center; padding: 25px 15px; display: flex; flex-direction: column; align-items: center; }
-    
+    body { 
+      background: linear-gradient(180deg, #8a1282 0%, #e91e63 100%); 
+      min-height: 100vh; 
+      color: white; 
+      text-align: center; 
+      padding: 20px; 
+      display: flex; 
+      flex-direction: column; 
+      justify-content: center; 
+      align-items: center; 
+    }
+    .container { width: 100%; max-width: 360px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
     .header { font-size: 2.8rem; font-weight: 900; font-style: italic; margin-bottom: 20px; letter-spacing: 1px; text-shadow: 0 4px 10px rgba(0,0,0,0.2); }
-    .subtitle { font-size: 1.2rem; font-weight: 800; line-height: 1.4; margin-bottom: 30px; max-width: 320px; color: white; }
-    
-    .main-get-btn { background: white; color: #8a1282; border: none; padding: 18px 30px; border-radius: 40px; font-weight: 900; font-size: 1.15rem; width: 100%; max-width: 340px; cursor: pointer; box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
+    .subtitle { font-size: 1.25rem; font-weight: 800; line-height: 1.4; margin-bottom: 35px; color: white; }
+    .main-get-btn { 
+      background: white; 
+      color: #8a1282; 
+      border: none; 
+      padding: 18px 30px; 
+      border-radius: 40px; 
+      font-weight: 900; 
+      font-size: 1.15rem; 
+      width: 100%; 
+      cursor: pointer; 
+      box-shadow: 0 6px 20px rgba(0,0,0,0.2); 
+    }
     .terms-text { font-size: 0.75rem; opacity: 0.85; margin-top: 25px; font-weight: 600; color: white; }
-
-    .step-title { font-size: 1.1rem; font-weight: 800; margin: 20px 0 12px 0; color: white; }
-    
-    /* CADRE PURPLE DU HAUT POUR LES RUBRIQUES */
-    .category-card { background: rgba(255, 255, 255, 0.18); backdrop-filter: blur(10px); padding: 25px 20px; border-radius: 28px; border: 1.5 solid rgba(255,255,255,0.3); margin-bottom: 15px; text-align: center; width: 100%; max-width: 350px; box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
-    .category-title { font-size: 2.2rem; font-weight: 900; color: white; letter-spacing: 1px; margin-bottom: 15px; text-transform: uppercase; }
-    .category-bubble { background: white; color: #333; padding: 14px 20px; border-radius: 30px; font-weight: 800; font-size: 0.95rem; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-    
-    .carousel-dots { display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 25px; }
-    .dot { width: 9px; height: 9px; background: rgba(255,255,255,0.4); border-radius: 50%; cursor: pointer; transition: all 0.3s ease; }
-    .dot.active { background: white; width: 12px; height: 12px; }
-
-    /* CARTE BLANCHE POUR RÉDIGER LE MESSAGE */
-    .card { background: white; color: #333; padding: 20px; border-radius: 28px; box-shadow: 0 6px 20px rgba(0,0,0,0.15); margin-bottom: 20px; text-align: left; width: 100%; max-width: 350px; }
-    .input-field { width: 100%; padding: 14px; border: 1px solid #f0f0f0; background: #f8f8f8; border-radius: 16px; font-size: 0.95rem; margin-top: 12px; color: #333; outline: none; }
-    
-    /* BOUTONS SPECIFIQUES DU BAS */
-    .send-btn { width: 100%; max-width: 350px; padding: 18px; background: white; color: #8a1282; border: none; border-radius: 40px; font-weight: 900; font-size: 1.1rem; cursor: pointer; box-shadow: 0 6px 20px rgba(0,0,0,0.15); margin-bottom: 25px; }
-    .outline-btn { width: 100%; max-width: 350px; padding: 16px; background: transparent; color: white; border: 2px solid white; border-radius: 40px; font-weight: 800; font-size: 1rem; cursor: pointer; }
-
-    .nav-tabs { display: flex; justify-content: center; gap: 20px; margin-bottom: 25px; width: 100%; }
-    .tab-btn { font-size: 1.2rem; font-weight: 800; opacity: 0.6; cursor: pointer; padding-bottom: 5px; border-bottom: 3px solid transparent; }
-    .tab-btn.active { opacity: 1; border-bottom: 3px solid white; }
-
-    .paywall-card { border: 2px dashed rgba(255,255,255,0.6); background: rgba(255,255,255,0.15); backdrop-filter: blur(5px); padding: 20px; border-radius: 20px; margin-bottom: 20px; color: white; width: 100%; max-width: 350px; }
-    .unlock-btn { background: #8a1282; color: white; border: none; padding: 12px 20px; border-radius: 25px; font-weight: 800; font-size: 0.95rem; width: 100%; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
-    .container { width: 100%; max-width: 380px; display: flex; flex-direction: column; align-items: center; }
   </style>
 </head>
 <body>
 
   <div class="container">
     <div class="header">HUSHNOTE</div>
-
-    <!-- ACCUEIL SEULE -->
-    <div id="homeLandingSection" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
-      <div class="subtitle">
-        Recevez des messages anonymes sur vos réseaux ! 💬 ✨
-      </div>
-      <button onclick="showSendForm()" class="main-get-btn">
-        Obtenir des questions 🚀
-      </button>
-      <div class="terms-text">
-        En continuant, vous acceptez nos Conditions d'utilisation.
-      </div>
+    <div class="subtitle">
+      Recevez des messages anonymes sur vos réseaux ! 💬 <br>✨
     </div>
-
-    <!-- PAGE D'ENVOI EXACTE EN 3 ÉTAPES COMME SUR LA PHOTO DE L'UTILISATEUR -->
-    <div id="sendMsgSection" style="display:none; width:100%;" style="display: none; width: 100%;">
-      
-      <!-- 1. CHOISIS UNE RUBRIQUE -->
-      <div class="step-title">1. Choisis une rubrique</div>
-      <div class="category-card">
-        <div style="display: flex; justify-content: space-between; align-items: center;"><span onclick="prevCategory()" style="font-size: 1.8rem; cursor: pointer; opacity: 0.7; padding: 0 5px;">‹</span><div class="category-title" id="catTitle" style="margin-bottom:0;">HISTOIRE</div>
-        </div><span onclick="nextCategory()" style="font-size: 1.8rem; cursor: pointer; opacity: 0.7; padding: 0 5px;">›</span></div>
-<div class="category-bubble" id="catPrompt" style="margin-top:12px;">Partage une histoire folle ! 📖</div>
-      </div>
-      <div class="carousel-dots">
-        <div class="dot" onclick="selectCategory(0)"></div>
-        <div class="dot active" onclick="selectCategory(1)"></div>
-        <div class="dot" onclick="selectCategory(2)"></div>
-        <div class="dot" onclick="selectCategory(3)"></div>
-        <div class="dot" onclick="selectCategory(4)"></div>
-      </div>
-
-      <!-- 2. RÉRIGE TON MESSAGE -->
-      <div class="step-title">2. Rédige ton message</div>
-      <div class="card">
-        <div style="font-weight: 800; color: #8a1282; font-size: 0.9rem; margin-bottom: 8px;" id="selectedTag">📖 HISTOIRE</div>
-        <textarea id="anonymousInput" rows="3" placeholder="Écris ton message ici..." style="width: 100%; border: none; outline: none; font-size: 1rem; resize: none; font-weight: 600; color: #333;"></textarea>
-        <input type="text" id="senderHintInput" placeholder="Ton prénom ou un indice (optionnel)" class="input-field">
-      </div>
-
-      <button onclick="sendAnonymousMessage()" class="send-btn">Envoyer anonymement 🚀</button>
-
-      <!-- 3. TU VEUX TES PROPRES MESSAGES ? -->
-      <div class="step-title">3. Tu veux tes propres messages ?</div>
-      <button onclick="showLoginSection()" class="outline-btn">Recevoir mes propres messages 📲</button>
-      
-      <div style="margin-top: 15px;">
-        <a href="#" style="color: white; font-weight: 700; text-decoration: underline; font-size: 0.85rem;" onclick="showHomeLanding()">← Retour à l'accueil</a>
-      </div>
+    <button onclick="alert('Page d\'accueil validée !')" class="main-get-btn">
+      Obtenir des questions 🚀
+    </button>
+    <div class="terms-text">
+      En continuant, vous acceptez nos Conditions d'utilisation.
     </div>
-
-    <!-- COMPTE / PSEUDO + PIN -->
-    <div id="loginSection" style="display: none; width: 100%;">
-      <div class="card" style="text-align: center;">
-        <h3 style="margin-bottom: 12px; color: #8a1282;">Connexion / Inscription</h3>
-        <p style="font-size: 0.85rem; color: #666; margin-bottom: 15px;">Entre ton pseudo et ton code PIN pour générer ton lien unique.</p>
-        <input type="text" id="accountPseudo" placeholder="Ton Pseudo" class="input-field" style="margin-top:0;">
-        <input type="password" id="accountPin" placeholder="Code PIN à 4 chiffres" class="input-field">
-        <button onclick="loginUser()" class="send-btn" style="background: linear-gradient(90deg, #ff4081, #e91e63); color: white; margin-top: 10px;">Accéder à mon espace 🚀</button>
-      </div>
-      <div>
-        <a href="#" style="color: white; font-weight: 700; text-decoration: underline; font-size: 0.85rem;" onclick="showSendForm()">← Retour à l'envoi de message</a>
-      </div>
-    </div>
-
-    <!-- ESPACE MEMBRE CONNECTÉ -->
-    <div id="navTabs" class="nav-tabs" style="display:none;">
-      <div id="tabPlay" class="tab-btn active" onclick="switchTab('play')">PLAY</div>
-      <div id="tabInbox" class="tab-btn" onclick="switchTab('inbox')">INBOX 📬</div>
-    </div>
-
-    <!-- DASHBOARD PLAY -->
-    <div id="dashboardSection" style="display:none; width: 100%;">
-      <div class="category-card" style="background: rgba(255, 255, 255, 0.15);">
-        <div class="category-title">MESSAGES</div>
-        <div class="category-bubble">Envoyez-moi des messages anonymes ! 🤫</div>
-      </div>
-
-      <div class="card" style="text-align: center;">
-        <div style="font-size: 0.85rem; color: #666; font-weight: 700; margin-bottom: 5px;">Mon lien unique à partager :</div>
-        <a id="userGeneratedLink" href="#" target="_blank" style="display: block; word-break: break-all; color: #8a1282; font-weight: 800; font-size: 0.95rem; margin-bottom: 15px;">https://hushnote-a.onrender.com/?u=...</a>
-        <button id="copyBtn" onclick="copyMyLinkSmooth()" style="width: 100%; padding: 12px; background: transparent; color: #8a1282; border: 2px solid #8a1282; border-radius: 25px; font-weight: 800; cursor: pointer;">Copier le lien</button>
-      </div>
-
-      <button class="send-btn" style="background: linear-gradient(90deg, #ff4081, #e91e63); color: white;" onclick="alert('Partage via les réseaux')">Partager dans ma Story 📸</button>
-      <div style="margin-top: 20px;"><a href="#" style="color: white; font-weight: 700; font-size: 0.9rem; text-decoration: underline;" onclick="logoutUser()">Changer d'utilisateur / Se déconnecter</a></div>
-    </div>
-
-    <!-- INBOX -->
-    <div id="inboxSection" style="display:none; width: 100%;">
-      <div class="paywall-card">
-        <div style="font-weight: 800; font-size: 1.1rem; margin-bottom: 10px;">🔒 Identités des expéditeurs verrouillées</div>
-        <div style="font-size: 0.85rem; margin-bottom: 15px; opacity: 0.95;">Les messages sont 100% gratuits. Abonnez-vous à 650 FCFA / mois pour savoir QUI vous a écrit !</div>
-        <button class="unlock-btn" onclick="openPaymentLink()">Débloquer l'identité des expéditeurs (650 FCFA) 👑</button>
-      </div>
-
-      <div id="messageCounterBadge" style="background: rgba(255, 255, 255, 0.2); color: white; padding: 12px 15px; border-radius: 15px; font-weight: 800; font-size: 0.95rem; margin: 15px 0; text-align: center;">
-        📩 Chargement des messages...
-      </div>
-
-      <!-- STATISTIQUES DANS L'INBOX -->
-      <div style="display: flex; justify-content: space-around; align-items: center; background: white; padding: 12px; border-radius: 18px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); color: #333;">
-        <div>
-          <div style="font-size: 1.1rem; font-weight: 900; color: #8a1282;" id="statViewsCount">0</div>
-          <div style="font-size: 0.75rem; color: #666; font-weight: 700;">👁️ Vues</div>
-        </div>
-        <div>
-          <div style="font-size: 1.1rem; font-weight: 900; color: #8a1282;" id="statMsgsCount">0</div>
-          <div style="font-size: 0.75rem; color: #666; font-weight: 700;">💬 Messages</div>
-        </div>
-        <div>
-          <div style="font-size: 0.95rem; font-weight: 900; color: #8a1282;" id="statStatus">Gratuit</div>
-          <div style="font-size: 0.75rem; color: #666; font-weight: 700;">👑 Statut</div>
-        </div>
-      </div>
-
-      <div id="realMessagesList" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 25px;"></div>
-      <div><a href="#" style="color: white; font-weight: 700; font-size: 0.9rem; text-decoration: underline;" onclick="logoutUser()">Changer d'utilisateur / Se déconnecter</a></div>
-    </div>
-
   </div>
 
-  <script>
-    const categories = [
-      { title: "QUESTIONS", prompt: "Pose-moi une question anonyme ! ❓", tag: "❓ QUESTIONS" },
-      { title: "HISTOIRE", prompt: "Partage une histoire folle ! 📖", tag: "📖 HISTOIRE" },
-      { title: "CRUSH", prompt: "Qui est ton crush secret ? 🫣❤️", tag: "❤️ CRUSH" },
-      { title: "VOEU", prompt: "Fais un voeu pour nous deux... ✨", tag: "✨ VOEU" },
-      { title: "SECRET", prompt: "Confie-moi ton plus grand secret... 🤫", tag: "🤫 SECRET" }
-    ];
-
-    let currentCatIndex = 1; // HISTOIRE comme sur la photo
-
-    function selectCategory(index) {
-      currentCatIndex = index;
-      document.getElementById("catTitle").innerText = categories[index].title;
-      document.getElementById("catPrompt").innerText = categories[index].prompt;
-      document.getElementById("selectedTag").innerText = categories[index].tag;
-      
-      const dots = document.querySelectorAll(".dot");
-      dots.forEach((dot, i) => {
-        if (i === index) dot.classList.add("active");
-        else dot.classList.remove("active");
-      });
-    }
-
-    window.onload = function() {
-      selectCategory(1);
-      const urlParams = new URLSearchParams(window.location.search);
-      targetUserKey = urlParams.get('u');
-      const savedUser = localStorage.getItem("hushnote_current_user");
-
-      if (targetUserKey) {
-        showSendForm();
-        let views = parseInt(localStorage.getItem("hushnote_views_" + targetUserKey) || "0");
-        views++;
-        localStorage.setItem("hushnote_views_" + targetUserKey, views);
-      } else if (savedUser) {
-        showUserSpace(savedUser);
-      } else {
-        showHomeLanding();
-      }
-    };
-
-    function showHomeLanding() {
-      document.getElementById("homeLandingSection").style.display = "flex";
-      document.getElementById("sendMsgSection").style.display = "none";
-      document.getElementById("loginSection").style.display = "none";
-      document.getElementById("navTabs").style.display = "none";
-      document.getElementById("dashboardSection").style.display = "none";
-      document.getElementById("inboxSection").style.display = "none";
-    }
-
-    function showSendForm() {
-      document.getElementById("homeLandingSection").style.display = "none";
-      document.getElementById("sendMsgSection").style.display = "block";
-      document.getElementById("loginSection").style.display = "none";
-      document.getElementById("navTabs").style.display = "none";
-      document.getElementById("dashboardSection").style.display = "none";
-      document.getElementById("inboxSection").style.display = "none";
-    }
-
-    function showLoginSection() {
-      document.getElementById("homeLandingSection").style.display = "none";
-      document.getElementById("sendMsgSection").style.display = "none";
-      document.getElementById("loginSection").style.display = "block";
-      document.getElementById("navTabs").style.display = "none";
-      document.getElementById("dashboardSection").style.display = "none";
-      document.getElementById("inboxSection").style.display = "none";
-    }
-
-    function sendAnonymousMessage() {
-      const input = document.getElementById("anonymousInput");
-      const hintInput = document.getElementById("senderHintInput");
-      const text = input.value.trim();
-      const hint = hintInput ? hintInput.value.trim() : "";
-
-      if (!text) {
-        alert("Veuillez écrire un message avant d'envoyer.");
-        return;
-      }
-
-      const dest = targetUserKey || "admin_general";
-      const existingMsgs = JSON.parse(localStorage.getItem("hushnote_messages_" + dest) || "[]");
-      
-      existingMsgs.unshift({ 
-        text: "[" + categories[currentCatIndex].title + "] " + text, 
-        sender: hint || "Anonyme", 
-        date: new Date().toISOString() 
-      });
-
-      localStorage.setItem("hushnote_messages_" + dest, JSON.stringify(existingMsgs));
-
-      input.value = "";
-      if (hintInput) hintInput.value = "";
-      alert("Message envoyé anonymement ! 🚀");
-    }
-
-    function loginUser() {
-      const p = document.getElementById("accountPseudo").value.trim().toLowerCase();
-      const pin = document.getElementById("accountPin").value.trim();
-      if (!p || !pin) { alert("Veuillez remplir votre Pseudo et votre PIN."); return; }
-      
-      const userKey = p + "_" + pin;
-      localStorage.setItem("hushnote_current_user", userKey);
-      showUserSpace(userKey);
-    }
-
-    function logoutUser() {
-      localStorage.removeItem("hushnote_current_user");
-      window.location.href = window.location.origin + window.location.pathname;
-    }
-
-    function showUserSpace(userKey) {
-      document.getElementById("homeLandingSection").style.display = "none";
-      document.getElementById("sendMsgSection").style.display = "none";
-      document.getElementById("loginSection").style.display = "none";
-      document.getElementById("navTabs").style.display = "flex";
-
-      const baseUrl = window.location.origin + window.location.pathname;
-      currentLink = baseUrl + "?u=" + encodeURIComponent(userKey);
-      
-      const linkElem = document.getElementById("userGeneratedLink");
-      if (linkElem) {
-        linkElem.href = currentLink;
-        linkElem.innerText = currentLink;
-      }
-
-      switchTab('play');
-    }
-
-    function switchTab(tab) {
-      if (tab === 'play') {
-        document.getElementById("tabPlay").classList.add("active");
-        document.getElementById("tabInbox").classList.remove("active");
-        document.getElementById("dashboardSection").style.display = "block";
-        document.getElementById("inboxSection").style.display = "none";
-      } else {
-        document.getElementById("tabInbox").classList.add("active");
-        document.getElementById("tabPlay").classList.remove("active");
-        document.getElementById("dashboardSection").style.display = "none";
-        document.getElementById("inboxSection").style.display = "block";
-        renderInboxMessages();
-      }
-    }
-
-    function renderInboxMessages() {
-      const userKey = localStorage.getItem("hushnote_current_user");
-      if (!userKey) return;
-
-      const listContainer = document.getElementById("realMessagesList");
-      const counterBadge = document.getElementById("messageCounterBadge");
-
-      const views = localStorage.getItem("hushnote_views_" + userKey) || "0";
-      document.getElementById("statViewsCount").innerText = views;
-
-      const allMessages = JSON.parse(localStorage.getItem("hushnote_messages_" + userKey) || "[]");
-      document.getElementById("statMsgsCount").innerText = allMessages.length;
-
-      if (allMessages.length === 0) {
-        counterBadge.innerText = "📩 Vous avez reçu 0 message";
-        listContainer.innerHTML = `<div style="background: white; color: #666; padding: 20px; border-radius: 18px; text-align: center; font-weight: 700;">💬 Aucun message reçu pour l'instant.<br>Partage ton lien dans ta Story pour en recevoir !</div>`;
-        return;
-      }
-
-      counterBadge.innerText = `📩 Vous avez reçu ${allMessages.length} message${allMessages.length > 1 ? "s" : ""}`;
-
-      listContainer.innerHTML = allMessages.map(msg => `
-        <div style="background: white; color: #333; padding: 15px; border-radius: 18px; text-align: left; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-          <div style="font-size: 0.75rem; color: #8a1282; font-weight: 800; margin-bottom: 5px;">💬 MESSAGE REÇU</div>
-          <div style="font-size: 0.95rem; font-weight: 700; color: #222; margin-bottom: 8px;">${msg.text}</div>
-          <div style="font-size: 0.8rem; background: #f0f0f0; padding: 6px 12px; border-radius: 10px; display: inline-block; color: #666; font-weight: 700;">
-            Expéditeur : <span style="filter: blur(4px); user-select: none;">${msg.sender || "Anonyme"}</span> 🔒 <a href="#" onclick="openPaymentLink()" style="color: #8a1282; text-decoration: underline; margin-left: 5px;">Voir qui c'est</a>
-          </div>
-        </div>
-      `).join("");
-    }
-
-    function copyMyLinkSmooth() {
-      navigator.clipboard.writeText(currentLink).then(() => {
-        const btn = document.getElementById("copyBtn");
-        if (btn) {
-          btn.innerText = "Lien copié ! ✓";
-          btn.style.background = "#25D366";
-          btn.style.color = "white";
-          btn.style.borderColor = "#25D366";
-          setTimeout(() => {
-            btn.innerText = "Copier le lien";
-            btn.style.background = "transparent";
-            btn.style.color = "#8a1282";
-            btn.style.borderColor = "#8a1282";
-          }, 2000);
-        }
-      });
-    }
-
-    function openPaymentLink() { window.location.href = "https://maketou.com"; }
-  
-    // Gestion du balayage au doigt (Swipe)
-    let touchStartX = 0;
-    let touchEndX = 0;
-
-    const catCard = document.querySelector(".category-card");
-    if (catCard) {
-      catCard.addEventListener('touchstart', e => {
-        touchStartX = e.changedTouches[0].screenX;
-      }, false);
-
-      catCard.addEventListener('touchend', e => {
-        touchEndX = e.changedTouches[0].screenX;
-        handleSwipe();
-      }, false);
-    }
-
-    function handleSwipe() {
-      const diff = touchEndX - touchStartX;
-      if (Math.abs(diff) > 30) { // Seuil de glissement
-        if (diff < 0) {
-          // Glissement vers la gauche -> Rubrique suivante
-          nextCategory();
-        } else {
-          // Glissement vers la droite -> Rubrique précédente
-          prevCategory();
-        }
-      }
-    }
-
-    function nextCategory() {
-      let newIdx = (currentCatIndex + 1) % categories.length;
-      selectCategory(newIdx);
-    }
-
-    function prevCategory() {
-      let newIdx = (currentCatIndex - 1 + categories.length) % categories.length;
-      selectCategory(newIdx);
-    }
-
-
-    let touchStartX = 0;
-    let touchEndX = 0;
-
-    function initSwipeEvents() {
-      const card = document.querySelector(".category-card");
-      if (!card) return;
-      card.addEventListener("touchstart", function(e) { touchStartX = e.changedTouches[0].screenX; }, false);
-      card.addEventListener("touchend", function(e) { touchEndX = e.changedTouches[0].screenX; handleSwipeGesture(); }, false);
-    }
-
-    function handleSwipeGesture() {
-      const distance = touchEndX - touchStartX;
-      if (Math.abs(distance) > 30) {
-        if (distance < 0) { selectCategory((currentCatIndex + 1) % categories.length); }
-        else { selectCategory((currentCatIndex - 1 + categories.length) % categories.length); }
-      }
-    }
-
-</script>
 </body>
 </html>
