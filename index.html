@@ -151,7 +151,7 @@
       const input = document.getElementById("anonymousInput");
       const hintInput = document.getElementById("senderHintInput");
       const text = input.value.trim();
-      if (!text) { alert("Veuillez écrire un message avant d'envoyer."); return; }
+      if (!text) { alert("Veuillez écrire un message et votre nom ou un indice avant d'envoyer."); return; }
       const dest = targetUserKey || "admin_general";
       const existingMsgs = JSON.parse(localStorage.getItem("hushnote_messages_" + dest) || "[]");
       existingMsgs.unshift({ text: "[" + categories[currentCatIndex].title + "] " + text, sender: (hintInput ? hintInput.value.trim() : "") || "Anonyme", date: new Date().toISOString() });
