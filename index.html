@@ -403,6 +403,25 @@
       selectCategory(newIdx);
     }
 
+
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    function initSwipeEvents() {
+      const card = document.querySelector(".category-card");
+      if (!card) return;
+      card.addEventListener("touchstart", function(e) { touchStartX = e.changedTouches[0].screenX; }, false);
+      card.addEventListener("touchend", function(e) { touchEndX = e.changedTouches[0].screenX; handleSwipeGesture(); }, false);
+    }
+
+    function handleSwipeGesture() {
+      const distance = touchEndX - touchStartX;
+      if (Math.abs(distance) > 30) {
+        if (distance < 0) { selectCategory((currentCatIndex + 1) % categories.length); }
+        else { selectCategory((currentCatIndex - 1 + categories.length) % categories.length); }
+      }
+    }
+
 </script>
 </body>
 </html>
