@@ -48,6 +48,35 @@
     .modal-btn { flex: 1; padding: 14px; border-radius: 30px; font-weight: 800; font-size: 0.95rem; cursor: pointer; border: 1.5px solid #ccc; background: transparent; color: #555; }
     .modal-btn-primary { border: none; background: #8a1282; color: white; }
   </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js">
+    function copyMyLinkSmooth() {
+      const link = currentLink || window.location.href;
+      navigator.clipboard.writeText(link).then(() => {
+        const btn = document.getElementById("copyBtn");
+        if (btn) {
+          const originalText = btn.innerText;
+          btn.innerText = "Lien copié ! ✓";
+          btn.style.background = "#25D366";
+          setTimeout(() => {
+            btn.innerText = originalText;
+            btn.style.background = "#8a1282";
+          }, 2000);
+        }
+      });
+    }
+
+    function downloadStoryCard() {
+      const card = document.getElementById("storyCardPreview");
+      if (!card || typeof html2canvas === "undefined") return;
+      html2canvas(card, { scale: 2 }).then(canvas => {
+        const a = document.createElement("a");
+        a.href = canvas.toDataURL("image/png");
+        a.download = "hushnote-story.png";
+        a.click();
+      });
+    }
+
+</script>
 </head>
 <body>
   <div class="container">
