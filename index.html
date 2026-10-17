@@ -66,8 +66,9 @@
       <!-- 1. CHOISIS UNE RUBRIQUE -->
       <div class="step-title">1. Choisis une rubrique</div>
       <div class="category-card">
-        <div class="category-title" id="catTitle">HISTOIRE</div>
-        <div class="category-bubble" id="catPrompt">Partage une histoire folle ! 📖</div>
+        <div style="display: flex; justify-content: space-between; align-items: center;"><span onclick="prevCategory()" style="font-size: 1.8rem; cursor: pointer; opacity: 0.7; padding: 0 5px;">‹</span><div class="category-title" id="catTitle" style="margin-bottom:0;">HISTOIRE</div>
+        </div><span onclick="nextCategory()" style="font-size: 1.8rem; cursor: pointer; opacity: 0.7; padding: 0 5px;">›</span></div>
+<div class="category-bubble" id="catPrompt" style="margin-top:12px;">Partage une histoire folle ! 📖</div>
       </div>
       <div class="carousel-dots">
         <div class="dot" onclick="selectCategory(0)"></div>
@@ -362,6 +363,46 @@
     }
 
     function openPaymentLink() { window.location.href = "https://maketou.com"; }
-  </script>
+  
+    // Gestion du balayage au doigt (Swipe)
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    const catCard = document.querySelector(".category-card");
+    if (catCard) {
+      catCard.addEventListener('touchstart', e => {
+        touchStartX = e.changedTouches[0].screenX;
+      }, false);
+
+      catCard.addEventListener('touchend', e => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+      }, false);
+    }
+
+    function handleSwipe() {
+      const diff = touchEndX - touchStartX;
+      if (Math.abs(diff) > 30) { // Seuil de glissement
+        if (diff < 0) {
+          // Glissement vers la gauche -> Rubrique suivante
+          nextCategory();
+        } else {
+          // Glissement vers la droite -> Rubrique précédente
+          prevCategory();
+        }
+      }
+    }
+
+    function nextCategory() {
+      let newIdx = (currentCatIndex + 1) % categories.length;
+      selectCategory(newIdx);
+    }
+
+    function prevCategory() {
+      let newIdx = (currentCatIndex - 1 + categories.length) % categories.length;
+      selectCategory(newIdx);
+    }
+
+</script>
 </body>
 </html>
