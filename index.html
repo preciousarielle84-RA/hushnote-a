@@ -138,22 +138,23 @@
     <div class="modal-content">
       <h3 style="font-size: 1.2rem; font-weight: 900; color: #8a1282;">Partager dans ta Story 📸</h3>
       <p style="font-size: 0.85rem; color: #666; margin-top: 4px;">Choisis ton réseau social :</p>
-      <div class="social-grid">
-        <div class="social-item" onclick="shareToDirect('whatsapp')"><div class="social-icon" style="background: #25D366;">💬</div><span>WhatsApp</span></div>
-        <div class="social-item" onclick="shareToDirect('instagram')"><div class="social-icon" style="background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);">📸</div><span>Instagram</span></div>
-        <div class="social-item" onclick="shareToDirect('facebook')"><div class="social-icon" style="background: #1877F2;">f</div><span>Facebook</span></div>
-        <div class="social-item" onclick="shareToDirect('tiktok')"><div class="social-icon" style="background: #000;">🎵</div><span>TikTok</span></div>
-        <div class="social-item" onclick="shareToDirect('snapchat')"><div class="social-icon" style="background: #FFFC00; color: black;">👻</div><span>Snapchat</span></div>
-        <div class="social-item" onclick="shareToDirect('telegram')"><div class="social-icon" style="background: #0088cc;">✈️</div><span>Telegram</span></div>
-        <div class="social-item" onclick="shareToDirect('pinterest')"><div class="social-icon" style="background: #E60023;">📌</div><span>Pinterest</span></div>
-        <div class="social-item" onclick="shareToDirect('youtube')"><div class="social-icon" style="background: #FF0000;">▶️</div><span>YouTube</span></div>
-        <div class="social-item" onclick="shareToDirect('twitter')"><div class="social-icon" style="background: #000;">𝕏</div><span>Twitter/X</span></div>
+      
+      <div class="social-grid" style="grid-template-columns: repeat(2, 1fr); gap: 25px; margin: 25px 0;">
+        <div class="social-item" onclick="shareToDirect('whatsapp')">
+          <div class="social-icon" style="background: #25D366; width: 60px; height: 60px; font-size: 1.8rem;">💬</div>
+          <span style="font-size: 0.95rem;">WhatsApp</span>
+        </div>
+        <div class="social-item" onclick="shareToDirect('facebook')">
+          <div class="social-icon" style="background: #1877F2; width: 60px; height: 60px; font-size: 1.8rem;">f</div>
+          <span style="font-size: 0.95rem;">Facebook</span>
+        </div>
       </div>
+
       <div class="modal-actions">
-        <button class="modal-btn" onclick="closeShareModal()">Annuler</button>
+        <button class="modal-btn" onclick="closeShareModal()">Retour</button>
         <button class="modal-btn modal-btn-primary" onclick="nativeShare()">Autre...</button>
       </div>
-    </div>
+    </div></div>
   </div>
 
   <script>
