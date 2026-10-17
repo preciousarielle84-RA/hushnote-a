@@ -111,6 +111,24 @@
       localStorage.setItem("hushnote_views_" + targetUserKey, currentViews);
     }
 
+
+    function updateUniqueLink() {
+      const p = document.getElementById("accountPseudo") ? document.getElementById("accountPseudo").value.trim().toLowerCase() : "";
+      const pin = document.getElementById("accountPin") ? document.getElementById("accountPin").value.trim() : "";
+      
+      if (p) {
+        const userKey = p + "_" + pin;
+        const baseUrl = window.location.origin + window.location.pathname;
+        currentLink = baseUrl + "?u=" + encodeURIComponent(userKey);
+        
+        const linkElem = document.getElementById("userGeneratedLink");
+        if (linkElem) {
+          linkElem.href = currentLink;
+          linkElem.innerText = currentLink;
+        }
+      }
+    }
+
 </script>
 </head>
 <body>
