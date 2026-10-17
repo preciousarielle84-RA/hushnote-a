@@ -133,7 +133,7 @@
       const card = document.getElementById("swipeCategoryCard");
       if (!card) return;
       card.addEventListener("touchstart", e => { touchStartX = e.changedTouches[0].screenX; }, false);
-      card.addEventListener("touchend", e => { touchEndX = e.changedTouches[0].screenX; const d = touchEndX - touchStartX; if (Math.abs(d) > 30) selectCategory(d < 0 ? (currentCatIndex + 1) % categories.length : (currentCatIndex - 1 + categories.length) % categories.length); }, false);
+      card.addEventListener("touchend", e => { touchEndX = e.changedTouches[0].screenX; const d = touchEndX - touchStartX; if (Math.abs(d) > 40) { if (d < 0) { selectCategory((currentCatIndex + 1) % categories.length); } else { selectCategory((currentCatIndex - 1 + categories.length) % categories.length); } } }, false);
     }
     window.onload = function() {
       selectCategory(0); initSwipeEvents();
