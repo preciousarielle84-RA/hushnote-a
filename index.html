@@ -237,12 +237,35 @@
         copyMyLink();
       }
     }
-    function shareToDirect(app) { nativeShare(); }
+    function shareToDirect(app) {
+      closeShareModal();
+      const link = currentLink || window.location.href;
+      const text = encodeURIComponent("Envoyez-moi des messages anonymes sur HushNote ! 💬 " + link);
+      const urlEnc = encodeURIComponent(link);
+
+      if (app === "whatsapp") {
+        window.location.href = "whatsapp://send?text=" + text;
+      } else if (app === "facebook") {
+        window.location.href = "https://www.facebook.com/sharer/sharer.php?u=" + urlEnc;
+      } else {
+        nativeShare();
+      }
+    }
+
     function nativeShare() {
       closeShareModal();
-      if (navigator.share) navigator.share({ title: 'HushNote', text: 'Envoyez-moi des messages anonymes sur HushNote ! 💬', url: currentLink || window.location.href }).catch(() => {});
-      else copyMyLink();
+      const link = currentLink || window.location.href;
+      if (navigator.share) {
+        navigator.share({
+          title: "HushNote",
+          text: "Envoyez-moi des messages anonymes sur HushNote ! 💬",
+          url: link
+        }).catch(() => {});
+      } else {
+        copyMyLink();
+      }
     }
+
     function openPaymentLink() { window.open("https://maketou.com", "_blank"); }
     function logoutUser() {
       document.getElementById('accountPseudo').value = '';
