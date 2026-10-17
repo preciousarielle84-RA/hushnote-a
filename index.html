@@ -181,7 +181,7 @@
         <a id="userGeneratedLink" href="#" target="_blank" style="display: block; word-break: break-all; color: #8a1282; font-weight: 800; font-size: 0.95rem; margin-bottom: 15px;">https://hushnote-a.onrender.com/?u=...</a>
         <button id="copyBtn" onclick="copyMyLinkSmooth()" style="width: 100%; padding: 12px; background: transparent; color: #8a1282; border: 2px solid #8a1282; border-radius: 25px; font-weight: 800; cursor: pointer;">Copier le lien</button>
       </div>
-      <button class="send-btn" style="background: linear-gradient(90deg, #ff4081, #e91e63); color: white;" onclick="copyMyLinkSmooth()">Partager dans ma Story 📸</button>
+      <button class="send-btn" style="background: linear-gradient(90deg, #ff4081, #e91e63); color: white;" onclick="openShareModal()">Partager dans ma Story 📸</button>
       <div style="margin-top: 20px;"><a href="#" style="color: white; font-weight: 700; font-size: 0.9rem; text-decoration: underline;" onclick="logoutUser()">Changer d'utilisateur / Se déconnecter</a></div>
     </div>
 
@@ -356,7 +356,17 @@
     }
 
     function openPaymentLink() { window.location.href = "https://maketou.com"; }
-  </script>
+  
+    function openShareModal() {
+      const modal = document.getElementById("shareModal");
+      if (modal) modal.style.display = "flex";
+    }
+    function closeShareModal() {
+      const modal = document.getElementById("shareModal");
+      if (modal) modal.style.display = "none";
+    }
+  
+</script>
 
   <!-- MODALE DE PARTAGE EXCLUSIVE (WhatsApp, Facebook, Telegram, Autre, Annuler) -->
   
