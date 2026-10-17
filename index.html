@@ -411,7 +411,7 @@
           <div style="font-size: 0.75rem; color: #8a1282; font-weight: 800; margin-bottom: 5px;">💬 MESSAGE REÇU</div>
           <div style="font-size: 0.95rem; font-weight: 700; color: #222; margin-bottom: 8px;">${msg.text}</div>
           <div style="font-size: 0.8rem; background: #f0f0f0; padding: 6px 12px; border-radius: 10px; display: inline-block; color: #666; font-weight: 700;">
-            Expéditeur : <span style="filter: blur(4px); user-select: none;">${msg.sender || "Anonyme"}</span> 🔒 <a href="#" onclick="openPaymentLink()" style="color: #8a1282; text-decoration: underline; margin-left: 5px;">Voir qui c'est</a>
+            Expéditeur : <span style="filter: blur(4px); user-select: none;">${msg.sender || "Anonyme"}</span> 🔒 <a href="#" onclick="openPaymentLink()" style="color: #8a1282; text-decoration: underline; margin-left: 5px;">Voir qui c'est</a> • <a href="#" onclick="alert('Message signalé aux administrateurs 🚩')" style="color: #e91e63; text-decoration: underline; margin-left: 5px;">Signaler 🚩</a>
           </div>
         </div>
       `).join("");
