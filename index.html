@@ -189,7 +189,7 @@
         <h3 style="margin-bottom: 12px; color: #8a1282;">Connexion / Inscription</h3>
         <p style="font-size: 0.85rem; color: #666; margin-bottom: 15px;">Entre ton pseudo et ton code PIN pour générer ton lien unique.</p>
         <input type="text" id="accountPseudo" placeholder="Ton Pseudo" class="input-field" style="margin-top:0;">
-        <input type="password" id="accountPin" placeholder="Code PIN à 4 chiffres" class="input-field">
+        <input type="password" id="accountPin" type="password" inputmode="numeric" maxlength="4" pattern="[0-9]*" placeholder="Code PIN à 4 chiffres" class="input-field">
         <button onclick="loginUser()" class="send-btn" style="background: linear-gradient(90deg, #ff4081, #e91e63); color: white; margin-top: 10px;">Accéder à mon espace 🚀</button>
       </div>
       <div><a href="#" style="color: white; font-weight: 700; text-decoration: underline; font-size: 0.85rem;" onclick="showSendForm()">← Retour à l'envoi de message</a></div>
@@ -325,6 +325,11 @@
       const p = document.getElementById("accountPseudo").value.trim().toLowerCase();
       const pin = document.getElementById("accountPin").value.trim();
       if (!p || !pin) { alert("Veuillez remplir votre Pseudo et votre PIN."); return; }
+      if (pin.length !== 4 || isNaN(pin)) { alert("Le code PIN doit contenir exactement 4 chiffres."); return; }
+      const userKey = p + "_" + pin;
+      localStorage.setItem("hushnote_current_user", userKey);
+      showUserSpace(userKey);
+    }
       localStorage.setItem("hushnote_current_user", p + "_" + pin);
       showUserSpace(p + "_" + pin);
     }
