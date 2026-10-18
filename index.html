@@ -395,6 +395,35 @@
       if (modal) modal.style.display = "none";
     }
   
+
+    function shareTo(network) {
+      const shareText = "Envoyez-moi des messages anonymes sur HushNote ! 🤫";
+      const encodedText = encodeURIComponent(shareText + " " + currentLink);
+      const encodedUrl = encodeURIComponent(currentLink);
+
+      if (network === 'whatsapp') {
+        window.open("https://api.whatsapp.com/send?text=" + encodedText, "_blank");
+      } else if (network === 'facebook') {
+        window.open("https://www.facebook.com/sharer/sharer.php?u=" + encodedUrl, "_blank");
+      } else if (network === 'telegram') {
+        window.open("https://t.me/share/url?url=" + encodedUrl + "&text=" + encodeURIComponent(shareText), "_blank");
+      }
+      closeShareModal();
+    }
+
+    function nativeShare() {
+      if (navigator.share) {
+        navigator.share({
+          title: 'HushNote',
+          text: 'Envoyez-moi des messages anonymes sur HushNote ! 🤫',
+          url: currentLink
+        }).catch(() => {});
+      } else {
+        copyMyLinkSmooth();
+      }
+      closeShareModal();
+    }
+
 </script>
 
   <!-- MODALE DE PARTAGE EXCLUSIVE (WhatsApp, Facebook, Telegram, Autre, Annuler) -->
