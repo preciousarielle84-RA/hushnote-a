@@ -293,7 +293,9 @@
       document.getElementById("navTabs").style.display = "none";
       document.getElementById("dashboardSection").style.display = "none";
       document.getElementById("inboxSection").style.display = "none";
-      setTimeout(initSwipeEvents, 100);
+      if (typeof initSwipeEvents === 'function') {
+        setTimeout(initSwipeEvents, 50);
+      }
     }
 
     function showLoginSection() {
