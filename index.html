@@ -27,126 +27,16 @@
     .tab-btn.active { opacity: 1; border-bottom: 3px solid white; }
     .paywall-card { border: 2px dashed rgba(255,255,255,0.6); background: rgba(255,255,255,0.15); padding: 20px; border-radius: 20px; margin-bottom: 20px; width: 100%; }
     .unlock-btn { background: #8a1282; color: white; border: none; padding: 12px 20px; border-radius: 25px; font-weight: 800; font-size: 0.95rem; width: 100%; cursor: pointer; }
-  
-    
 
-
-  
-  
-  .modal-overlay { 
-    position: fixed !important; 
-    top: 0 !important; 
-    left: 0 !important; 
-    width: 100vw !important; 
-    height: 100vh !important; 
-    background: rgba(0, 0, 0, 0.65) !important; 
-    backdrop-filter: blur(5px) !important; 
-    display: none; 
-    justify-content: center; 
-    align-items: center; 
-    z-index: 999999 !important; 
-  }
-  .modal-content { 
-    background: #ffffff !important; 
-    color: #333333 !important; 
-    width: 90% !important; 
-    max-width: 360px !important; 
-    border-radius: 28px !important; 
-    padding: 22px 18px 22px 18px !important; 
-    text-align: center !important; 
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3) !important; 
-  }
-
-
-  .share-grid-clean { 
-    display: flex !important; 
-    justify-content: space-around !important; 
-    align-items: center !important; 
-    margin: 25px 0 !important; 
-  }
-  .share-item-clean { 
-    display: flex !important; 
-    flex-direction: column !important; 
-    align-items: center !important; 
-    cursor: pointer !important; 
-    font-size: 0.85rem !important; 
-    font-weight: 800 !important; 
-    color: #333 !important; 
-    gap: 8px !important; 
-  }
-  .share-icon-clean { 
-    width: 60px !important; 
-    height: 60px !important; 
-    border-radius: 20px !important; 
-    display: flex !important; 
-    align-items: center !important; 
-    justify-content: center !important; 
-    font-size: 1.8rem !important; 
-    box-shadow: 0 4px 12px rgba(0,0,0,0.12) !important; 
-  }
-  .modal-btns-clean { 
-    display: flex !important; 
-    gap: 12px !important; 
-    margin-top: 15px !important; 
-  }
-  .modal-btn-cancel-clean { 
-    flex: 1 !important; 
-    padding: 15px !important; 
-    border: 2px solid #e0e0e0 !important; 
-    background: white !important; 
-    border-radius: 30px !important; 
-    font-weight: 800 !important; 
-    color: #555 !important; 
-    cursor: pointer !important; 
-  }
-  .modal-btn-other-clean { 
-    flex: 1 !important; 
-    padding: 15px !important; 
-    background: #8a1282 !important; 
-    border: none !important; 
-    border-radius: 30px !important; 
-    font-weight: 800 !important; 
-    color: white !important; 
-    cursor: pointer !important; 
-  }
-
-
-  
-  
-  .modal-overlay { 
-    position: fixed !important; 
-    top: 0 !important; 
-    left: 0 !important; 
-    width: 100vw !important; 
-    height: 100vh !important; 
-    background: rgba(0, 0, 0, 0.65) !important; 
-    backdrop-filter: blur(5px) !important; 
-    display: none; 
-    justify-content: center; 
-    align-items: center; 
-    z-index: 999999 !important; 
-  }
-  .modal-content { 
-    background: #ffffff !important; 
-    color: #333333 !important; 
-    width: 90% !important; 
-    max-width: 360px !important; 
-    border-radius: 28px !important; 
-    padding: 22px 18px 22px 18px !important; 
-    text-align: center !important; 
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3) !important; 
-  }
-
-
-  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-  .share-grid-full { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 18px 10px !important; margin: 20px 0 !important; }
-  .share-item-full { display: flex !important; flex-direction: column !important; align-items: center !important; cursor: pointer !important; font-size: 0.8rem !important; font-weight: 700 !important; color: #333 !important; gap: 6px !important; }
-  .share-icon-full { width: 56px !important; height: 56px !important; border-radius: 18px !important; display: flex !important; align-items: center !important; justify-content: center !important; font-size: 1.7rem !important; box-shadow: 0 4px 10px rgba(0,0,0,0.12) !important; }
-  .modal-btns-full { display: flex !important; gap: 12px !important; margin-top: 15px !important; }
-  .modal-btn-cancel-full { flex: 1 !important; padding: 14px !important; border: 2px solid #ddd !important; background: white !important; border-radius: 30px !important; font-weight: 800 !important; color: #444 !important; cursor: pointer !important; font-size: 0.95rem !important; }
-  .modal-btn-other-full { flex: 1 !important; padding: 14px !important; background: #8a1282 !important; border: none !important; border-radius: 30px !important; font-weight: 800 !important; color: white !important; cursor: pointer !important; font-size: 0.95rem !important; }
-
-</style>
+    /* Popup de partage */
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 999999; }
+    .modal-content { background: #ffffff; color: #333333; width: 90%; max-width: 360px; border-radius: 28px; padding: 22px 18px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+    .share-item-full { display: flex; flex-direction: column; align-items: center; cursor: pointer; font-size: 0.85rem; font-weight: 800; color: #333; gap: 6px; }
+    .share-icon-full { width: 58px; height: 58px; border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
+    .modal-btns-full { display: flex; gap: 12px; margin-top: 15px; }
+    .modal-btn-cancel-full { flex: 1; padding: 14px; border: 2px solid #ddd; background: white; border-radius: 30px; font-weight: 800; color: #444; cursor: pointer; font-size: 0.95rem; }
+    .modal-btn-other-full { flex: 1; padding: 14px; background: #8a1282; border: none; border-radius: 30px; font-weight: 800; color: white; cursor: pointer; font-size: 0.95rem; }
+  </style>
 </head>
 <body>
   <div class="container">
@@ -156,7 +46,6 @@
       <button onclick="showSendForm()" class="main-get-btn">Obtenir des questions 🚀</button>
       <div style="font-size: 0.75rem; opacity: 0.85; margin-top: 25px; font-weight: 600;">En continuant, vous acceptez nos Conditions d'utilisation.</div>
     </div>
-
     <div id="sendMsgSection" style="display: none; width: 100%;">
       <div class="header">HUSHNOTE</div>
       <div class="step-title">1. Choisis une rubrique</div>
@@ -183,13 +72,14 @@
       <button onclick="showLoginSection()" class="outline-btn">Recevoir mes propres messages 📲</button>
       <div style="margin-top: 15px;"><a href="#" style="color: white; font-weight: 700; text-decoration: underline; font-size: 0.85rem;" onclick="showHomeLanding()">← Retour à l'accueil</a></div>
     </div>
+
     <div id="loginSection" style="display: none; width: 100%;">
       <div class="header">HUSHNOTE</div>
       <div class="card" style="text-align: center;">
         <h3 style="margin-bottom: 12px; color: #8a1282;">Connexion / Inscription</h3>
         <p style="font-size: 0.85rem; color: #666; margin-bottom: 15px;">Entre ton pseudo et ton code PIN pour générer ton lien unique.</p>
         <input type="text" id="accountPseudo" placeholder="Ton Pseudo" class="input-field" style="margin-top:0;">
-        <input type="password" id="accountPin" type="password" inputmode="numeric" maxlength="4" pattern="[0-9]*" placeholder="Code PIN à 4 chiffres" class="input-field">
+        <input type="password" id="accountPin" inputmode="numeric" maxlength="4" pattern="[0-9]*" placeholder="Code PIN à 4 chiffres" class="input-field">
         <button onclick="loginUser()" class="send-btn" style="background: linear-gradient(90deg, #ff4081, #e91e63); color: white; margin-top: 10px;">Accéder à mon espace 🚀</button>
       </div>
       <div><a href="#" style="color: white; font-weight: 700; text-decoration: underline; font-size: 0.85rem;" onclick="showSendForm()">← Retour à l'envoi de message</a></div>
@@ -228,6 +118,33 @@
       </div>
       <div id="realMessagesList" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 25px;"></div>
       <div><a href="#" style="color: white; font-weight: 700; font-size: 0.9rem; text-decoration: underline;" onclick="logoutUser()">Changer d'utilisateur / Se déconnecter</a></div>
+    </div>
+  </div>
+  <!-- MODALE DE PARTAGE -->
+  <div id="shareModal" class="modal-overlay">
+    <div class="modal-content">
+      <h3 style="color: #8a1282; font-size: 1.35rem; font-weight: 900; margin-bottom: 4px;">Partager dans ta Story 📸</h3>
+      <p style="font-size: 0.85rem; color: #666; font-weight: 700; margin-bottom: 15px;">Choisis ton réseau social :</p>
+      
+      <div style="display: flex; justify-content: space-around; align-items: center; margin: 20px 0;">
+        <div class="share-item-full" onclick="shareTo('whatsapp')">
+          <div class="share-icon-full" style="background: #25D366; color: white;">💬</div>
+          <span>WhatsApp</span>
+        </div>
+        <div class="share-item-full" onclick="shareTo('facebook')">
+          <div class="share-icon-full" style="background: #1877F2; color: white; font-weight: 900; font-family: sans-serif;">f</div>
+          <span>Facebook</span>
+        </div>
+        <div class="share-item-full" onclick="shareTo('telegram')">
+          <div class="share-icon-full" style="background: #0088cc; color: white;">✈️</div>
+          <span>Telegram</span>
+        </div>
+      </div>
+
+      <div class="modal-btns-full">
+        <button class="modal-btn-cancel-full" onclick="closeShareModal()">Annuler</button>
+        <button class="modal-btn-other-full" onclick="nativeShare()">Autre...</button>
+      </div>
     </div>
   </div>
 
@@ -293,9 +210,7 @@
       document.getElementById("navTabs").style.display = "none";
       document.getElementById("dashboardSection").style.display = "none";
       document.getElementById("inboxSection").style.display = "none";
-      if (typeof initSwipeEvents === 'function') {
-        setTimeout(initSwipeEvents, 50);
-      }
+      setTimeout(initSwipeEvents, 100);
     }
 
     function showLoginSection() {
@@ -331,9 +246,6 @@
       const userKey = p + "_" + pin;
       localStorage.setItem("hushnote_current_user", userKey);
       showUserSpace(userKey);
-    }
-      localStorage.setItem("hushnote_current_user", p + "_" + pin);
-      showUserSpace(p + "_" + pin);
     }
 
     function logoutUser() {
@@ -392,16 +304,14 @@
     }
 
     function openPaymentLink() { window.location.href = "https://maketou.com"; }
-  
+
     function openShareModal() {
-      const modal = document.getElementById("shareModal");
-      if (modal) modal.style.display = "flex";
+      document.getElementById("shareModal").style.display = "flex";
     }
+
     function closeShareModal() {
-      const modal = document.getElementById("shareModal");
-      if (modal) modal.style.display = "none";
+      document.getElementById("shareModal").style.display = "none";
     }
-  
 
     function shareTo(network) {
       const shareText = "Envoyez-moi des messages anonymes sur HushNote ! 🤫";
@@ -430,48 +340,6 @@
       }
       closeShareModal();
     }
-
-</script>
-
-  <!-- MODALE DE PARTAGE EXCLUSIVE (WhatsApp, Facebook, Telegram, Autre, Annuler) -->
-  
-  
-
-
-
-  
-
-
-  
-  
-  <div id="shareModal" class="modal-overlay">
-    <div class="modal-content" style="padding-bottom: 25px !important; margin-bottom: 0 !important;">
-      <h3 style="color: #8a1282; font-size: 1.35rem; font-weight: 900; margin-bottom: 4px;">Partager dans ta Story 📸</h3>
-      <p style="font-size: 0.85rem; color: #666; font-weight: 700; margin-bottom: 10px;">Choisis ton réseau social :</p>
-      
-      <div style="display: flex; justify-content: space-around; align-items: center; margin: 20px 0;">
-        <div class="share-item-full" onclick="shareTo('whatsapp')">
-          <div class="share-icon-full" style="background: #25D366; color: white;">💬</div>
-          <span>WhatsApp</span>
-        </div>
-        <div class="share-item-full" onclick="shareTo('facebook')">
-          <div class="share-icon-full" style="background: #1877F2; color: white; font-weight: 900; font-family: sans-serif;">f</div>
-          <span>Facebook</span>
-        </div>
-        <div class="share-item-full" onclick="shareTo('telegram')">
-          <div class="share-icon-full" style="background: #0088cc; color: white;">✈️</div>
-          <span>Telegram</span>
-        </div>
-      </div>
-
-      <div class="modal-btns-full" style="margin-top: 10px;">
-        <button class="modal-btn-cancel-full" onclick="closeShareModal()">Annuler</button>
-        <button class="modal-btn-other-full" onclick="nativeShare()">Autre...</button>
-      </div>
-    </div>
-  </div>
-
-
-
+  </script>
 </body>
 </html>
