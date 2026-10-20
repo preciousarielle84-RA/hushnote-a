@@ -37,9 +37,11 @@
     .modal-btn-cancel-full { flex: 1; padding: 14px; border: 2px solid #ddd; background: white; border-radius: 30px; font-weight: 800; color: #444; cursor: pointer; font-size: 0.95rem; }
     .modal-btn-other-full { flex: 1; padding: 14px; background: #8a1282; border: none; border-radius: 30px; font-weight: 800; color: white; cursor: pointer; font-size: 0.95rem; }
   </style>
+  
 </head>
 <body>
   <div class="container">
+  <button id="notif-btn" onclick="requestNotifPermission()" style="margin: 10px auto; display: block; background: rgba(255,255,255,0.2); color: #fff; border: 1px solid #fff; padding: 8px 16px; border-radius: 20px; font-weight: bold; cursor: pointer;">🔔 Activer les notifications de messages</button>
     <div id="homeLandingSection" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
       <div class="header">HUSHNOTE</div>
       <div class="subtitle">Recevez des messages anonymes sur vos réseaux ! 💬 <br>✨</div>
@@ -101,7 +103,7 @@
         <button id="copyBtn" onclick="copyMyLinkSmooth()" style="width: 100%; padding: 12px; background: transparent; color: #8a1282; border: 2px solid #8a1282; border-radius: 25px; font-weight: 800; cursor: pointer;">Copier le lien</button>
       </div>
       <button class="send-btn" style="background: linear-gradient(90deg, #ff4081, #e91e63); color: white;" onclick="openShareModal()">Partager dans ma Story 📸</button>
-      <div style="margin-top: 20px;"><a href="#" style="color: white; font-weight: 700; font-size: 0.9rem; text-decoration: underline;" onclick="logoutUser()">Changer d'utilisateur / Se déconnecter</a></div>
+      <div style="margin-top: 20px;"><a href="#" style="color: white; font-weight: 700; font-size: 0.9rem; text-decoration: underline;" onclick="if(!confirm('Voulez-vous vraiment vous déconnecter ?')) return false; logoutUser()">Changer d'utilisateur / Se déconnecter</a></div>
     </div>
 
     <div id="inboxSection" style="display:none; width: 100%;">
@@ -117,7 +119,7 @@
         <div><div style="font-size: 0.95rem; font-weight: 900; color: #8a1282;" id="statStatus">Gratuit</div><div style="font-size: 0.75rem; color: #666; font-weight: 700;">👑 Statut</div></div>
       </div>
       <div id="realMessagesList" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 25px;"></div>
-      <div><a href="#" style="color: white; font-weight: 700; font-size: 0.9rem; text-decoration: underline;" onclick="logoutUser()">Changer d'utilisateur / Se déconnecter</a></div>
+      <div><a href="#" style="color: white; font-weight: 700; font-size: 0.9rem; text-decoration: underline;" onclick="if(!confirm('Voulez-vous vraiment vous déconnecter ?')) return false; logoutUser()">Changer d'utilisateur / Se déconnecter</a></div>
     </div>
   </div>
   <!-- MODALE DE PARTAGE -->
@@ -249,6 +251,7 @@
     }
 
     function logoutUser() {
+  if (!confirm("Voulez-vous vraiment vous déconnecter ?")) return;
       localStorage.removeItem("hushnote_current_user");
       window.location.href = window.location.origin + window.location.pathname;
     }
@@ -341,5 +344,162 @@
       closeShareModal();
     }
   </script>
+
+<script>
+// --- FONCTIONNALITÉ 1 : Génération & Téléchargement d'image pour Story ---
+function downloadStoryImage() {
+  const card = document.querySelector('.card') || document.body;
+  if (typeof html2canvas === 'undefined') {
+    alert("Chargement du composant d'image en cours, réessayez dans un instant.");
+    return;
+  }
+  html2canvas(card, { scale: 2 }).then(canvas => {
+    const link = document.createElement('a');
+    link.download = 'hushnote-story.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  }).catch(err => {
+    console.error("Erreur de génération d'image:", err);
+    alert("Impossible de générer l'image sur ce navigateur.");
+  });
+}
+
+// Lier la fonction downloadStoryImage aux boutons 'Partager dans ma Story'
+document.addEventListener('DOMContentLoaded', () => {
+  const storyBtns = document.querySelectorAll('button, a');
+  storyBtns.forEach(el => {
+    if (el.textContent.includes('Partager dans ma Story')) {
+      el.setAttribute('onclick', 'downloadStoryImage(); return false;');
+    }
+  });
+});
+
+// --- FONCTIONNALITÉ 2 : Notifications Web en Temps Réel ---
+function requestNotifPermission() {
+  if (!("Notification" in window)) {
+    alert("Votre navigateur ne supporte pas les notifications web.");
+    return;
+  }
+  Notification.requestPermission().then(permission => {
+    if (permission === "granted") {
+      alert("Notifications activées ! Vous serez alerté lors de la réception d'un nouveau message.");
+      new Notification("HushNote 🤫", { body: "Les notifications sont bien configurées !" });
+    } else {
+      alert("Permission de notification refusée.");
+    }
+  });
+}
+
+function notifyNewMessage(senderName) {
+  if ("Notification" in window && Notification.permission === "granted") {
+    new Notification("Nouveau message anonyme ! 📬", {
+      body: "Quelqu'un vous a envoyé une note secrète sur HushNote.",
+      icon: "/icon.png"
+    });
+  }
+}
+</script>
+
+
+<script>
+function shareStoryMenu() {
+  const userLink = document.querySelector('input[readonly]')?.value || document.querySelector('.card a')?.href || window.location.href;
+  const text = "Envoyez-moi des messages anonymes sur HushNote ! 🤫 " + userLink;
+
+  if (navigator.share) {
+    navigator.share({
+      title: 'HushNote',
+      text: text,
+      url: userLink
+    }).catch(() => {});
+  } else {
+    window.open('https://api.whatsapp.com/send?text=' + encodeURIComponent(text), '_blank');
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const storyBtns = document.querySelectorAll('button, a');
+  storyBtns.forEach(el => {
+    if (el.textContent.includes('Partager dans ma Story')) {
+      el.setAttribute('onclick', 'shareStoryMenu(); return false;');
+    }
+  });
+});
+</script>
+
+
+<!-- Modal Partager dans ta Story -->
+<div id="customShareModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:9999; align-items:center; justify-content:center;">
+  <div style="background:#fff; width:85%; max-width:350px; border-radius:24px; padding:24px; text-align:center; box-shadow:0 10px 25px rgba(0,0,0,0.3); margin:auto; position:relative; top:50%; transform:translateY(-50%);">
+    <h3 style="color:#6b0f6c; margin-top:0; font-size:20px; font-weight:bold;">Partager dans ta Story 📸</h3>
+    <p style="color:#666; font-size:13px; margin-bottom:20px;">Choisis ton réseau social :</p>
+    <div style="display:flex; justify-content:space-around; margin-bottom:20px;">
+      <div onclick="shareViaApp('whatsapp')" style="cursor:pointer; text-align:center;">
+        <div style="background:#25D366; width:50px; height:50px; border-radius:16px; display:flex; align-items:center; justify-content:center; margin:0 auto 6px;">
+          <span style="color:#fff; font-size:24px;">💬</span>
+        </div>
+        <span style="font-size:12px; color:#333; font-weight:bold;">WhatsApp</span>
+      </div>
+      <div onclick="shareViaApp('facebook')" style="cursor:pointer; text-align:center;">
+        <div style="background:#1877F2; width:50px; height:50px; border-radius:16px; display:flex; align-items:center; justify-content:center; margin:0 auto 6px;">
+          <span style="color:#fff; font-size:24px; font-weight:bold;">f</span>
+        </div>
+        <span style="font-size:12px; color:#333; font-weight:bold;">Facebook</span>
+      </div>
+      <div onclick="shareViaApp('telegram')" style="cursor:pointer; text-align:center;">
+        <div style="background:#2AABEE; width:50px; height:50px; border-radius:16px; display:flex; align-items:center; justify-content:center; margin:0 auto 6px;">
+          <span style="color:#fff; font-size:24px;">✈️</span>
+        </div>
+        <span style="font-size:12px; color:#333; font-weight:bold;">Telegram</span>
+      </div>
+    </div>
+    <div style="display:flex; gap:10px;">
+      <button onclick="closeShareModal()" style="flex:1; padding:12px; border:1px solid #ccc; background:#fff; border-radius:20px; font-weight:bold; color:#555; cursor:pointer;">Annuler</button>
+      <button onclick="shareViaApp('native')" style="flex:1; padding:12px; border:none; background:#8e1291; border-radius:20px; font-weight:bold; color:#fff; cursor:pointer;">Autre...</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function openCustomShareModal() {
+  const modal = document.getElementById('customShareModal');
+  if (modal) modal.style.display = 'block';
+}
+
+function closeShareModal() {
+  const modal = document.getElementById('customShareModal');
+  if (modal) modal.style.display = 'none';
+}
+
+function shareViaApp(app) {
+  const link = document.querySelector('input[readonly]')?.value || window.location.href;
+  const msg = encodeURIComponent("Envoyez-moi des messages anonymes sur HushNote ! 🤫 " + link);
+  
+  if (app === 'whatsapp') {
+    window.open('https://api.whatsapp.com/send?text=' + msg, '_blank');
+  } else if (app === 'facebook') {
+    window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(link), '_blank');
+  } else if (app === 'telegram') {
+    window.open('https://t.me/share/url?url=' + encodeURIComponent(link) + '&text=' + msg, '_blank');
+  } else if (app === 'native') {
+    if (navigator.share) {
+      navigator.share({ title: 'HushNote', text: "Envoyez-moi des messages anonymes sur HushNote ! 🤫", url: link }).catch(() => {});
+    } else {
+      window.open('https://api.whatsapp.com/send?text=' + msg, '_blank');
+    }
+  }
+  closeShareModal();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const storyBtns = document.querySelectorAll('button, a');
+  storyBtns.forEach(el => {
+    if (el.textContent.includes('Partager dans ma Story')) {
+      el.setAttribute('onclick', 'openCustomShareModal(); return false;');
+    }
+  });
+});
+</script>
+
 </body>
 </html>
