@@ -341,5 +341,42 @@
       closeShareModal();
     }
   </script>
+
+<script>
+window.addEventListener('DOMContentLoaded', () => {
+  setInterval(() => {
+    // Vérifie si on est sur la vue INBOX et si la barre n'existe pas encore
+    const inboxTitle = Array.from(document.querySelectorAll('h1, h2, div, span, button')).find(el => el.textContent.trim() === 'INBOX 📬' || el.textContent.trim().includes('INBOX'));
+    
+    if (inboxTitle && !document.getElementById('inboxNotifBanner')) {
+      const parentContainer = inboxTitle.closest('div');
+      if (parentContainer) {
+        const banner = document.createElement('div');
+        banner.id = 'inboxNotifBanner';
+        banner.style.cssText = 'margin: 12px auto 16px; width: 90%; max-width: 360px; background: rgba(255, 255, 255, 0.2); border: 1.5px solid rgba(255, 255, 255, 0.6); border-radius: 30px; padding: 10px 16px; text-align: center; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; backdrop-filter: blur(5px);';
+        banner.innerHTML = '<span style="font-size: 16px;">🔔</span><span style="color: #ffffff; font-weight: 600; font-size: 13px;">Activer les notifications de messages</span>';
+        
+        banner.onclick = async () => {
+          if ('Notification' in window) {
+            const perm = await Notification.requestPermission();
+            if (perm === 'granted') {
+              alert('Notifications activées avec succès ! 🎉');
+              banner.style.display = 'none';
+            } else {
+              alert('Les notifications ont été refusées ou bloquées par le navigateur.');
+            }
+          } else {
+            alert('Votre navigateur ne prend pas en charge les notifications push.');
+          }
+        };
+
+        // Insertion juste en dessous du titre INBOX
+        inboxTitle.insertAdjacentElement('afterend', banner);
+      }
+    }
+  }, 1000);
+});
+</script>
+
 </body>
 </html>
